@@ -9,13 +9,22 @@ const PUBLIC_PATHS = [
   '/signup',
   '/faq',
   '/cgv',
+  '/cgu',
   '/confidentialite',
+  '/politique-confidentialite',
   '/mentions-legales',
+  '/securite',
   '/cabinet',
 ]
 
-/** Préfixes d'API publics — pas de check subscription */
-const PUBLIC_API_PREFIXES = [
+/**
+ * Préfixes publics — pas de check auth/subscription.
+ * Inclut /auth/ (callback OAuth + magic link), /portail/ (portail client public),
+ * et les API publiques.
+ */
+const PUBLIC_PREFIXES = [
+  '/auth/',             // /auth/callback, /auth/login, /auth/register, /auth/forgot-password
+  '/portail/',          // /portail/[token] — portail client accessible sans compte
   '/api/auth/',
   '/api/health',
   '/api/contact',
@@ -32,7 +41,7 @@ const SKIP_ONBOARDING_PATHS = ['/onboarding']
 
 function isPublicRoute(pathname: string): boolean {
   if (PUBLIC_PATHS.includes(pathname)) return true
-  if (PUBLIC_API_PREFIXES.some(p => pathname.startsWith(p))) return true
+  if (PUBLIC_PREFIXES.some(p => pathname.startsWith(p))) return true
   return false
 }
 

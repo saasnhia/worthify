@@ -8,6 +8,16 @@ import {
 } from 'lucide-react'
 
 // ─────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────
+
+/** Format a price number: whole → "36", decimal → "9,60" */
+function formatPrice(price: number): string {
+  if (Number.isInteger(price)) return `${price}`
+  return price.toFixed(2).replace('.', ',')
+}
+
+// ─────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────
 
@@ -26,6 +36,7 @@ interface PlanCardData {
   name: string
   subtitle: string
   priceMo: number | null
+  priceAnnualTotal?: number
   maxUsers?: string
   trialDays: number
   features: FeatureItem[]
@@ -56,7 +67,7 @@ const FAQ_ITEMS = [
   { q: "Comment fonctionne la période d'essai ?", r: "Selon votre profil, 14 ou 30 jours sans engagement, sans carte bancaire. Vous accédez à toutes les fonctionnalités du plan choisi pendant l'essai." },
   { q: "L'OCR supporte-t-il toutes les factures ?", r: 'Notre moteur OCR traite les factures PDF, JPEG et PNG, même scannées. Il est entraîné sur des milliers de factures françaises et européennes.' },
   { q: "Qu'est-ce que l'e-invoicing 2026 ?", r: 'À partir de 2026, la facturation électronique sera obligatoire entre entreprises françaises. FinSoft vous prépare dès maintenant à cette transition avec le format Factur-X.' },
-  { q: "Combien d'utilisateurs peut-on ajouter ?", r: "Le plan Starter inclut 1 utilisateur, Pro de 1 à 15 selon le tier, Premium jusqu'à 15 utilisateurs. Des licences supplémentaires sont disponibles à la carte." },
+  { q: "Combien d'utilisateurs peut-on ajouter ?", r: "Le plan Starter inclut 1 utilisateur. Les plans Essentiel et Premium vont de 1 à 15 utilisateurs selon le profil. Les plans Cabinet jusqu'à 10 utilisateurs." },
   { q: 'Le rapprochement bancaire est-il automatique ?', r: "Oui. Importez votre relevé bancaire (CSV, OFX) et FinSoft suggère automatiquement les correspondances avec vos factures. Vous validez en un clic." },
   { q: "Puis-je annuler mon abonnement à tout moment ?", r: "Absolument. Pas d'engagement, pas de frais de résiliation. Vous pouvez exporter vos données à tout moment au format standard (FEC, CSV, PDF)." },
 ]
@@ -66,15 +77,14 @@ const FAQ_ITEMS = [
 // ─────────────────────────────────────────────────────────────
 
 const PROFILES = [
-  { label: 'Indépendant',    sub: '1 utilisateur',       trialBadge: "🎁 30 jours gratuits — Accès Premium complet · Sans carte bancaire" },
-  { label: 'TPE',            sub: '1–5 salariés',        trialBadge: "⏱ 14 jours gratuits — Accès Pro complet · Sans carte bancaire" },
-  { label: 'PME',            sub: '6–15 salariés',       trialBadge: "⏱ 14 jours gratuits · Sans carte bancaire" },
-  { label: '16–50 salariés', sub: 'Grande PME / ETI',    trialBadge: "" },
-  { label: 'Cabinet',        sub: 'Experts-comptables',  trialBadge: "🎁 30 jours gratuits — Jusqu'à 4 utilisateurs · Sans CB" },
+  { label: 'Indépendant',   sub: '1 utilisateur',      trialBadge: "🎁 30 jours gratuits — Sans carte bancaire" },
+  { label: 'TPE 1-5',       sub: '1–5 salariés',       trialBadge: "⏱ 14 jours gratuits — Sans carte bancaire" },
+  { label: 'PME 6-15',      sub: '6–15 salariés',      trialBadge: "⏱ 14 jours gratuits — Sans carte bancaire" },
+  { label: 'Cabinet',       sub: 'Experts-comptables', trialBadge: "🎁 30 jours gratuits — Jusqu'à 4 utilisateurs · Sans CB" },
 ]
 
 const PROFILES_PLANS: PlanCardData[][] = [
-  // ── Profil 0 — Indépendant
+  // ── Profil 0 — Indépendant (4 plans)
   [
     {
       id: 'starter',
@@ -85,9 +95,10 @@ const PROFILES_PLANS: PlanCardData[][] = [
       trialDays: 0,
       features: [
         { text: 'Tableau de bord KPIs', ok: true },
-        { text: 'OCR basique (30 docs/mois)', ok: true },
+        { text: 'Import & OCR basique (30 docs/mois)', ok: true },
         { text: '1 compte bancaire synchronisé', ok: true },
         { text: 'Facturation simple', ok: true },
+        { text: 'Support email', ok: true },
         { text: 'Rapprochement automatique', ok: false },
         { text: 'Agents IA', ok: false },
       ],
@@ -96,222 +107,279 @@ const PROFILES_PLANS: PlanCardData[][] = [
       ctaNote: 'Aucune carte bancaire requise',
     },
     {
-      id: 'pro-indep',
-      name: 'Pro',
-      subtitle: 'Pour les indépendants et freelances',
-      priceMo: 29,
+      id: 'basique-indep',
+      name: 'Basique',
+      subtitle: 'Pour facturer et gérer votre comptabilité',
+      priceMo: 12,
+      priceAnnualTotal: 115,
       maxUsers: '1 utilisateur',
       trialDays: 30,
       features: [
         { text: 'Tout Starter inclus', ok: true },
-        { text: 'OCR + enrichissement SIREN illimité', ok: true },
-        { text: 'Rapprochement bancaire IA', ok: true },
-        { text: 'Gestion commerciale complète', ok: true },
+        { text: 'OCR illimité + enrichissement SIREN', ok: true },
+        { text: 'Facturation complète (devis, BC, BL, avoirs)', ok: true },
         { text: 'TVA CA3 automatique', ok: true },
-        { text: 'Relances automatiques impayés', ok: true },
         { text: 'Export FEC', ok: true },
-        { text: 'Portail client', ok: false },
+        { text: 'Rapprochement bancaire IA', ok: false },
+        { text: 'Relances automatiques', ok: false },
         { text: 'Agents IA custom', ok: false },
       ],
+      featured: false,
+      cta: 'Essai gratuit 30 jours →',
+      planKey: 'BASIQUE_INDEP',
+      ctaNote: 'Sans carte bancaire',
+    },
+    {
+      id: 'essentiel-indep',
+      name: 'Essentiel',
+      subtitle: 'Pour piloter votre activité efficacement',
+      priceMo: 22,
+      priceAnnualTotal: 211,
+      maxUsers: '1 utilisateur',
+      trialDays: 30,
+      features: [
+        { text: 'Tout Basique inclus', ok: true },
+        { text: 'Rapprochement bancaire IA', ok: true },
+        { text: 'Relances automatiques impayés', ok: true },
+        { text: 'Notes de frais', ok: true },
+        { text: 'Prévisionnel trésorerie', ok: true },
+        { text: 'Catégorisation automatique', ok: true },
+        { text: 'Support chat prioritaire', ok: true },
+        { text: 'Agents IA sur mesure', ok: false },
+        { text: 'Liasses fiscales', ok: false },
+      ],
       featured: true,
-      cta: "🎁 Essai 30 jours gratuit",
-      planKey: 'PRO_INDEPENDANT',
+      cta: 'Essai gratuit 30 jours →',
+      planKey: 'ESSENTIEL_INDEP',
       ctaNote: 'Sans carte bancaire',
     },
     {
       id: 'premium-indep',
       name: 'Premium',
-      subtitle: 'Tout Pro + agents IA et portail client',
-      priceMo: 59,
+      subtitle: 'Tout Essentiel + IA avancée et liasses',
+      priceMo: 74,
+      priceAnnualTotal: 710,
       maxUsers: '1 utilisateur',
       trialDays: 30,
       features: [
-        { text: 'Tout Pro inclus', ok: true },
-        { text: 'Assistant IA PCG & BOFIP', ok: true },
-        { text: 'Agents IA custom', ok: true },
-        { text: 'Portail client', ok: true },
+        { text: 'Tout Essentiel inclus', ok: true },
+        { text: 'Agents IA sur mesure', ok: true },
+        { text: 'Assistant PCG & BOFIP', ok: true },
         { text: 'Liasses fiscales (2035)', ok: true },
         { text: 'E-invoicing 2026 natif', ok: true },
+        { text: 'Immobilisations & emprunts', ok: true },
         { text: 'Support prioritaire FR', ok: true },
       ],
       featured: false,
-      cta: 'Essai gratuit 30 jours',
-      planKey: 'PREMIUM_INDEPENDANT',
+      cta: 'Essai gratuit 30 jours →',
+      planKey: 'PREMIUM_INDEP',
       ctaNote: 'Sans carte bancaire',
     },
   ],
 
-  // ── Profil 1 — TPE
+  // ── Profil 1 — TPE 1-5 (3 plans)
   [
     {
-      id: 'pro-tpe',
-      name: 'Pro TPE',
-      subtitle: 'Idéal pour les petites équipes',
-      priceMo: 49,
+      id: 'basique-tpe',
+      name: 'Basique',
+      subtitle: 'Pour gérer et facturer en équipe',
+      priceMo: 27,
+      priceAnnualTotal: 259,
       maxUsers: "Jusqu'à 5 utilisateurs",
       trialDays: 14,
       features: [
-        { text: 'Tout Starter inclus', ok: true },
-        { text: 'OCR + enrichissement SIREN illimité', ok: true },
-        { text: 'Rapprochement bancaire IA', ok: true },
-        { text: 'Gestion commerciale complète', ok: true },
+        { text: 'OCR illimité + enrichissement SIREN', ok: true },
+        { text: 'Facturation + gestion commerciale', ok: true },
         { text: 'TVA CA3 automatique', ok: true },
-        { text: 'Relances automatiques', ok: true },
         { text: 'Export FEC', ok: true },
+        { text: 'Multi-comptes bancaires', ok: true },
+        { text: 'Rapprochement bancaire IA', ok: false },
+        { text: 'Portail client', ok: false },
+      ],
+      featured: false,
+      cta: 'Essai gratuit 14 jours →',
+      planKey: 'BASIQUE_TPE',
+      ctaNote: 'Sans carte bancaire',
+    },
+    {
+      id: 'essentiel-tpe',
+      name: 'Essentiel',
+      subtitle: 'Pour piloter votre TPE avec l\'IA',
+      priceMo: 45,
+      priceAnnualTotal: 432,
+      maxUsers: "Jusqu'à 5 utilisateurs",
+      trialDays: 14,
+      features: [
+        { text: 'Tout Basique inclus', ok: true },
+        { text: 'Rapprochement bancaire IA', ok: true },
+        { text: 'Relances automatiques', ok: true },
+        { text: 'Notes de frais', ok: true },
+        { text: 'Prévisionnel trésorerie', ok: true },
+        { text: 'Catégorisation automatique', ok: true },
+        { text: 'API & intégrations tierces', ok: true },
+        { text: 'Agents IA sur mesure', ok: false },
         { text: 'Portail client', ok: false },
       ],
       featured: true,
-      cta: '⏱ Essai gratuit 14 jours',
-      planKey: 'PRO_TPE',
+      cta: 'Essai gratuit 14 jours →',
+      planKey: 'ESSENTIEL_TPE',
       ctaNote: 'Sans carte bancaire',
     },
     {
       id: 'premium-tpe',
-      name: 'Premium TPE',
-      subtitle: 'Tout Pro + IA avancée et portail',
-      priceMo: 99,
+      name: 'Premium',
+      subtitle: 'Tout Essentiel + IA, portail et liasses',
+      priceMo: 139,
+      priceAnnualTotal: 1334,
       maxUsers: "Jusqu'à 5 utilisateurs",
       trialDays: 14,
       features: [
-        { text: 'Tout Pro TPE inclus', ok: true },
-        { text: 'Assistant IA PCG & BOFIP', ok: true },
-        { text: 'Agents IA custom', ok: true },
+        { text: 'Tout Essentiel inclus', ok: true },
+        { text: 'Agents IA sur mesure', ok: true },
         { text: 'Portail client collaboratif', ok: true },
         { text: 'Liasses fiscales (2065, 2031)', ok: true },
         { text: 'E-invoicing 2026 natif', ok: true },
-        { text: 'Support prioritaire FR', ok: true },
+        { text: 'Intégrations Cegid & Sage', ok: true },
+        { text: 'Analytique avancée', ok: true },
       ],
       featured: false,
-      cta: 'Essai gratuit 14 jours',
+      cta: 'Essai gratuit 14 jours →',
       planKey: 'PREMIUM_TPE',
       ctaNote: 'Sans carte bancaire',
     },
   ],
 
-  // ── Profil 2 — PME
+  // ── Profil 2 — PME 6-15 (3 plans + sur mesure)
   [
     {
-      id: 'pro-pme',
-      name: 'Pro PME',
-      subtitle: 'Pour les équipes de 6 à 15 personnes',
-      priceMo: 99,
+      id: 'basique-pme',
+      name: 'Basique',
+      subtitle: 'Pour une PME en croissance',
+      priceMo: 45,
+      priceAnnualTotal: 432,
       maxUsers: "Jusqu'à 15 utilisateurs",
       trialDays: 14,
       features: [
-        { text: 'Tout Pro TPE inclus', ok: true },
+        { text: 'OCR illimité + enrichissement SIREN', ok: true },
+        { text: 'Facturation + gestion commerciale', ok: true },
+        { text: 'TVA CA3 automatique', ok: true },
+        { text: 'Export FEC', ok: true },
         { text: 'Multi-comptes bancaires illimités', ok: true },
         { text: 'Gestion multi-entités', ok: true },
-        { text: 'Export FEC avancé', ok: true },
-        { text: 'Rapports analytiques', ok: true },
-        { text: 'Portail client', ok: false },
-        { text: 'Agents IA custom', ok: false },
+        { text: 'Rapprochement bancaire IA', ok: false },
       ],
       featured: false,
-      cta: 'Essai gratuit 14 jours',
-      planKey: 'PRO_PME',
+      cta: 'Essai gratuit 14 jours →',
+      planKey: 'BASIQUE_PME',
+      ctaNote: 'Sans carte bancaire',
+    },
+    {
+      id: 'essentiel-pme',
+      name: 'Essentiel',
+      subtitle: 'Pour piloter votre PME de bout en bout',
+      priceMo: 89,
+      priceAnnualTotal: 854,
+      maxUsers: "Jusqu'à 15 utilisateurs",
+      trialDays: 14,
+      features: [
+        { text: 'Tout Basique inclus', ok: true },
+        { text: 'Rapprochement bancaire IA', ok: true },
+        { text: 'Relances automatiques', ok: true },
+        { text: 'Notes de frais', ok: true },
+        { text: 'Prévisionnel trésorerie', ok: true },
+        { text: 'Analytique & rapports avancés', ok: true },
+        { text: 'API & intégrations tierces', ok: true },
+        { text: 'Agents IA sur mesure', ok: false },
+      ],
+      featured: true,
+      cta: 'Essai gratuit 14 jours →',
+      planKey: 'ESSENTIEL_PME',
       ctaNote: 'Sans carte bancaire',
     },
     {
       id: 'premium-pme',
-      name: 'Premium PME',
-      subtitle: 'Pour les grandes équipes avec IA avancée',
-      priceMo: 179,
+      name: 'Premium',
+      subtitle: 'Tout Essentiel + IA avancée et liasses',
+      priceMo: 269,
+      priceAnnualTotal: 2582,
       maxUsers: "Jusqu'à 15 utilisateurs",
       trialDays: 14,
       features: [
-        { text: 'Tout Pro PME inclus', ok: true },
-        { text: 'Assistant IA PCG & BOFIP', ok: true },
-        { text: 'Agents IA custom', ok: true },
+        { text: 'Tout Essentiel inclus', ok: true },
+        { text: 'Agents IA sur mesure', ok: true },
         { text: 'Portail client multi-dossiers', ok: true },
         { text: 'Liasses fiscales complètes', ok: true },
         { text: 'E-invoicing 2026 natif', ok: true },
         { text: 'Intégrations Cegid & Sage', ok: true },
-        { text: 'Onboarding dédié', ok: true },
+        { text: 'Immobilisations & emprunts', ok: true },
       ],
-      featured: true,
-      cta: 'Essai gratuit 14 jours',
+      featured: false,
+      cta: 'Essai gratuit 14 jours →',
       planKey: 'PREMIUM_PME',
       ctaNote: 'Sans carte bancaire',
     },
-  ],
-
-  // ── Profil 3 — 16-50 salariés
-  [
     {
-      id: 'premium-pme-large',
-      name: 'Premium PME',
-      subtitle: "Pour les grandes PME jusqu'à 50 personnes",
-      priceMo: 299,
-      maxUsers: "Jusqu'à 50 utilisateurs",
-      trialDays: 0,
-      features: [
-        { text: 'Tout Premium PME inclus', ok: true },
-        { text: "Jusqu'à 50 utilisateurs", ok: true },
-        { text: 'SLA garanti 99,9%', ok: true },
-        { text: 'Suivi des temps collaborateurs', ok: true },
-        { text: 'Comptabilité analytique avancée', ok: true },
-        { text: 'API entreprise', ok: true },
-      ],
-      featured: false,
-      cta: 'Contacter un expert',
-      isContact: true,
-    },
-    {
-      id: 'enterprise',
-      name: 'Enterprise',
-      subtitle: 'Sur mesure pour vos besoins spécifiques',
+      id: 'pme-surmesure',
+      name: 'Plus de 15 salariés ?',
+      subtitle: 'Contactez-nous pour un devis personnalisé.',
       priceMo: null,
-      maxUsers: 'Utilisateurs illimités',
+      maxUsers: 'Illimité',
       trialDays: 0,
       features: [
         { text: 'Tout Premium inclus', ok: true },
-        { text: 'Déploiement on-premise possible', ok: true },
-        { text: 'SSO / Active Directory', ok: true },
-        { text: 'Contrat de service personnalisé', ok: true },
+        { text: 'Utilisateurs illimités', ok: true },
+        { text: 'SLA garanti 99,9%', ok: true },
         { text: 'Account manager dédié', ok: true },
-        { text: 'Formation équipes incluse', ok: true },
       ],
-      featured: true,
-      cta: 'Demander un devis',
+      featured: false,
+      cta: 'Demander un devis →',
       isContact: true,
     },
   ],
 
-  // ── Profil 4 — Cabinet
+  // ── Profil 3 — Cabinet (2 plans + sur mesure)
   [
     {
-      id: 'cabinet-pro',
-      name: 'Cabinet Pro',
-      subtitle: "Pour les cabinets de 1 à 4 collaborateurs",
+      id: 'cabinet-essentiel',
+      name: 'Cabinet Essentiel',
+      subtitle: "Tout ce qu'il faut pour gérer vos dossiers",
       priceMo: 99,
-      maxUsers: "Jusqu'à 4 collaborateurs",
+      priceAnnualTotal: 950,
+      maxUsers: "Jusqu'à 10 utilisateurs",
       trialDays: 30,
       features: [
         { text: 'Multi-dossiers clients illimités', ok: true },
         { text: 'Portail client collaboratif', ok: true },
-        { text: 'OCR + enrichissement SIREN illimité', ok: true },
+        { text: 'OCR illimité + enrichissement SIREN', ok: true },
         { text: 'Rapprochement bancaire IA', ok: true },
         { text: 'TVA CA3 automatique', ok: true },
         { text: 'Relances automatiques', ok: true },
+        { text: 'Gestion commerciale complète', ok: true },
         { text: 'Export FEC par dossier', ok: true },
-        { text: 'Liasses fiscales complètes', ok: false },
+        { text: 'Notes de frais', ok: true },
+        { text: 'Support chat', ok: true },
+        { text: 'Agents IA sur mesure', ok: false },
+        { text: 'Liasses fiscales avancées', ok: false },
       ],
       featured: false,
-      cta: '🎁 Essai gratuit 30 jours',
-      planKey: 'CABINET_PRO',
-      ctaNote: 'Sans carte bancaire',
+      cta: 'Essai cabinet 30 jours →',
+      planKey: 'CABINET_ESSENTIEL',
+      ctaNote: 'Sans CB · 4 utilisateurs max pendant l\'essai',
     },
     {
       id: 'cabinet-premium',
       name: 'Cabinet Premium',
       subtitle: 'Tout ce dont un cabinet moderne a besoin',
       priceMo: 179,
-      maxUsers: "Jusqu'à 4 collaborateurs",
+      priceAnnualTotal: 1718,
+      maxUsers: "Jusqu'à 10 utilisateurs",
       trialDays: 30,
       features: [
-        { text: 'Tout Cabinet Pro inclus', ok: true },
-        { text: 'Assistant IA PCG & BOFIP', ok: true },
+        { text: 'Tout Cabinet Essentiel inclus', ok: true },
+        { text: 'Agents IA sur mesure', ok: true },
+        { text: 'Assistant PCG & BOFIP', ok: true },
         { text: 'Liasses fiscales (2065, 2031, 2035)', ok: true },
+        { text: 'Analytique & immobilisations & emprunts', ok: true },
         { text: 'E-invoicing 2026 natif', ok: true },
         { text: 'Intégrations Cegid & Sage', ok: true },
         { text: 'Suivi des temps collaborateurs', ok: true },
@@ -319,14 +387,14 @@ const PROFILES_PLANS: PlanCardData[][] = [
         { text: 'Support prioritaire FR', ok: true },
       ],
       featured: true,
-      cta: '🎁 Essai gratuit 30 jours',
+      cta: 'Essai cabinet Premium 30 jours →',
       planKey: 'CABINET_PREMIUM',
-      ctaNote: 'Sans carte bancaire',
+      ctaNote: 'Sans CB · 4 utilisateurs max pendant l\'essai',
     },
     {
-      id: 'cabinet-enterprise',
-      name: 'Sur mesure',
-      subtitle: 'Plus de 4 collaborateurs ou besoins spécifiques',
+      id: 'cabinet-surmenure',
+      name: 'Plus de 10 utilisateurs ?',
+      subtitle: 'Grand cabinet ou tarification à la mission ? Contactez-nous.',
       priceMo: null,
       maxUsers: 'Collaborateurs illimités',
       trialDays: 0,
@@ -339,24 +407,17 @@ const PROFILES_PLANS: PlanCardData[][] = [
         { text: 'Formation équipes incluse', ok: true },
       ],
       featured: false,
-      cta: 'Parler à un expert',
+      cta: 'Parler à un expert →',
       isContact: true,
     },
   ],
 ]
 
 // ─────────────────────────────────────────────────────────────
-// PLAN CARD COMPONENT (outside HomePage for performance)
+// PLAN CARD COMPONENT (outside HomePage for perf)
 // ─────────────────────────────────────────────────────────────
 
 function PlanCard({ plan, annual }: { plan: PlanCardData; annual: boolean }) {
-  const displayPrice =
-    plan.priceMo === null || plan.priceMo === 0
-      ? plan.priceMo
-      : annual
-        ? Math.round(plan.priceMo * 0.8)
-        : plan.priceMo
-
   const href = plan.isContact
     ? '#contact-cabinet'
     : plan.planKey
@@ -391,26 +452,36 @@ function PlanCard({ plan, annual }: { plan: PlanCardData; annual: boolean }) {
             Sur mesure
           </span>
         ) : plan.priceMo === 0 ? (
-          <span className={`text-4xl font-extrabold ${plan.featured ? 'text-white' : 'text-slate-900'}`}>
-            Gratuit
-          </span>
-        ) : (
-          <div className="mb-1">
+          <div>
+            <span className={`text-4xl font-extrabold ${plan.featured ? 'text-white' : 'text-slate-900'}`}>
+              Gratuit
+            </span>
+            <p className={`text-xs mt-1 ${plan.featured ? 'text-slate-400' : 'text-slate-400'}`}>Pour toujours</p>
+          </div>
+        ) : annual && plan.priceAnnualTotal ? (
+          <div>
             <div className="flex items-end gap-1">
               <span className={`text-5xl font-extrabold ${plan.featured ? 'text-white' : 'text-slate-900'}`}>
-                {displayPrice}€
+                {formatPrice(plan.priceMo * 0.8)}€
               </span>
               <span className={`text-sm mb-1.5 ${plan.featured ? 'text-slate-400' : 'text-slate-400'}`}>/mois</span>
             </div>
-            {annual && plan.priceMo > 0 && (
-              <p className={`text-xs mt-0.5 ${plan.featured ? 'text-slate-400' : 'text-slate-400'}`}>
-                <span className="line-through">{plan.priceMo}€/mois</span>
-                {' '}→ facturé {Math.round(plan.priceMo * 0.8 * 12)}€/an
-              </p>
-            )}
-            {!annual && plan.priceMo > 0 && (
+            <p className={`text-xs mt-0.5 ${plan.featured ? 'text-slate-400' : 'text-slate-400'}`}>
+              <span className="line-through">{plan.priceMo}€/mois</span>
+              {' '}→ facturé {plan.priceAnnualTotal}€/an
+            </p>
+          </div>
+        ) : (
+          <div>
+            <div className="flex items-end gap-1">
+              <span className={`text-5xl font-extrabold ${plan.featured ? 'text-white' : 'text-slate-900'}`}>
+                {plan.priceMo}€
+              </span>
+              <span className={`text-sm mb-1.5 ${plan.featured ? 'text-slate-400' : 'text-slate-400'}`}>/mois</span>
+            </div>
+            {plan.priceAnnualTotal && (
               <p className="text-xs text-emerald-500 mt-0.5">
-                Ou {Math.round(plan.priceMo * 0.8)}€/mois en annuel (−20%)
+                Ou {formatPrice(plan.priceMo * 0.8)}€/mois en annuel (−20%)
               </p>
             )}
           </div>
@@ -603,6 +674,8 @@ export default function HomePage() {
     },
   ]
 
+  const planCount = PROFILES_PLANS[profilIdx].length
+
   return (
     <div className="min-h-screen bg-white text-slate-900">
 
@@ -625,7 +698,7 @@ export default function HomePage() {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            <Link href="/auth/login" className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors">
+            <Link href="/login" className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors">
               Se connecter
             </Link>
             <Link href="/auth/register"
@@ -648,7 +721,7 @@ export default function HomePage() {
               </a>
             ))}
             <div className="flex gap-3 pt-2">
-              <Link href="/auth/login" className="flex-1 text-center px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium">Se connecter</Link>
+              <Link href="/login" className="flex-1 text-center px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium">Se connecter</Link>
               <Link href="/auth/register" className="flex-1 text-center px-4 py-2 bg-emerald-500 text-white rounded-xl text-sm font-semibold">Essai gratuit</Link>
             </div>
           </div>
@@ -845,9 +918,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── PRICING — 5 profils ── */}
+      {/* ── PRICING — 4 profils ── */}
       <section id="pricing" className="py-24 px-4">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Tarifs adaptés à votre profil</h2>
             <p className="text-slate-500 mb-8">Choisissez votre situation pour voir les plans qui vous correspondent.</p>
@@ -870,13 +943,13 @@ export default function HomePage() {
           <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
             {PROFILES.map((p, i) => (
               <button key={p.label} onClick={() => setProfilIdx(i)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all border ${
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all border ${
                   profilIdx === i
                     ? 'bg-emerald-500 text-white border-emerald-500 shadow-md'
                     : 'bg-white text-slate-600 border-gray-200 hover:border-emerald-300 hover:text-slate-900'
                 }`}>
                 {p.label}
-                <span className={`ml-1.5 text-xs font-normal ${profilIdx === i ? 'text-emerald-100' : 'text-slate-400'}`}>
+                <span className={`ml-2 text-xs font-normal ${profilIdx === i ? 'text-emerald-100' : 'text-slate-400'}`}>
                   {p.sub}
                 </span>
               </button>
@@ -893,10 +966,12 @@ export default function HomePage() {
           )}
 
           {/* Grille de plans */}
-          <div className={`grid gap-6 items-start ${
-            PROFILES_PLANS[profilIdx].length === 2
-              ? 'grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto'
-              : 'grid-cols-1 md:grid-cols-3'
+          <div className={`grid gap-5 items-start ${
+            planCount === 4
+              ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4'
+              : planCount === 3
+                ? 'grid-cols-1 md:grid-cols-3'
+                : 'grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto'
           }`}>
             {PROFILES_PLANS[profilIdx].map(plan => (
               <PlanCard key={plan.id} plan={plan} annual={annual} />
@@ -918,6 +993,7 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+          <p className="text-center text-xs text-slate-400 mt-4">Tous les prix sont HT — TVA 20% applicable</p>
         </div>
       </section>
 
@@ -962,9 +1038,10 @@ export default function HomePage() {
           </h2>
 
           <p className="text-slate-500 leading-relaxed mb-6 text-base">
-            FinSoft est développé au sein du département Finance-Comptabilité de l&apos;IAE de Dijon.
-            Notre équipe d&apos;étudiants en Master CCA et d&apos;experts-comptables a conçu une solution
-            ancrée dans les réalités du terrain comptable français.
+            FinSoft est développé au sein du département Finance-Comptabilité de l&apos;IAE de Dijon
+            (Université de Bourgogne). Notre équipe d&apos;étudiants en Licence de Gestion — option Finance
+            et de professionnels de l&apos;expertise comptable a conçu une solution ancrée dans les réalités
+            du terrain comptable français.
           </p>
 
           <p className="text-slate-500 leading-relaxed mb-10 text-base">
@@ -974,7 +1051,7 @@ export default function HomePage() {
 
           <div className="inline-flex items-center gap-2 text-sm text-slate-400 font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-            Département Finance-Comptabilité · Promotion 2026
+            Licence Gestion · Option Finance · Promotion 2026
           </div>
         </div>
       </section>
@@ -1089,7 +1166,7 @@ export default function HomePage() {
                 <li><a href="#features" className="hover:text-white transition-colors">Fonctionnalités</a></li>
                 <li><a href="#pricing" className="hover:text-white transition-colors">Tarifs</a></li>
                 <li><Link href="/auth/register" className="hover:text-white transition-colors">Essai gratuit</Link></li>
-                <li><Link href="/auth/login" className="hover:text-white transition-colors">Se connecter</Link></li>
+                <li><Link href="/login" className="hover:text-white transition-colors">Se connecter</Link></li>
               </ul>
             </div>
             <div>
