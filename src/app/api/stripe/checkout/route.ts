@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import type Stripe from 'stripe'
 import { createClient } from '@/lib/supabase/server'
-import { stripe, priceIdFromPlan } from '@/lib/stripe/client'
-import type { StripePlan } from '@/lib/stripe/client'
+import { stripe } from '@/lib/stripe/client'
+import { PLANS } from '@/lib/stripe/plans'
 
 /**
  * POST /api/stripe/checkout
- * Body: { plan: 'starter' | 'cabinet' | 'pro' }
- * Returns: { url: string }  — Stripe Checkout Session URL
+ * Body: { plan_id: string, billing: 'monthly' | 'annual' }
+ * Returns: { url: string } — Stripe Checkout Session URL
  */
 export async function POST(req: NextRequest) {
   try {
@@ -18,14 +18,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
     }
 
-    const body = await req.json() as { plan?: string }
-    const plan = body.plan as StripePlan | undefined
+    const body = await req.json() as { plan_id?: string; billing?: string }
+    const planKey = body.plan_id?.toUpperCase()
+    const billing: 'monthly' | 'annual' = body.billing === 'annual' ? 'annual' : 'monthly'
 
-    if (!plan || !['starter', 'cabinet', 'pro'].includes(plan)) {
+    if (!planKey || !(planKey in PLANS)) {
       return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })
     }
 
-    const priceId = priceIdFromPlan(plan)
+    const plan = PLANS[planKey]
+    const priceId = billing === 'annual' ? plan.annual : plan.monthly
+
     if (!priceId) {
       return NextResponse.json({ error: 'Price ID introuvable pour ce plan' }, { status: 400 })
     }
@@ -37,7 +40,6 @@ export async function POST(req: NextRequest) {
       .eq('user_id', user.id)
       .maybeSingle()
 
-    // Build origin for redirect URLs
     const origin = req.headers.get('origin') ?? 'https://finpilote.vercel.app'
 
     const customerField: Pick<Stripe.Checkout.SessionCreateParams, 'customer' | 'customer_email'> =
@@ -48,12 +50,15 @@ export async function POST(req: NextRequest) {
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${origin}/dashboard?stripe=success`,
-      cancel_url:  `${origin}/pricing?stripe=canceled`,
-      metadata: { user_id: user.id, plan },
-      subscription_data: { metadata: { user_id: user.id, plan } },
+      success_url: `${origin}/dashboard?welcome=true`,
+      cancel_url:  `${origin}/#pricing`,
+      metadata: { user_id: user.id, plan_id: planKey, billing },
+      subscription_data: {
+        trial_period_days: plan.trial_days > 0 ? plan.trial_days : undefined,
+        metadata: { user_id: user.id, plan_id: planKey, billing },
+      },
+      payment_method_collection: plan.trial_days > 0 ? 'if_required' : 'always',
       allow_promotion_codes: true,
-      billing_address_collection: 'auto',
       locale: 'fr',
       ...customerField,
     })

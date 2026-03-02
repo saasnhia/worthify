@@ -4,31 +4,456 @@ import { useState } from 'react'
 import Link from 'next/link'
 import {
   CheckCircle2, X, ChevronDown, ArrowRight, ScanLine, ArrowRightLeft,
-  BookOpen, Users2, Bell, Menu, Shield, Zap, Globe, Building2,
+  BookOpen, Users2, Bell, Menu, Shield, Zap, Globe,
 } from 'lucide-react'
 
 // ─────────────────────────────────────────────────────────────
-// DATA (inchangé sauf TEMOIGNAGES et PLANS)
+// TYPES
 // ─────────────────────────────────────────────────────────────
 
-const COMPARISON = [
-  { critere: 'OCR natif + IA', finsoft: true, pennylane: true, dext: true, sage: false },
-  { critere: 'Portail client intégré', finsoft: true, pennylane: false, dext: false, sage: false },
-  { critere: 'PCG / BOFIP assistant', finsoft: true, pennylane: false, dext: false, sage: false },
-  { critere: 'Gestion commerciale (devis, BC…)', finsoft: true, pennylane: true, dext: false, sage: true },
-  { critere: 'Hébergé en France', finsoft: true, pennylane: false, dext: false, sage: false },
+type ComparisonRow = {
+  critere: string
+  finsoft: boolean | 'soon'
+  pennylane: boolean
+  dext: boolean
+  sage: boolean
+}
+
+interface FeatureItem { text: string; ok: boolean }
+
+interface PlanCardData {
+  id: string
+  name: string
+  subtitle: string
+  priceMo: number | null
+  maxUsers?: string
+  trialDays: number
+  features: FeatureItem[]
+  featured: boolean
+  cta: string
+  planKey?: string
+  isContact?: boolean
+  ctaNote?: string
+}
+
+// ─────────────────────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────────────────────
+
+const COMPARISON: ComparisonRow[] = [
+  { critere: 'OCR natif + IA',                       finsoft: true,   pennylane: true,  dext: true,  sage: false },
+  { critere: 'Portail client intégré',                finsoft: true,   pennylane: false, dext: false, sage: false },
+  { critere: 'PCG / BOFIP assistant',                 finsoft: true,   pennylane: false, dext: false, sage: false },
+  { critere: 'Gestion commerciale (devis, BC…)',      finsoft: true,   pennylane: true,  dext: false, sage: true  },
+  { critere: 'Hébergé en France',                     finsoft: true,   pennylane: false, dext: false, sage: false },
+  { critere: 'Agent IA réponse/résumé mails',         finsoft: true,   pennylane: false, dext: false, sage: false },
+  { critere: 'Mise en relation cabinet/entreprise',   finsoft: 'soon', pennylane: false, dext: false, sage: false },
 ]
 
 const FAQ_ITEMS = [
   { q: 'FinSoft est-il conforme RGPD ?', r: "Oui. Toutes vos données sont hébergées en France. Aucune donnée n'est transmise à des tiers sans votre consentement. FinSoft est conforme au RGPD (Règlement Général sur la Protection des Données)." },
   { q: 'Puis-je importer mes données depuis Sage ou Cegid ?', r: "Oui. FinSoft dispose d'une intégration native avec Cegid Loop et Sage via Chift. L'import FEC est également supporté pour la reprise de l'historique." },
-  { q: "Comment fonctionne la période d'essai ?", r: "14 jours sans engagement, sans carte bancaire. Vous accédez à toutes les fonctionnalités du plan Pro pendant l'essai." },
+  { q: "Comment fonctionne la période d'essai ?", r: "Selon votre profil, 14 ou 30 jours sans engagement, sans carte bancaire. Vous accédez à toutes les fonctionnalités du plan choisi pendant l'essai." },
   { q: "L'OCR supporte-t-il toutes les factures ?", r: 'Notre moteur OCR traite les factures PDF, JPEG et PNG, même scannées. Il est entraîné sur des milliers de factures françaises et européennes.' },
   { q: "Qu'est-ce que l'e-invoicing 2026 ?", r: 'À partir de 2026, la facturation électronique sera obligatoire entre entreprises françaises. FinSoft vous prépare dès maintenant à cette transition avec le format Factur-X.' },
-  { q: "Combien d'utilisateurs peut-on ajouter ?", r: "Le plan Starter inclut 1 utilisateur, Pro de 1 à 15 selon le tier, Premium illimité. Des licences supplémentaires sont disponibles à la carte." },
+  { q: "Combien d'utilisateurs peut-on ajouter ?", r: "Le plan Starter inclut 1 utilisateur, Pro de 1 à 15 selon le tier, Premium jusqu'à 15 utilisateurs. Des licences supplémentaires sont disponibles à la carte." },
   { q: 'Le rapprochement bancaire est-il automatique ?', r: "Oui. Importez votre relevé bancaire (CSV, OFX) et FinSoft suggère automatiquement les correspondances avec vos factures. Vous validez en un clic." },
   { q: "Puis-je annuler mon abonnement à tout moment ?", r: "Absolument. Pas d'engagement, pas de frais de résiliation. Vous pouvez exporter vos données à tout moment au format standard (FEC, CSV, PDF)." },
 ]
+
+// ─────────────────────────────────────────────────────────────
+// PLAN PROFILES
+// ─────────────────────────────────────────────────────────────
+
+const PROFILES = [
+  { label: 'Indépendant',    sub: '1 utilisateur',       trialBadge: "🎁 30 jours gratuits — Accès Premium complet · Sans carte bancaire" },
+  { label: 'TPE',            sub: '1–5 salariés',        trialBadge: "⏱ 14 jours gratuits — Accès Pro complet · Sans carte bancaire" },
+  { label: 'PME',            sub: '6–15 salariés',       trialBadge: "⏱ 14 jours gratuits · Sans carte bancaire" },
+  { label: '16–50 salariés', sub: 'Grande PME / ETI',    trialBadge: "" },
+  { label: 'Cabinet',        sub: 'Experts-comptables',  trialBadge: "🎁 30 jours gratuits — Jusqu'à 4 utilisateurs · Sans CB" },
+]
+
+const PROFILES_PLANS: PlanCardData[][] = [
+  // ── Profil 0 — Indépendant
+  [
+    {
+      id: 'starter',
+      name: 'Starter',
+      subtitle: 'Pour découvrir sans engagement',
+      priceMo: 0,
+      maxUsers: '1 utilisateur',
+      trialDays: 0,
+      features: [
+        { text: 'Tableau de bord KPIs', ok: true },
+        { text: 'OCR basique (30 docs/mois)', ok: true },
+        { text: '1 compte bancaire synchronisé', ok: true },
+        { text: 'Facturation simple', ok: true },
+        { text: 'Rapprochement automatique', ok: false },
+        { text: 'Agents IA', ok: false },
+      ],
+      featured: false,
+      cta: 'Démarrer gratuitement',
+      ctaNote: 'Aucune carte bancaire requise',
+    },
+    {
+      id: 'pro-indep',
+      name: 'Pro',
+      subtitle: 'Pour les indépendants et freelances',
+      priceMo: 29,
+      maxUsers: '1 utilisateur',
+      trialDays: 30,
+      features: [
+        { text: 'Tout Starter inclus', ok: true },
+        { text: 'OCR + enrichissement SIREN illimité', ok: true },
+        { text: 'Rapprochement bancaire IA', ok: true },
+        { text: 'Gestion commerciale complète', ok: true },
+        { text: 'TVA CA3 automatique', ok: true },
+        { text: 'Relances automatiques impayés', ok: true },
+        { text: 'Export FEC', ok: true },
+        { text: 'Portail client', ok: false },
+        { text: 'Agents IA custom', ok: false },
+      ],
+      featured: true,
+      cta: "🎁 Essai 30 jours gratuit",
+      planKey: 'PRO_INDEPENDANT',
+      ctaNote: 'Sans carte bancaire',
+    },
+    {
+      id: 'premium-indep',
+      name: 'Premium',
+      subtitle: 'Tout Pro + agents IA et portail client',
+      priceMo: 59,
+      maxUsers: '1 utilisateur',
+      trialDays: 30,
+      features: [
+        { text: 'Tout Pro inclus', ok: true },
+        { text: 'Assistant IA PCG & BOFIP', ok: true },
+        { text: 'Agents IA custom', ok: true },
+        { text: 'Portail client', ok: true },
+        { text: 'Liasses fiscales (2035)', ok: true },
+        { text: 'E-invoicing 2026 natif', ok: true },
+        { text: 'Support prioritaire FR', ok: true },
+      ],
+      featured: false,
+      cta: 'Essai gratuit 30 jours',
+      planKey: 'PREMIUM_INDEPENDANT',
+      ctaNote: 'Sans carte bancaire',
+    },
+  ],
+
+  // ── Profil 1 — TPE
+  [
+    {
+      id: 'pro-tpe',
+      name: 'Pro TPE',
+      subtitle: 'Idéal pour les petites équipes',
+      priceMo: 49,
+      maxUsers: "Jusqu'à 5 utilisateurs",
+      trialDays: 14,
+      features: [
+        { text: 'Tout Starter inclus', ok: true },
+        { text: 'OCR + enrichissement SIREN illimité', ok: true },
+        { text: 'Rapprochement bancaire IA', ok: true },
+        { text: 'Gestion commerciale complète', ok: true },
+        { text: 'TVA CA3 automatique', ok: true },
+        { text: 'Relances automatiques', ok: true },
+        { text: 'Export FEC', ok: true },
+        { text: 'Portail client', ok: false },
+      ],
+      featured: true,
+      cta: '⏱ Essai gratuit 14 jours',
+      planKey: 'PRO_TPE',
+      ctaNote: 'Sans carte bancaire',
+    },
+    {
+      id: 'premium-tpe',
+      name: 'Premium TPE',
+      subtitle: 'Tout Pro + IA avancée et portail',
+      priceMo: 99,
+      maxUsers: "Jusqu'à 5 utilisateurs",
+      trialDays: 14,
+      features: [
+        { text: 'Tout Pro TPE inclus', ok: true },
+        { text: 'Assistant IA PCG & BOFIP', ok: true },
+        { text: 'Agents IA custom', ok: true },
+        { text: 'Portail client collaboratif', ok: true },
+        { text: 'Liasses fiscales (2065, 2031)', ok: true },
+        { text: 'E-invoicing 2026 natif', ok: true },
+        { text: 'Support prioritaire FR', ok: true },
+      ],
+      featured: false,
+      cta: 'Essai gratuit 14 jours',
+      planKey: 'PREMIUM_TPE',
+      ctaNote: 'Sans carte bancaire',
+    },
+  ],
+
+  // ── Profil 2 — PME
+  [
+    {
+      id: 'pro-pme',
+      name: 'Pro PME',
+      subtitle: 'Pour les équipes de 6 à 15 personnes',
+      priceMo: 99,
+      maxUsers: "Jusqu'à 15 utilisateurs",
+      trialDays: 14,
+      features: [
+        { text: 'Tout Pro TPE inclus', ok: true },
+        { text: 'Multi-comptes bancaires illimités', ok: true },
+        { text: 'Gestion multi-entités', ok: true },
+        { text: 'Export FEC avancé', ok: true },
+        { text: 'Rapports analytiques', ok: true },
+        { text: 'Portail client', ok: false },
+        { text: 'Agents IA custom', ok: false },
+      ],
+      featured: false,
+      cta: 'Essai gratuit 14 jours',
+      planKey: 'PRO_PME',
+      ctaNote: 'Sans carte bancaire',
+    },
+    {
+      id: 'premium-pme',
+      name: 'Premium PME',
+      subtitle: 'Pour les grandes équipes avec IA avancée',
+      priceMo: 179,
+      maxUsers: "Jusqu'à 15 utilisateurs",
+      trialDays: 14,
+      features: [
+        { text: 'Tout Pro PME inclus', ok: true },
+        { text: 'Assistant IA PCG & BOFIP', ok: true },
+        { text: 'Agents IA custom', ok: true },
+        { text: 'Portail client multi-dossiers', ok: true },
+        { text: 'Liasses fiscales complètes', ok: true },
+        { text: 'E-invoicing 2026 natif', ok: true },
+        { text: 'Intégrations Cegid & Sage', ok: true },
+        { text: 'Onboarding dédié', ok: true },
+      ],
+      featured: true,
+      cta: 'Essai gratuit 14 jours',
+      planKey: 'PREMIUM_PME',
+      ctaNote: 'Sans carte bancaire',
+    },
+  ],
+
+  // ── Profil 3 — 16-50 salariés
+  [
+    {
+      id: 'premium-pme-large',
+      name: 'Premium PME',
+      subtitle: "Pour les grandes PME jusqu'à 50 personnes",
+      priceMo: 299,
+      maxUsers: "Jusqu'à 50 utilisateurs",
+      trialDays: 0,
+      features: [
+        { text: 'Tout Premium PME inclus', ok: true },
+        { text: "Jusqu'à 50 utilisateurs", ok: true },
+        { text: 'SLA garanti 99,9%', ok: true },
+        { text: 'Suivi des temps collaborateurs', ok: true },
+        { text: 'Comptabilité analytique avancée', ok: true },
+        { text: 'API entreprise', ok: true },
+      ],
+      featured: false,
+      cta: 'Contacter un expert',
+      isContact: true,
+    },
+    {
+      id: 'enterprise',
+      name: 'Enterprise',
+      subtitle: 'Sur mesure pour vos besoins spécifiques',
+      priceMo: null,
+      maxUsers: 'Utilisateurs illimités',
+      trialDays: 0,
+      features: [
+        { text: 'Tout Premium inclus', ok: true },
+        { text: 'Déploiement on-premise possible', ok: true },
+        { text: 'SSO / Active Directory', ok: true },
+        { text: 'Contrat de service personnalisé', ok: true },
+        { text: 'Account manager dédié', ok: true },
+        { text: 'Formation équipes incluse', ok: true },
+      ],
+      featured: true,
+      cta: 'Demander un devis',
+      isContact: true,
+    },
+  ],
+
+  // ── Profil 4 — Cabinet
+  [
+    {
+      id: 'cabinet-pro',
+      name: 'Cabinet Pro',
+      subtitle: "Pour les cabinets de 1 à 4 collaborateurs",
+      priceMo: 99,
+      maxUsers: "Jusqu'à 4 collaborateurs",
+      trialDays: 30,
+      features: [
+        { text: 'Multi-dossiers clients illimités', ok: true },
+        { text: 'Portail client collaboratif', ok: true },
+        { text: 'OCR + enrichissement SIREN illimité', ok: true },
+        { text: 'Rapprochement bancaire IA', ok: true },
+        { text: 'TVA CA3 automatique', ok: true },
+        { text: 'Relances automatiques', ok: true },
+        { text: 'Export FEC par dossier', ok: true },
+        { text: 'Liasses fiscales complètes', ok: false },
+      ],
+      featured: false,
+      cta: '🎁 Essai gratuit 30 jours',
+      planKey: 'CABINET_PRO',
+      ctaNote: 'Sans carte bancaire',
+    },
+    {
+      id: 'cabinet-premium',
+      name: 'Cabinet Premium',
+      subtitle: 'Tout ce dont un cabinet moderne a besoin',
+      priceMo: 179,
+      maxUsers: "Jusqu'à 4 collaborateurs",
+      trialDays: 30,
+      features: [
+        { text: 'Tout Cabinet Pro inclus', ok: true },
+        { text: 'Assistant IA PCG & BOFIP', ok: true },
+        { text: 'Liasses fiscales (2065, 2031, 2035)', ok: true },
+        { text: 'E-invoicing 2026 natif', ok: true },
+        { text: 'Intégrations Cegid & Sage', ok: true },
+        { text: 'Suivi des temps collaborateurs', ok: true },
+        { text: 'Onboarding dédié', ok: true },
+        { text: 'Support prioritaire FR', ok: true },
+      ],
+      featured: true,
+      cta: '🎁 Essai gratuit 30 jours',
+      planKey: 'CABINET_PREMIUM',
+      ctaNote: 'Sans carte bancaire',
+    },
+    {
+      id: 'cabinet-enterprise',
+      name: 'Sur mesure',
+      subtitle: 'Plus de 4 collaborateurs ou besoins spécifiques',
+      priceMo: null,
+      maxUsers: 'Collaborateurs illimités',
+      trialDays: 0,
+      features: [
+        { text: 'Tout Cabinet Premium inclus', ok: true },
+        { text: 'Collaborateurs illimités', ok: true },
+        { text: 'SLA garanti 99,9%', ok: true },
+        { text: 'Mise en relation clients entreprises', ok: true },
+        { text: 'Account manager dédié', ok: true },
+        { text: 'Formation équipes incluse', ok: true },
+      ],
+      featured: false,
+      cta: 'Parler à un expert',
+      isContact: true,
+    },
+  ],
+]
+
+// ─────────────────────────────────────────────────────────────
+// PLAN CARD COMPONENT (outside HomePage for performance)
+// ─────────────────────────────────────────────────────────────
+
+function PlanCard({ plan, annual }: { plan: PlanCardData; annual: boolean }) {
+  const displayPrice =
+    plan.priceMo === null || plan.priceMo === 0
+      ? plan.priceMo
+      : annual
+        ? Math.round(plan.priceMo * 0.8)
+        : plan.priceMo
+
+  const href = plan.isContact
+    ? '#contact-cabinet'
+    : plan.planKey
+      ? `/auth/register?plan=${plan.planKey}&billing=${annual ? 'annual' : 'monthly'}`
+      : '/auth/register'
+
+  return (
+    <div className={`rounded-2xl border p-6 flex flex-col relative overflow-hidden ${
+      plan.featured
+        ? 'bg-[#0A1628] text-white border-2 border-emerald-500 shadow-xl'
+        : 'bg-white text-slate-900 border-gray-200'
+    }`}>
+      {/* Diagonal ribbon */}
+      {plan.featured && (
+        <div className="absolute top-0 right-0 w-24 h-24 overflow-hidden pointer-events-none">
+          <div className="absolute top-4 -right-5 bg-emerald-500 text-white text-[9px] font-bold px-10 py-1 rotate-45 whitespace-nowrap">
+            Le plus populaire
+          </div>
+        </div>
+      )}
+
+      <div className="mb-5">
+        <h3 className={`text-lg font-bold mb-1 ${plan.featured ? 'text-white' : 'text-slate-900'}`}>
+          {plan.name}
+        </h3>
+        <p className={`text-xs mb-4 ${plan.featured ? 'text-slate-400' : 'text-slate-500'}`}>
+          {plan.subtitle}
+        </p>
+
+        {plan.priceMo === null ? (
+          <span className={`text-3xl font-extrabold ${plan.featured ? 'text-white' : 'text-slate-900'}`}>
+            Sur mesure
+          </span>
+        ) : plan.priceMo === 0 ? (
+          <span className={`text-4xl font-extrabold ${plan.featured ? 'text-white' : 'text-slate-900'}`}>
+            Gratuit
+          </span>
+        ) : (
+          <div className="mb-1">
+            <div className="flex items-end gap-1">
+              <span className={`text-5xl font-extrabold ${plan.featured ? 'text-white' : 'text-slate-900'}`}>
+                {displayPrice}€
+              </span>
+              <span className={`text-sm mb-1.5 ${plan.featured ? 'text-slate-400' : 'text-slate-400'}`}>/mois</span>
+            </div>
+            {annual && plan.priceMo > 0 && (
+              <p className={`text-xs mt-0.5 ${plan.featured ? 'text-slate-400' : 'text-slate-400'}`}>
+                <span className="line-through">{plan.priceMo}€/mois</span>
+                {' '}→ facturé {Math.round(plan.priceMo * 0.8 * 12)}€/an
+              </p>
+            )}
+            {!annual && plan.priceMo > 0 && (
+              <p className="text-xs text-emerald-500 mt-0.5">
+                Ou {Math.round(plan.priceMo * 0.8)}€/mois en annuel (−20%)
+              </p>
+            )}
+          </div>
+        )}
+
+        <p className={`text-xs mt-2 ${plan.featured ? 'text-slate-400' : 'text-slate-400'}`}>
+          HT · {plan.maxUsers ?? '1 utilisateur'}
+        </p>
+      </div>
+
+      <ul className="space-y-2 mb-6 flex-1 text-sm">
+        {plan.features.map(f => (
+          <li key={f.text} className={`flex items-start gap-2.5 ${
+            f.ok
+              ? (plan.featured ? 'text-slate-200' : 'text-slate-700')
+              : (plan.featured ? 'text-slate-600' : 'text-slate-400')
+          }`}>
+            {f.ok
+              ? <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
+              : <X className={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.featured ? 'text-slate-600' : 'text-gray-300'}`} />}
+            {f.text}
+          </li>
+        ))}
+      </ul>
+
+      <a href={href}
+        className={`block text-center py-3 px-4 rounded-xl font-semibold text-sm transition-colors ${
+          plan.featured
+            ? 'bg-emerald-500 text-white hover:bg-emerald-600'
+            : plan.isContact
+              ? 'bg-slate-900 text-white hover:bg-slate-800'
+              : 'border border-gray-200 text-slate-700 hover:bg-gray-50'
+        }`}>
+        {plan.cta}
+      </a>
+      {plan.ctaNote && (
+        <p className={`text-center text-xs mt-2 ${plan.featured ? 'text-slate-500' : 'text-slate-400'}`}>
+          {plan.ctaNote}
+        </p>
+      )}
+    </div>
+  )
+}
 
 // ─────────────────────────────────────────────────────────────
 // PAGE
@@ -36,7 +461,7 @@ const FAQ_ITEMS = [
 
 export default function HomePage() {
   const [annual, setAnnual] = useState(false)
-  const [proTier, setProTier] = useState(0)
+  const [profilIdx, setProfilIdx] = useState(0)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [mobileMenu, setMobileMenu] = useState(false)
   const [contactForm, setContactForm] = useState({ nom: '', cabinet: '', email: '', message: '' })
@@ -55,17 +480,6 @@ export default function HomePage() {
       setSent(true)
     } catch { /* silent */ } finally { setSending(false) }
   }
-
-  // ── Pricing data ──
-  const PRO_TIERS = [
-    { label: 'Indépendant', sub: '1 utilisateur', monthly: 19, annual: 190 },
-    { label: 'TPE', sub: '1–5 utilisateurs', monthly: 39, annual: 390 },
-    { label: 'PME', sub: '6–15 utilisateurs', monthly: 79, annual: 790 },
-  ]
-  const proMonthly = PRO_TIERS[proTier].monthly
-  const proAnnual = Math.round(PRO_TIERS[proTier].annual / 12)
-  const premiumMonthly = 89
-  const premiumAnnual = 71
 
   // ── Feature mockups ──
   const FEATURES = [
@@ -173,9 +587,9 @@ export default function HomePage() {
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 text-xs space-y-3">
           <p className="font-semibold text-slate-600 mb-1">Suivi — Facture #FAC-2026-041</p>
           {[
-            { day: 'J+7', label: 'Relance 1 envoyée', icon: '✓', dot: 'bg-emerald-500' },
-            { day: 'J+15', label: 'Relance 2 programmée', icon: '📅', dot: 'bg-blue-400' },
-            { day: 'J+30', label: 'Mise en demeure', icon: '🔴', dot: 'bg-gray-200' },
+            { day: 'J+7',  label: 'Relance 1 envoyée',    icon: '✓',  dot: 'bg-emerald-500' },
+            { day: 'J+15', label: 'Relance 2 programmée', icon: '📅', dot: 'bg-blue-400'    },
+            { day: 'J+30', label: 'Mise en demeure',       icon: '🔴', dot: 'bg-gray-200'    },
           ].map((step, i) => (
             <div key={i} className="flex items-center gap-3">
               <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${step.dot}`} />
@@ -205,7 +619,7 @@ export default function HomePage() {
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
             <a href="#features" className="hover:text-slate-900 transition-colors">Fonctionnalités</a>
             <a href="#pricing" className="hover:text-slate-900 transition-colors">Tarifs</a>
-            <a href="#temoignages" className="hover:text-slate-900 transition-colors">Témoignages</a>
+            <a href="#temoignages" className="hover:text-slate-900 transition-colors">Notre histoire</a>
             <a href="#contact-cabinet" className="hover:text-slate-900 transition-colors">Cabinet</a>
             <a href="#faq" className="hover:text-slate-900 transition-colors">FAQ</a>
           </div>
@@ -216,7 +630,7 @@ export default function HomePage() {
             </Link>
             <Link href="/auth/register"
               className="px-4 py-2 bg-emerald-500 text-white text-sm font-semibold rounded-xl hover:bg-emerald-600 transition-colors shadow-sm">
-              Essai gratuit 14j →
+              Essai gratuit →
             </Link>
           </div>
 
@@ -230,7 +644,7 @@ export default function HomePage() {
             {(['#features', '#pricing', '#temoignages', '#contact-cabinet', '#faq'] as const).map((href, i) => (
               <a key={href} href={href} onClick={() => setMobileMenu(false)}
                 className="block text-sm font-medium text-slate-700 py-1">
-                {['Fonctionnalités', 'Tarifs', 'Témoignages', 'Cabinet', 'FAQ'][i]}
+                {['Fonctionnalités', 'Tarifs', 'Notre histoire', 'Cabinet', 'FAQ'][i]}
               </a>
             ))}
             <div className="flex gap-3 pt-2">
@@ -271,7 +685,6 @@ export default function HomePage() {
             </a>
           </div>
 
-          {/* Badges confiance — CORRECTION #6 : "RGPD compliant" */}
           <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500">
             <div className="flex items-center gap-1.5">
               <span className="text-base">🇫🇷</span>
@@ -285,7 +698,7 @@ export default function HomePage() {
             <div className="w-px h-4 bg-gray-200 hidden sm:block" />
             <div className="flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5 text-emerald-500" />
-              14 jours d&apos;essai gratuit
+              14–30 jours d&apos;essai gratuit
             </div>
             <div className="w-px h-4 bg-gray-200 hidden sm:block" />
             <div className="flex items-center gap-1.5">
@@ -326,14 +739,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── SECTION #1 : IAE DIJON (remplace logos fictifs) ── */}
+      {/* ── SECTION IAE DIJON ── */}
       <section className="border-y border-gray-100 py-14 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
           <p className="text-center text-xs font-semibold text-slate-400 uppercase tracking-widest mb-8">
             Référence académique &amp; validation
           </p>
 
-          {/* Badge principal IAE */}
           <div className="flex justify-center mb-8">
             <div className="flex items-start gap-5 bg-emerald-50 border border-emerald-200 rounded-2xl px-7 py-5 max-w-2xl">
               <div className="text-4xl flex-shrink-0">🎓</div>
@@ -347,7 +759,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* 3 badges supplémentaires */}
           <div className="flex flex-wrap items-center justify-center gap-4">
             {[
               { icon: '📚', text: 'Corpus PCG & BOFIP intégré' },
@@ -363,7 +774,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FEATURES avec vrais mockups ── */}
+      {/* ── FEATURES ── */}
       <section id="features" className="py-24 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -382,7 +793,6 @@ export default function HomePage() {
                   <p className="text-slate-500 leading-relaxed text-base">{f.desc}</p>
                 </div>
                 <div className="flex-1 w-full lg:w-auto">
-                  {/* Vrai mockup HTML/CSS */}
                   <div className="bg-gradient-to-br from-slate-50 to-gray-100 rounded-2xl border border-gray-200 p-6 flex items-center justify-center" style={{ minHeight: '200px' }}>
                     <div className="w-full max-w-sm">
                       {f.mockup}
@@ -417,7 +827,13 @@ export default function HomePage() {
                 {COMPARISON.map(row => (
                   <tr key={row.critere} className="hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4 text-slate-700">{row.critere}</td>
-                    <td className="px-4 py-4 text-center">{row.finsoft ? <CheckCircle2 className="w-4 h-4 text-emerald-500 mx-auto" /> : <X className="w-4 h-4 text-gray-300 mx-auto" />}</td>
+                    <td className="px-4 py-4 text-center">
+                      {row.finsoft === 'soon'
+                        ? <span className="text-xs text-amber-600 font-semibold">À venir</span>
+                        : row.finsoft
+                          ? <CheckCircle2 className="w-4 h-4 text-emerald-500 mx-auto" />
+                          : <X className="w-4 h-4 text-gray-300 mx-auto" />}
+                    </td>
                     <td className="px-4 py-4 text-center hidden sm:table-cell">{row.pennylane ? <CheckCircle2 className="w-4 h-4 text-emerald-500 mx-auto" /> : <X className="w-4 h-4 text-gray-300 mx-auto" />}</td>
                     <td className="px-4 py-4 text-center hidden md:table-cell">{row.dext ? <CheckCircle2 className="w-4 h-4 text-emerald-500 mx-auto" /> : <X className="w-4 h-4 text-gray-300 mx-auto" />}</td>
                     <td className="px-4 py-4 text-center hidden lg:table-cell">{row.sage ? <CheckCircle2 className="w-4 h-4 text-emerald-500 mx-auto" /> : <X className="w-4 h-4 text-gray-300 mx-auto" />}</td>
@@ -429,12 +845,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── PRICING #2 : Pennylane-style ── */}
+      {/* ── PRICING — 5 profils ── */}
       <section id="pricing" className="py-24 px-4">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Tarifs simples et transparents</h2>
-            <p className="text-slate-500 mb-8">Pas de frais cachés. Changez de plan à tout moment.</p>
+            <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Tarifs adaptés à votre profil</h2>
+            <p className="text-slate-500 mb-8">Choisissez votre situation pour voir les plans qui vous correspondent.</p>
+
+            {/* Toggle mensuel / annuel */}
             <div className="inline-flex items-center gap-3 bg-gray-100 rounded-xl p-1">
               <button onClick={() => setAnnual(false)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${!annual ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}>
@@ -448,181 +866,51 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-
-            {/* ── Plan Starter ── */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 flex flex-col">
-              <div className="mb-6">
-                <h3 className="text-lg font-bold text-slate-900 mb-1">Starter</h3>
-                <p className="text-xs text-slate-500 mb-4">Pour découvrir FinSoft sans engagement</p>
-                <div className="flex items-end gap-1">
-                  <span className="text-4xl font-extrabold text-slate-900">Gratuit</span>
-                </div>
-                <p className="text-xs text-slate-400 mt-1">Essai 14 jours, puis 0€/mois</p>
-              </div>
-
-              <div className="mb-6">
-                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Limites</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {['1 utilisateur', '30 factures/mois', 'Sans CB'].map(l => (
-                    <span key={l} className="px-2 py-1 bg-gray-100 text-slate-600 text-[11px] rounded-lg font-medium">{l}</span>
-                  ))}
-                </div>
-              </div>
-
-              <ul className="space-y-2 mb-6 flex-1 text-sm">
-                {[
-                  { text: 'Tableau de bord KPIs', ok: true },
-                  { text: 'Import & OCR basique (30 docs/mois)', ok: true },
-                  { text: 'Synchronisation 1 compte bancaire', ok: true },
-                  { text: 'Facturation simple (devis + factures)', ok: true },
-                  { text: 'Support email', ok: true },
-                  { text: 'Rapprochement automatique', ok: false },
-                  { text: 'Agents IA', ok: false },
-                  { text: 'Portail client', ok: false },
-                ].map(f => (
-                  <li key={f.text} className={`flex items-start gap-2.5 ${f.ok ? 'text-slate-700' : 'text-slate-400'}`}>
-                    {f.ok
-                      ? <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                      : <X className="w-4 h-4 text-gray-300 flex-shrink-0 mt-0.5" />}
-                    {f.text}
-                  </li>
-                ))}
-              </ul>
-
-              <a href="/auth/register"
-                className="block text-center py-3 px-4 rounded-xl font-semibold text-sm border border-gray-200 text-slate-700 hover:bg-gray-50 transition-colors">
-                Démarrer gratuitement
-              </a>
-              <p className="text-center text-xs text-slate-400 mt-2">Aucune carte bancaire requise</p>
-            </div>
-
-            {/* ── Plan Pro ── */}
-            <div className="rounded-2xl border-2 border-emerald-400 bg-white p-6 relative flex flex-col shadow-lg shadow-emerald-500/10">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex gap-2">
-                <span className="px-3 py-1 bg-emerald-500 text-white text-xs font-bold rounded-full">Recommandé</span>
-                <span className="px-3 py-1 bg-slate-800 text-white text-xs font-bold rounded-full">Le plus populaire</span>
-              </div>
-
-              <div className="mb-4">
-                <h3 className="text-lg font-bold text-slate-900 mb-1">Pro</h3>
-                <p className="text-xs text-slate-500 mb-4">Pour les indépendants et petites entreprises</p>
-
-                {/* Tier selector */}
-                <div className="flex gap-1 p-1 bg-gray-100 rounded-xl mb-4">
-                  {PRO_TIERS.map((tier, idx) => (
-                    <button key={tier.label} onClick={() => setProTier(idx)}
-                      className={`flex-1 px-2 py-1.5 rounded-lg text-[11px] font-semibold transition-colors leading-tight text-center ${proTier === idx ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}>
-                      {tier.label}<br />
-                      <span className="font-normal text-[10px] text-slate-400">{tier.sub}</span>
-                    </button>
-                  ))}
-                </div>
-
-                <div className="flex items-end gap-1">
-                  <span className="text-4xl font-extrabold text-slate-900">
-                    {annual ? proAnnual : proMonthly}€
-                  </span>
-                  <span className="text-slate-400 text-sm mb-1">/mois</span>
-                </div>
-                {annual && <p className="text-xs text-emerald-600 mt-1">Facturé {PRO_TIERS[proTier].annual}€/an</p>}
-              </div>
-
-              <ul className="space-y-2 mb-6 flex-1 text-sm">
-                {[
-                  'Tout le plan Starter',
-                  'OCR + enrichissement SIREN illimité',
-                  'Rapprochement bancaire automatique IA',
-                  'Gestion commerciale complète (devis, BC, BL, avoirs)',
-                  'TVA CA3 automatique',
-                  'Relances automatiques impayés',
-                  'Import relevés bancaires illimités',
-                  'Catégorisation automatique transactions',
-                  'Export FEC',
-                  'Support chat prioritaire',
-                ].map(f => (
-                  <li key={f} className="flex items-start gap-2.5 text-slate-700">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                    {f}
-                  </li>
-                ))}
-                {[
-                  'Agents IA custom',
-                  'Portail client cabinet',
-                  'Liasses fiscales',
-                ].map(f => (
-                  <li key={f} className="flex items-start gap-2.5 text-slate-400">
-                    <X className="w-4 h-4 text-gray-300 flex-shrink-0 mt-0.5" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-
-              <a href="/auth/register?plan=pro"
-                className="block text-center py-3 px-4 rounded-xl font-semibold text-sm bg-emerald-500 text-white hover:bg-emerald-600 transition-colors shadow-sm">
-                Essai gratuit 14 jours
-              </a>
-            </div>
-
-            {/* ── Plan Premium ── */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 flex flex-col">
-              <div className="mb-6">
-                <h3 className="text-lg font-bold text-slate-900 mb-1">Premium</h3>
-                <p className="text-xs text-slate-500 mb-4">Idéal pour les cabinets d&apos;expertise comptable et d&apos;audit</p>
-
-                <div className="flex items-end gap-1">
-                  <span className="text-4xl font-extrabold text-slate-900">
-                    {annual ? premiumAnnual : premiumMonthly}€
-                  </span>
-                  <span className="text-slate-400 text-sm mb-1">/mois</span>
-                </div>
-                <p className="text-xs text-slate-400 mt-1">Jusqu&apos;à 10 utilisateurs</p>
-                {annual && <p className="text-xs text-emerald-600 mt-0.5">Facturé {premiumAnnual * 12}€/an</p>}
-                <a href="#contact-cabinet" className="inline-flex items-center gap-1 text-xs text-emerald-600 hover:underline mt-2 font-medium">
-                  Plus de 10 users ? Devis sur mesure →
-                </a>
-              </div>
-
-              <ul className="space-y-2 mb-6 flex-1 text-sm">
-                {[
-                  'Tout le plan Pro',
-                  'Multi-dossiers illimités',
-                  'Portail client collaboratif',
-                  'Assistant IA PCG & BOFIP',
-                  'Créateur d\'agents IA custom',
-                  'Liasses fiscales (2065, 2031, 2035)',
-                  'Comptabilité analytique',
-                  'Module immobilisations & emprunts',
-                  'Facturation électronique e-invoicing 2026',
-                  'Intégrations Cegid & Sage',
-                  'Suivi des temps collaborateurs',
-                  'Onboarding dédié + support prioritaire',
-                ].map(f => (
-                  <li key={f} className="flex items-start gap-2.5 text-slate-700">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-
-              <a href="#contact-cabinet"
-                className="block text-center py-3 px-4 rounded-xl font-semibold text-sm bg-emerald-500 text-white hover:bg-emerald-600 transition-colors shadow-sm">
-                Demander un essai cabinet gratuit
-              </a>
-              <p className="text-center text-xs text-slate-400 mt-2">
-                Plus de 10 utilisateurs ? <a href="#contact-cabinet" className="text-emerald-600 hover:underline">Devis sur mesure adapté</a>.
-              </p>
-            </div>
+          {/* Sélecteur de profil */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+            {PROFILES.map((p, i) => (
+              <button key={p.label} onClick={() => setProfilIdx(i)}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all border ${
+                  profilIdx === i
+                    ? 'bg-emerald-500 text-white border-emerald-500 shadow-md'
+                    : 'bg-white text-slate-600 border-gray-200 hover:border-emerald-300 hover:text-slate-900'
+                }`}>
+                {p.label}
+                <span className={`ml-1.5 text-xs font-normal ${profilIdx === i ? 'text-emerald-100' : 'text-slate-400'}`}>
+                  {p.sub}
+                </span>
+              </button>
+            ))}
           </div>
 
-          {/* Ligne "Toutes les offres incluent" */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          {/* Badge essai */}
+          {PROFILES[profilIdx].trialBadge && (
+            <div className="text-center mb-8">
+              <span className="inline-block px-4 py-2 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-medium rounded-xl">
+                {PROFILES[profilIdx].trialBadge}
+              </span>
+            </div>
+          )}
+
+          {/* Grille de plans */}
+          <div className={`grid gap-6 items-start ${
+            PROFILES_PLANS[profilIdx].length === 2
+              ? 'grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto'
+              : 'grid-cols-1 md:grid-cols-3'
+          }`}>
+            {PROFILES_PLANS[profilIdx].map(plan => (
+              <PlanCard key={plan.id} plan={plan} annual={annual} />
+            ))}
+          </div>
+
+          {/* Bande de confiance */}
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             {[
               { icon: '🔒', text: 'Hébergé en France' },
               { icon: '🇪🇺', text: 'RGPD natif' },
-              { icon: '🔄', text: 'Migration gratuite' },
-              { icon: '📞', text: 'Support FR' },
               { icon: '🚫', text: 'Sans engagement' },
+              { icon: '📞', text: 'Support FR' },
+              { icon: '🔄', text: 'Migration gratuite' },
             ].map(b => (
               <div key={b.text} className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-xs text-slate-600 font-medium">
                 <span>{b.icon}</span>
@@ -662,76 +950,31 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── TÉMOIGNAGES #5 : IAE Dijon ── */}
-      <section id="temoignages" className="py-24 px-4 bg-gray-50">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            {/* Badge officiel IAE Dijon */}
-            <div className="inline-flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-2xl px-6 py-4 mb-8">
-              <span className="text-3xl">🎓</span>
-              <div className="text-left">
-                <p className="font-bold text-slate-900 text-sm">FinSoft — Projet académique IAE Dijon</p>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Développé en partenariat avec le département Finance-Comptabilité<br />
-                  de l&apos;IAE de Dijon (Université de Bourgogne)
-                </p>
-              </div>
-            </div>
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-3">Ce qu&apos;ils en disent</h2>
-            <p className="text-slate-500">Retours d&apos;experts et d&apos;étudiants en comptabilité</p>
+      {/* ── NOTRE HISTOIRE ── */}
+      <section id="temoignages" className="py-24 px-4 bg-[#F8FAFC]">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full text-sm font-semibold text-emerald-700 mb-8">
+            🎓 IAE Dijon — Université de Bourgogne
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Témoignage 1 — Professeur IAE */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-              <p className="text-slate-700 text-sm leading-relaxed mb-5 italic">
-                &ldquo;FinSoft démontre une maîtrise réelle des enjeux de la comptabilité numérique.
-                La conformité PCG et l&apos;intégration BOFIP sont particulièrement bien pensées pour un usage en cabinet.&rdquo;
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm flex-shrink-0">
-                  PR
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Pr. [Nom]</p>
-                  <p className="text-xs text-slate-500">Département Finance-Comptabilité, IAE Dijon</p>
-                </div>
-              </div>
-            </div>
+          <h2 className="text-3xl font-extrabold text-slate-900 mb-6">
+            Né à l&apos;IAE Dijon, conçu pour les professionnels
+          </h2>
 
-            {/* Témoignage 2 — Étudiant M2 CCA */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-              <p className="text-slate-700 text-sm leading-relaxed mb-5 italic">
-                &ldquo;On a testé FinSoft sur de vrais dossiers en stage. L&apos;OCR et le rapprochement automatique
-                font gagner un temps considérable par rapport aux logiciels classiques.&rdquo;
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm flex-shrink-0">
-                  M2
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Étudiant M2 CCA</p>
-                  <p className="text-xs text-slate-500">IAE Dijon — promotion 2026</p>
-                </div>
-              </div>
-            </div>
+          <p className="text-slate-500 leading-relaxed mb-6 text-base">
+            FinSoft est développé au sein du département Finance-Comptabilité de l&apos;IAE de Dijon.
+            Notre équipe d&apos;étudiants en Master CCA et d&apos;experts-comptables a conçu une solution
+            ancrée dans les réalités du terrain comptable français.
+          </p>
 
-            {/* Témoignage 3 — Expert-comptable stagiaire */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-              <p className="text-slate-700 text-sm leading-relaxed mb-5 italic">
-                &ldquo;La mise en conformité e-invoicing 2026 et l&apos;assistant PCG/BOFIP sont des atouts majeurs.
-                FinSoft répond aux besoins réels des cabinets modernes.&rdquo;
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center font-bold text-sm flex-shrink-0">
-                  EC
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Expert-comptable stagiaire</p>
-                  <p className="text-xs text-slate-500">Partenaire IAE Dijon</p>
-                </div>
-              </div>
-            </div>
+          <p className="text-slate-500 leading-relaxed mb-10 text-base">
+            Notre mission : mettre la technologie IA au service de l&apos;accompagnement comptable,
+            avec une rigueur académique et une vision pratique des besoins des cabinets modernes.
+          </p>
+
+          <div className="inline-flex items-center gap-2 text-sm text-slate-400 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+            Département Finance-Comptabilité · Promotion 2026
           </div>
         </div>
       </section>
@@ -818,7 +1061,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FOOTER #4 : liens légaux complets ── */}
+      {/* ── FOOTER ── */}
       <footer className="bg-slate-900 text-slate-400">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
