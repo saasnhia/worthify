@@ -163,12 +163,12 @@ function LoginForm() {
 
         {/* Access link */}
         <p className="mt-6 text-center text-sm text-navy-500">
-          Pas encore de licence ?{' '}
+          Pas encore de compte ?{' '}
           <Link
             href="/signup"
             className="font-medium text-emerald-600 hover:text-emerald-700"
           >
-            Demander une d&eacute;mo
+            Créer un compte
           </Link>
         </p>
       </Card>

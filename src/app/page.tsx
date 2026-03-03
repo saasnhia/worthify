@@ -409,8 +409,8 @@ function PlanCard({ plan, annual }: { plan: PlanCardData; annual: boolean }) {
   const href = plan.isContact
     ? 'mailto:contact@finsoft.app'
     : plan.planKey
-      ? `/auth/register?plan=${plan.planKey}&billing=${annual ? 'annual' : 'monthly'}`
-      : '/auth/register'
+      ? `/signup?plan=${plan.planKey}&billing=${annual ? 'annual' : 'monthly'}`
+      : '/signup'
 
   return (
     <div className={`rounded-2xl border p-6 flex flex-col relative overflow-hidden ${
@@ -565,7 +565,7 @@ export default function HomePage() {
             <Link href="/login" className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors">
               Se connecter
             </Link>
-            <Link href="/auth/register"
+            <Link href="/signup"
               className="px-4 py-2 bg-emerald-500 text-white text-sm font-semibold rounded-xl hover:bg-emerald-600 transition-colors shadow-sm">
               Essai gratuit →
             </Link>
@@ -586,7 +586,7 @@ export default function HomePage() {
             ))}
             <div className="flex gap-3 pt-2">
               <Link href="/login" className="flex-1 text-center px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium">Se connecter</Link>
-              <Link href="/auth/register" className="flex-1 text-center px-4 py-2 bg-emerald-500 text-white rounded-xl text-sm font-semibold">Essai gratuit</Link>
+              <Link href="/signup" className="flex-1 text-center px-4 py-2 bg-emerald-500 text-white rounded-xl text-sm font-semibold">Essai gratuit</Link>
             </div>
           </div>
         )}
@@ -611,7 +611,7 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
-            <Link href="/auth/register"
+            <Link href="/signup"
               className="flex items-center gap-2 px-6 py-3.5 bg-emerald-500 text-white font-semibold rounded-xl hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20 text-base">
               Démarrer l&apos;essai gratuit
               <ArrowRight className="w-4 h-4" />
@@ -951,7 +951,7 @@ export default function HomePage() {
           <p className="text-slate-400 max-w-xl mx-auto mb-8">
             1 mois offert · Résiliable à tout moment · Support inclus
           </p>
-          <Link href="/auth/register"
+          <Link href="/signup"
             className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-500 text-white font-semibold rounded-xl hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20 text-lg">
             Démarrer gratuitement →
           </Link>
@@ -1042,7 +1042,7 @@ export default function HomePage() {
               <ul className="space-y-2 text-sm">
                 <li><a href="#features" className="hover:text-white transition-colors">Fonctionnalités</a></li>
                 <li><a href="#pricing" className="hover:text-white transition-colors">Tarifs</a></li>
-                <li><Link href="/auth/register" className="hover:text-white transition-colors">Essai gratuit</Link></li>
+                <li><Link href="/signup" className="hover:text-white transition-colors">Essai gratuit</Link></li>
                 <li><Link href="/login" className="hover:text-white transition-colors">Se connecter</Link></li>
               </ul>
             </div>
