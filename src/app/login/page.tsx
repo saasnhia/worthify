@@ -16,7 +16,12 @@ function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(() => {
+    const urlError = searchParams.get('error')
+    if (urlError === 'auth_callback_error') return 'Erreur lors de la connexion. Veuillez reessayer.'
+    if (urlError === 'verification_failed') return 'Le lien de verification a expire ou est invalide. Veuillez vous reinscrire.'
+    return null
+  })
 
   const redirect = searchParams.get('redirect') || '/dashboard'
 
