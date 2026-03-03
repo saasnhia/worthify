@@ -19,8 +19,15 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json() as { plan_id?: string; billing?: string }
-    const planKey = body.plan_id?.toUpperCase()
     const billing: 'monthly' | 'annual' = body.billing === 'annual' ? 'annual' : 'monthly'
+
+    // Map legacy 3-plan IDs to real plan keys
+    const PLAN_ALIASES: Record<string, string> = {
+      CABINET: 'CABINET_ESSENTIEL',
+      PRO: 'CABINET_PREMIUM',
+    }
+    const rawKey = body.plan_id?.toUpperCase()
+    const planKey = rawKey ? (PLAN_ALIASES[rawKey] ?? rawKey) : undefined
 
     if (!planKey || !(planKey in PLANS)) {
       return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })

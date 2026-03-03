@@ -12,9 +12,12 @@ import { triggerErreurCritique } from '@/lib/n8n/trigger'
  */
 export async function POST(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
-  const authHeader = req.headers.get('authorization')
+  if (!cronSecret) {
+    return NextResponse.json({ error: 'CRON_SECRET non configuré' }, { status: 500 })
+  }
 
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  const authHeader = req.headers.get('authorization')
+  if (authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }
 
