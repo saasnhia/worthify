@@ -11,63 +11,45 @@ test.describe('Pricing — page publique', () => {
     await expect(page).toHaveTitle(/tarif|prix|plan|FinSoft|FinPilote/i, { timeout: 15_000 })
   })
 
-  test('les 3 plans sont affichés', async ({ page }) => {
+  test('les profils de plans sont affichés', async ({ page }) => {
     await page.goto('/pricing')
-    await expect(page.getByText(/starter/i).first()).toBeVisible({ timeout: 10_000 })
-    await expect(page.getByText(/cabinet/i).first()).toBeVisible()
-    await expect(page.getByText(/\bpro\b/i).first()).toBeVisible()
+    await expect(page.getByText(/cabinet/i).first()).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText(/indépendant|independant/i).first()).toBeVisible()
   })
 
-  test('prix corrects : 290€ / 890€ / 1900€', async ({ page }) => {
+  test('prix Cabinet Essentiel affiché (99€/mois)', async ({ page }) => {
     await page.goto('/pricing')
-    await expect(page.getByText(/290/)).toBeVisible({ timeout: 10_000 })
-    await expect(page.getByText(/890/)).toBeVisible()
-    await expect(page.getByText(/1.?900|1900/)).toBeVisible()
+    // Default profile is Cabinet — should show 99€
+    await expect(page.getByText(/99/)).toBeVisible({ timeout: 10_000 })
   })
 
-  test('toggle Cabinet / Entreprise fonctionne', async ({ page }) => {
+  test('toggle profil Indépendant fonctionne', async ({ page }) => {
     await page.goto('/pricing')
-    // Find Entreprise toggle button
-    const entrepriseBtn = page.getByRole('button', { name: /entreprise/i })
-    await expect(entrepriseBtn.first()).toBeVisible({ timeout: 10_000 })
-    await entrepriseBtn.first().click()
-    // After click, mode should be entreprise
-    await expect(page.getByText(/entreprise|tpe|pme/i).first()).toBeVisible()
-
-    // Switch back to Cabinet
-    const cabinetBtn = page.getByRole('button', { name: /cabinet/i })
-    await cabinetBtn.first().click()
-    await expect(page.getByText(/cabinet/i).first()).toBeVisible()
+    const indepBtn = page.getByRole('button', { name: /indépendant|independant/i })
+    await expect(indepBtn.first()).toBeVisible({ timeout: 10_000 })
+    await indepBtn.first().click()
+    // After click, should show Starter plan
+    await expect(page.getByText(/starter/i).first()).toBeVisible()
   })
 
-  test('bouton S\'abonner redirige vers /login (si non connecté)', async ({ page }) => {
+  test('lien essai gratuit pointe vers /signup', async ({ page }) => {
     await page.goto('/pricing')
-    const btn = page.getByRole('button', { name: /s'abonner|abonner|choisir|souscrire/i }).first()
-    await expect(btn).toBeVisible({ timeout: 10_000 })
-    await btn.click()
-    // Non-authenticated: should go to /login (or Stripe checkout)
-    await page.waitForURL(/\/(login|checkout\.stripe\.com)/, { timeout: 15_000 }).catch(() => {})
-    expect(page.url()).toMatch(/login|stripe/)
+    const link = page.getByRole('link', { name: /essai|démarrer|gratuit/i }).first()
+    await expect(link).toBeVisible({ timeout: 10_000 })
+    const href = await link.getAttribute('href')
+    expect(href).toMatch(/\/signup/)
   })
 })
 
 test.describe('Pricing — utilisateur connecté', () => {
   // Uses saved auth session from global setup
 
-  test('bouton S\'abonner (connecté) redirige vers Stripe Checkout', async ({ page }) => {
+  test('lien essai cabinet pointe vers /signup avec plan', async ({ page }) => {
     await page.goto('/pricing')
-    const btn = page.getByRole('button', { name: /s'abonner|abonner|choisir|souscrire/i }).first()
-    await expect(btn).toBeVisible({ timeout: 10_000 })
-
-    // Intercept navigation — Stripe may open in same tab
-    const [response] = await Promise.all([
-      page.waitForNavigation({ timeout: 20_000 }).catch(() => null),
-      btn.click(),
-    ])
-    // Either URL changed to stripe, or button triggered a fetch (session already active)
-    const url = page.url()
-    const isStripeOrPricing = url.includes('stripe.com') || url.includes('/pricing') || url.includes('/dashboard')
-    expect(isStripeOrPricing).toBe(true)
+    const link = page.getByRole('link', { name: /essai cabinet|cabinet.*30 jours/i }).first()
+    await expect(link).toBeVisible({ timeout: 10_000 })
+    const href = await link.getAttribute('href')
+    expect(href).toMatch(/\/signup\?plan=CABINET/)
   })
 
   test('message subscription_required affiché si query param présent', async ({ page }) => {

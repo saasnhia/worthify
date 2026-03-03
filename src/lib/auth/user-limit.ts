@@ -28,8 +28,8 @@ export function isAtLimit(plan: Plan, activeCount: number): boolean {
 /** Upgrade price hint for upsell banners */
 export function getUpgradePrice(plan: Plan): string | null {
   switch (plan) {
-    case 'starter': return '890€/an (Cabinet, 10 utilisateurs)'
-    case 'cabinet': return '1 900€/an (Pro, illimité)'
+    case 'starter': return '99€/mois (Cabinet Essentiel, 10 utilisateurs)'
+    case 'cabinet': return '179€/mois (Cabinet Premium, 10 utilisateurs)'
     default:        return null
   }
 }
