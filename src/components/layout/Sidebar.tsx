@@ -37,6 +37,7 @@ import {
   Users2,
   ShoppingCart,
   Package,
+  MessageSquare,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
@@ -44,7 +45,7 @@ import { createClient } from '@/lib/supabase/client'
 interface SidebarSection {
   label: string
   icon: React.ElementType
-  items: { name: string; href: string; icon: React.ElementType; badge?: 'overdue' | 'relances' }[]
+  items: { name: string; href: string; icon: React.ElementType; badge?: 'overdue' | 'relances'; planTag?: string }[]
 }
 
 const sections: SidebarSection[] = [
@@ -62,6 +63,15 @@ const sections: SidebarSection[] = [
       { name: 'Rapprochement', href: '/rapprochement', icon: ArrowRightLeft },
       { name: 'Immobilisations', href: '/dashboard/immobilisations', icon: Building2 },
       { name: 'Analytique', href: '/dashboard/analytique', icon: PieChart },
+      { name: 'Liasses fiscales', href: '/dashboard/liasses', icon: FileText, planTag: 'Premium' },
+    ],
+  },
+  {
+    label: 'IA & Automatisation',
+    icon: Sparkles,
+    items: [
+      { name: 'Agents IA', href: '/dashboard/agents', icon: Bot, planTag: 'Premium' },
+      { name: 'Assistant PCG/BOFIP', href: '/dashboard/assistant', icon: MessageSquare, planTag: 'Essentiel+' },
     ],
   },
   {
@@ -103,6 +113,7 @@ const sections: SidebarSection[] = [
     items: [
       { name: 'Mes dossiers', href: '/cabinet', icon: FolderOpen },
       { name: 'Portail Clients', href: '/portail', icon: Users2 },
+      { name: 'Portail simplifié', href: '/dashboard/cabinet/portail', icon: Users, planTag: 'Cabinet' },
       { name: 'E-invoicing 2026', href: '/comptabilite/factures/einvoicing', icon: FileCheck },
     ],
   },
@@ -327,14 +338,20 @@ export function Sidebar() {
                         `}
                       >
                         <item.icon className="w-3.5 h-3.5 flex-shrink-0" />
-                        {item.name}
+                        <span className="truncate">{item.name}</span>
                         {(() => {
                           const count = item.badge === 'relances' ? relancesCount : item.badge === 'overdue' ? overdueCount : 0
-                          return count > 0 ? (
+                          if (count > 0) return (
                             <span className="ml-auto flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-coral-500 text-white text-[10px] font-bold leading-none">
                               {count > 99 ? '99+' : count}
                             </span>
-                          ) : null
+                          )
+                          if (item.planTag) return (
+                            <span className="ml-auto text-[9px] font-semibold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 whitespace-nowrap">
+                              {item.planTag}
+                            </span>
+                          )
+                          return null
                         })()}
                       </Link>
                     )
