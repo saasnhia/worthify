@@ -1,5 +1,5 @@
 /**
- * WelcomeEmail — Générateur d'email de bienvenue FinSoft
+ * WelcomeEmail — Générateur d'email de bienvenue Worthify
  * Retourne { subject, html, text } — pas de dépendance @react-email
  */
 
@@ -16,9 +16,9 @@ interface WelcomeEmailResult {
 
 export function generateWelcomeEmail(params: WelcomeEmailParams): WelcomeEmailResult {
   const name = params.prenom || params.email.split('@')[0]
-  const dashboardUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://finpilote.vercel.app'
+  const dashboardUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://worthify.vercel.app'
 
-  const subject = `Bienvenue sur FinSoft 🎉 — votre essai de 30 jours commence`
+  const subject = `Bienvenue sur Worthify 🎉 — votre essai de 30 jours commence`
 
   const html = `
 <!DOCTYPE html>
@@ -26,7 +26,7 @@ export function generateWelcomeEmail(params: WelcomeEmailParams): WelcomeEmailRe
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bienvenue sur FinSoft</title>
+  <title>Bienvenue sur Worthify</title>
 </head>
 <body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
   <div style="max-width:560px;margin:40px auto;padding:0 16px">
@@ -37,7 +37,7 @@ export function generateWelcomeEmail(params: WelcomeEmailParams): WelcomeEmailRe
         <div style="width:36px;height:36px;background:#22D3A5;border-radius:10px;display:inline-flex;align-items:center;justify-content:center">
           <span style="color:#0F172A;font-size:18px;font-weight:900">F</span>
         </div>
-        <span style="color:#ffffff;font-size:22px;font-weight:700;letter-spacing:-0.5px">Fin<span style="color:#22D3A5">Soft</span></span>
+        <span style="color:#ffffff;font-size:22px;font-weight:700;letter-spacing:-0.5px">Worthi<span style="color:#22D3A5">fy</span></span>
       </div>
     </div>
 
@@ -49,7 +49,7 @@ export function generateWelcomeEmail(params: WelcomeEmailParams): WelcomeEmailRe
         Bienvenue, ${name} ! 👋
       </h1>
       <p style="color:#475569;font-size:15px;line-height:1.6;margin:0 0 24px">
-        Votre compte FinSoft est prêt. Vous disposez de <strong>30 jours d'essai gratuit</strong>
+        Votre compte Worthify est prêt. Vous disposez de <strong>30 jours d'essai gratuit</strong>
         pour découvrir toutes les fonctionnalités.
       </p>
 
@@ -122,14 +122,14 @@ export function generateWelcomeEmail(params: WelcomeEmailParams): WelcomeEmailRe
         Une question ? Répondez directement à cet email.<br />
         Notre équipe vous répond sous 24h (jours ouvrés).<br />
         <br />
-        <span style="font-size:11px">FinSoft — Comptabilité intelligente hébergée en France 🇫🇷</span>
+        <span style="font-size:11px">Worthify — Comptabilité intelligente hébergée en France 🇫🇷</span>
       </p>
     </div>
 
     <!-- Footer -->
     <p style="color:#cbd5e1;font-size:11px;text-align:center;margin:16px 0 40px">
-      Vous recevez cet email car vous venez de créer un compte FinSoft avec ${params.email}.<br />
-      © ${new Date().getFullYear()} FinSoft — IAE Dijon, Dijon, France
+      Vous recevez cet email car vous venez de créer un compte Worthify avec ${params.email}.<br />
+      © ${new Date().getFullYear()} Worthify — IAE Dijon, Dijon, France
     </p>
   </div>
 </body>
@@ -137,7 +137,7 @@ export function generateWelcomeEmail(params: WelcomeEmailParams): WelcomeEmailRe
   `.trim()
 
   const text = `
-Bienvenue sur FinSoft, ${name} !
+Bienvenue sur Worthify, ${name} !
 
 Votre compte est prêt. Vous disposez de 30 jours d'essai gratuit.
 
@@ -150,7 +150,7 @@ Accédez à votre tableau de bord : ${dashboardUrl}/dashboard
 
 Des questions ? Répondez à cet email — nous répondons sous 24h.
 
-© ${new Date().getFullYear()} FinSoft — Hébergé en France 🇫🇷
+© ${new Date().getFullYear()} Worthify — Hébergé en France 🇫🇷
   `.trim()
 
   return { subject, html, text }

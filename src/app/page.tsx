@@ -16,12 +16,12 @@ import { ComparatifSection } from '@/components/ComparatifSection'
 // ─────────────────────────────────────────────────────────────
 
 const FAQ_ITEMS: { q: string; r: string; cta?: { text: string; href: string } }[] = [
-  { q: 'FinSoft est-il conforme RGPD ?', r: "Oui. Notre infrastructure utilise des serveurs europeens certifies. Aucune donnee n'est transmise a des tiers sans votre consentement. FinSoft est conforme au RGPD et utilise des modeles IA heberges en Europe." },
-  { q: 'Vous utilisez Sage ou Cegid ?', r: "FinSoft s'integre avec Sage et Cegid via notre connecteur. Ce qui est repris : FEC, plan comptable personnalise, balances N-1. Immobilisations : import CSV, migration accompagnee sur demande. Notre equipe vous guide etape par etape.", cta: { text: 'Parler de ma migration \u2192', href: 'mailto:contact@finsoft.app?subject=Migration Sage' } },
+  { q: 'Worthify est-il conforme RGPD ?', r: "Oui. Notre infrastructure utilise des serveurs europeens certifies. Aucune donnee n'est transmise a des tiers sans votre consentement. Worthify est conforme au RGPD et utilise des modeles IA heberges en Europe." },
+  { q: 'Vous utilisez Sage ou Cegid ?', r: "Worthify s'integre avec Sage et Cegid via notre connecteur. Ce qui est repris : FEC, plan comptable personnalise, balances N-1. Immobilisations : import CSV, migration accompagnee sur demande. Notre equipe vous guide etape par etape.", cta: { text: 'Parler de ma migration \u2192', href: 'mailto:contact@worthify.app?subject=Migration Sage' } },
   { q: "Comment fonctionne l'essai gratuit ?", r: "Vous creez votre compte sans carte bancaire. Acces complet pendant 30 jours. A l'issue de la periode d'essai, l'acces est suspendu sauf souscription a un abonnement payant. Vous pouvez resilier a tout moment en 1 clic depuis vos parametres." },
-  { q: "Qu'est-ce que l'e-invoicing 2026 ?", r: "A partir de 2026, la facturation electronique sera obligatoire entre entreprises francaises. FinSoft vous prepare des maintenant avec le format Factur-X et le statut d'Operateur de Dematerialisation." },
+  { q: "Qu'est-ce que l'e-invoicing 2026 ?", r: "A partir de 2026, la facturation electronique sera obligatoire entre entreprises francaises. Worthify vous prepare des maintenant avec le format Factur-X et le statut d'Operateur de Dematerialisation." },
   { q: "Puis-je annuler mon abonnement a tout moment ?", r: "Absolument. Pas d'engagement, pas de frais de resiliation. Resiliez en 1 clic depuis vos parametres. Vous pouvez exporter toutes vos donnees a tout moment au format standard (FEC, CSV, PDF)." },
-  { q: "Quelles fonctionnalites arrivent prochainement ?", r: "Lettrage avance, gestion multi-exercice et teledeclaration EDI-TDFC sont prevus pour T3 2026. Vous voulez influencer nos priorites ? Parlez-nous directement.", cta: { text: 'Partager mon retour \u2192', href: 'mailto:contact@finsoft.app?subject=Roadmap FinSoft' } },
+  { q: "Quelles fonctionnalites arrivent prochainement ?", r: "Lettrage avance, gestion multi-exercice et teledeclaration EDI-TDFC sont prevus pour T3 2026. Vous voulez influencer nos priorites ? Parlez-nous directement.", cta: { text: 'Partager mon retour \u2192', href: 'mailto:contact@worthify.app?subject=Roadmap Worthify' } },
 ]
 
 export default function HomePage() {
@@ -52,9 +52,9 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">FS</span>
+              <span className="text-white font-bold text-sm">W</span>
             </div>
-            <span className="font-bold text-xl text-slate-900">FinSoft</span>
+            <span className="font-bold text-xl text-slate-900">Worthify</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
@@ -257,11 +257,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── POURQUOI FINSOFT — 3 cards honnetes ── */}
+      {/* ── POURQUOI WORTHIFY — 3 cards honnetes ── */}
       <section className="py-24 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Pourquoi FinSoft ?</h2>
+            <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Pourquoi Worthify ?</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
@@ -272,7 +272,7 @@ export default function HomePage() {
               <p className="text-sm text-slate-500 leading-relaxed">
                 Les solutions existantes facturent a l&apos;utilisateur ou au dossier.
                 Plus votre cabinet grandit, plus vous payez.
-                FinSoft Cabinet : dossiers illimites a partir de 99&euro;/mois.
+                Worthify Cabinet : dossiers illimites a partir de 99&euro;/mois.
               </p>
             </div>
             <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
@@ -317,7 +317,7 @@ export default function HomePage() {
           </h2>
           <p className="text-slate-400 max-w-xl mx-auto mb-8">
             Multi-dossiers, portail client, e-invoicing, intégrations Cegid &amp; Sage.
-            FinSoft est conçu pour les cabinets qui veulent gagner du temps sur chaque dossier.
+            Worthify est conçu pour les cabinets qui veulent gagner du temps sur chaque dossier.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6 mb-10">
             {['Multi-dossiers illimités', 'Portail client sécurisé', 'E-invoicing 2026 natif', 'Intégration Cegid / Sage'].map(f => (
@@ -327,7 +327,7 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-          <a href="mailto:contact@finsoft.app"
+          <a href="mailto:contact@worthify.app"
             className="inline-flex items-center gap-2 px-6 py-3.5 bg-emerald-500 text-white font-semibold rounded-xl hover:bg-emerald-600 transition-colors">
             Nous contacter
             <ArrowRight className="w-4 h-4" />
@@ -369,7 +369,7 @@ export default function HomePage() {
       <section className="py-20 px-4 bg-slate-900">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-extrabold text-white mb-4">
-            Essayez FinSoft gratuitement
+            Essayez Worthify gratuitement
           </h2>
           <p className="text-slate-400 max-w-xl mx-auto mb-8">
             30 jours gratuits &middot; Sans carte bancaire &middot; Resiliable a tout moment
@@ -448,9 +448,9 @@ export default function HomePage() {
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">FS</span>
+                  <span className="text-white font-bold text-sm">W</span>
                 </div>
-                <span className="font-bold text-xl text-white">FinSoft</span>
+                <span className="font-bold text-xl text-white">Worthify</span>
               </div>
               <p className="text-sm max-w-xs leading-relaxed">
                 La solution comptable intelligente pour les cabinets d&apos;expertise comptable et PME françaises.
@@ -480,7 +480,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t border-slate-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-600">
-            <p>© 2026 FinSoft · Conçu à l&apos;IAE Dijon · contact@finsoft.app</p>
+            <p>© 2026 Worthify · Conçu à l&apos;IAE Dijon · contact@worthify.app</p>
           </div>
         </div>
       </footer>

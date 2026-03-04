@@ -1,9 +1,9 @@
-# FinSoft — Contexte projet
+# Worthify — Contexte projet
 
 ## Stack technique
 - Next.js 16.1.6, TypeScript strict, Tailwind CSS
 - Supabase (auth + base de données)
-- Vercel (déploiement prod) → finpilote.vercel.app
+- Vercel (déploiement prod) → worthify.vercel.app
 - Docker pour usage local
 
 ## Palette de couleurs

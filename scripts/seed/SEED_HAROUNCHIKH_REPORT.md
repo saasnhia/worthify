@@ -141,6 +141,6 @@
 
 ## Connexion de démo
 
-- **URL** : https://finpilote.vercel.app
+- **URL** : https://worthify.vercel.app
 - **Email** : harounchikh71@gmail.com
 - **Mot de passe** : `Demo2026!`

@@ -3,16 +3,16 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
-  title: 'FinSoft — Comptabilité automatisée. En local.',
+  title: 'Worthify — Comptabilité automatisée. En local.',
   description: 'SaaS comptable local RGPD. OCR factures, TVA, rapprochement bancaire. Dès 299€.',
   keywords: ['comptabilité', 'OCR factures', 'SIREN', 'TVA intracommunautaire', 'VIES', 'rapprochement bancaire', 'PME', 'cabinet comptable', 'RGPD', 'Dijon'],
-  authors: [{ name: 'FinSoft' }],
+  authors: [{ name: 'Worthify' }],
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
   openGraph: {
-    title: 'FinSoft — Comptabilité automatisée. En local.',
+    title: 'Worthify — Comptabilité automatisée. En local.',
     description: 'SaaS comptable local RGPD. OCR factures, TVA, rapprochement bancaire. Dès 299€.',
     type: 'website',
     locale: 'fr_FR',

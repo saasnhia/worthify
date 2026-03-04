@@ -40,9 +40,9 @@ export default async function PortailClientPublicPage({ params }: Props) {
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-xs font-bold">F</span>
+              <span className="text-white text-xs font-bold">W</span>
             </div>
-            <span className="font-semibold text-gray-900 text-sm">FinSoft</span>
+            <span className="font-semibold text-gray-900 text-sm">Worthify</span>
           </div>
           <div className="flex items-center gap-2 text-xs text-gray-500">
             <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
@@ -111,7 +111,7 @@ export default async function PortailClientPublicPage({ params }: Props) {
           <p className="text-xs text-gray-400">
             Cet espace est sécurisé et accessible uniquement via ce lien personnel.
           </p>
-          <p className="text-xs text-gray-300 mt-1">Propulsé par FinSoft — Hébergé en France 🇫🇷</p>
+          <p className="text-xs text-gray-300 mt-1">Propulsé par Worthify — Hébergé en France 🇫🇷</p>
         </div>
       </main>
     </div>

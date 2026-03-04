@@ -1,4 +1,4 @@
-# FINSOFT - CONTEXTE PROJET
+# WORTHIFY - CONTEXTE PROJET
 
 ## 🎯 Description
 SaaS de comptabilité automatisée pour freelances et TPE en France. 
@@ -16,7 +16,7 @@ Import bancaire automatique, catégorisation IA, déclarations fiscales, audit c
 - **HTTP**: fetch natif Next.js
 
 ## 📁 Architecture
-finsoft/
+worthify/
 ├── src/
 │ ├── app/ # Next.js App Router
 │ │ ├── api/ # API Routes
@@ -298,7 +298,7 @@ Browser : F12 → Console
 VS Code : Breakpoints supportés
 
 📞 Informations Projet
-Repo Git : https://github.com/saasnhia/finsoft
+Repo Git : https://github.com/saasnhia/worthify
 
 Branche : main
 

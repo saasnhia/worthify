@@ -1,7 +1,7 @@
-# FinSoft — Rapport de tests E2E Playwright
+# Worthify — Rapport de tests E2E Playwright
 
 **Date :** 2026-02-25
-**Version testée :** `https://finpilote.vercel.app`
+**Version testée :** `https://worthify.vercel.app`
 **Outils :** Playwright, Chromium, Firefox
 
 ---
@@ -157,7 +157,7 @@ tests/
 └── comptabilite.spec.ts
 ```
 
-**Compte test :** `test@finsoft.dev` / `TestFinSoft2026!`
+**Compte test :** `test@worthify.dev` / `TestWorthify2026!`
 - Provisionné via Supabase Admin API (email confirmé automatiquement)
 - `user_profiles`: `subscription_status='active'`, `onboarding_completed=true`, `profile_type='cabinet'`
 - `subscriptions`: plan `pro`, statut `active`, expire +1 an

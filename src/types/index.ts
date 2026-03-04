@@ -1,4 +1,4 @@
-// Types pour FinSoft
+// Types pour Worthify
 
 export interface User {
   id: string

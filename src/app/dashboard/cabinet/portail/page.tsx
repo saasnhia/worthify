@@ -57,7 +57,7 @@ export default function PortailCabinetPage() {
   const [clientNom, setClientNom] = useState('')
   const [saving, setSaving] = useState(false)
 
-  const BASE_URL = typeof window !== 'undefined' ? window.location.origin : 'https://finpilote.vercel.app'
+  const BASE_URL = typeof window !== 'undefined' ? window.location.origin : 'https://worthify.vercel.app'
 
   const fetchPortails = useCallback(async () => {
     if (!user?.id) return

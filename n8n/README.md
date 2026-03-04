@@ -1,7 +1,7 @@
 # n8n — Outil OPS Fondateur UNIQUEMENT
 
 > **IMPORTANT : n8n n'est PAS une fonctionnalité cabinet.**
-> Les automatisations métier (rapprochement, alertes, emails) sont **natives dans FinSoft**.
+> Les automatisations métier (rapprochement, alertes, emails) sont **natives dans Worthify**.
 > n8n sert uniquement au fondateur pour monitorer l'infrastructure en production.
 
 ---
@@ -11,18 +11,18 @@
 ```
 AVANT (❌ mauvaise approche)           APRÈS (✅ approche actuelle)
 ────────────────────────────           ─────────────────────────────
-FinSoft → n8n → Cegid sync            FinSoft → API Cegid directement
-FinSoft → n8n → email alertes         FinSoft → Resend (natif)
-FinSoft → n8n → rapprochement         FinSoft → matching natif (auto-match.ts)
-n8n → FinSoft webhooks (RLS bypass!)  ❌ SUPPRIMÉ — faille de sécurité
+Worthify → n8n → Cegid sync            Worthify → API Cegid directement
+Worthify → n8n → email alertes         Worthify → Resend (natif)
+Worthify → n8n → rapprochement         Worthify → matching natif (auto-match.ts)
+n8n → Worthify webhooks (RLS bypass!)  ❌ SUPPRIMÉ — faille de sécurité
 ```
 
-**Règle absolue :** Les webhooks entrants (n8n → FinSoft) ne doivent JAMAIS exister.
+**Règle absolue :** Les webhooks entrants (n8n → Worthify) ne doivent JAMAIS exister.
 Ils acceptaient `user_id` dans le body, contournant Supabase RLS.
 
 ---
 
-## Automatisations natives (FinSoft)
+## Automatisations natives (Worthify)
 
 | Feature | Implémentation | Fichier |
 |---|---|---|
@@ -33,14 +33,14 @@ Ils acceptaient `user_id` dans le body, contournant Supabase RLS.
 
 ---
 
-## Triggers OPS Fondateur (FinSoft → n8n)
+## Triggers OPS Fondateur (Worthify → n8n)
 
 | Événement | Webhook n8n | Fichier |
 |---|---|---|
-| CRON rappels terminé | `POST /webhook/finsoft/cron-rappels-termine` | `src/lib/n8n/trigger.ts` |
-| Erreur critique prod | `POST /webhook/finsoft/erreur-critique` | `src/lib/n8n/trigger.ts` |
-| Nouveau lead site | `POST /webhook/finsoft/nouveau-lead` | `src/lib/n8n/trigger.ts` |
-| Nouveau cabinet (info) | `POST /webhook/finsoft/nouveau-cabinet` | `src/lib/n8n/trigger.ts` |
+| CRON rappels terminé | `POST /webhook/worthify/cron-rappels-termine` | `src/lib/n8n/trigger.ts` |
+| Erreur critique prod | `POST /webhook/worthify/erreur-critique` | `src/lib/n8n/trigger.ts` |
+| Nouveau lead site | `POST /webhook/worthify/nouveau-lead` | `src/lib/n8n/trigger.ts` |
+| Nouveau cabinet (info) | `POST /webhook/worthify/nouveau-cabinet` | `src/lib/n8n/trigger.ts` |
 
 Ces triggers sont **fire-and-forget** (échec silencieux, timeout 5s).
 Ils ne traitent aucune donnée métier — uniquement des notifications Slack pour le fondateur.
@@ -51,9 +51,9 @@ Ils ne traitent aucune donnée métier — uniquement des notifications Slack po
 
 | Fichier | Canal Slack | Déclencheur |
 |---|---|---|
-| `ops-01-cron-monitoring.json` | `#ops-finsoft` | CRON rappels quotidien |
-| `ops-02-erreur-critique.json` | `#ops-finsoft` | Erreur critique prod |
-| `ops-03-nouveau-lead.json` | `#leads-finsoft` | Formulaire contact site |
+| `ops-01-cron-monitoring.json` | `#ops-worthify` | CRON rappels quotidien |
+| `ops-02-erreur-critique.json` | `#ops-worthify` | Erreur critique prod |
+| `ops-03-nouveau-lead.json` | `#leads-worthify` | Formulaire contact site |
 
 ---
 

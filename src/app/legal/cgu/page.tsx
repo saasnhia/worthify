@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: "Conditions Generales d'Utilisation | FinSoft",
+  title: "Conditions Generales d'Utilisation | Worthify",
 }
 
 export default function CGUPage() {
@@ -11,9 +11,9 @@ export default function CGUPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">FS</span>
+              <span className="text-white font-bold text-sm">W</span>
             </div>
-            <span className="font-bold text-xl text-slate-900">FinSoft</span>
+            <span className="font-bold text-xl text-slate-900">Worthify</span>
           </Link>
         </div>
       </nav>
@@ -25,7 +25,7 @@ export default function CGUPage() {
           <section>
             <h2 className="text-lg font-bold text-slate-900 mb-3">1. Acceptation</h2>
             <p>
-              L&apos;utilisation de FinSoft implique l&apos;acceptation des presentes CGU.
+              L&apos;utilisation de Worthify implique l&apos;acceptation des presentes CGU.
             </p>
           </section>
 
@@ -40,7 +40,7 @@ export default function CGUPage() {
           <section>
             <h2 className="text-lg font-bold text-slate-900 mb-3">3. Usage autorise</h2>
             <p>
-              FinSoft est destine a un usage professionnel de comptabilite.
+              Worthify est destine a un usage professionnel de comptabilite.
               Toute utilisation frauduleuse, illegale ou contraire aux bonnes moeurs est interdite.
             </p>
           </section>
@@ -48,7 +48,7 @@ export default function CGUPage() {
           <section>
             <h2 className="text-lg font-bold text-slate-900 mb-3">4. Disponibilite</h2>
             <p>
-              FinSoft s&apos;efforce d&apos;assurer une disponibilite maximale du service.
+              Worthify s&apos;efforce d&apos;assurer une disponibilite maximale du service.
               Des interruptions pour maintenance peuvent survenir, avec information
               prealable des utilisateurs dans la mesure du possible.
             </p>
@@ -57,7 +57,7 @@ export default function CGUPage() {
           <section>
             <h2 className="text-lg font-bold text-slate-900 mb-3">5. Propriete intellectuelle</h2>
             <p>
-              Le logiciel FinSoft et ses composants sont la propriete de ses fondateurs.
+              Le logiciel Worthify et ses composants sont la propriete de ses fondateurs.
               L&apos;utilisateur dispose d&apos;un droit d&apos;usage non exclusif dans le cadre de son abonnement.
             </p>
           </section>
@@ -65,7 +65,7 @@ export default function CGUPage() {
           <section>
             <h2 className="text-lg font-bold text-slate-900 mb-3">6. Responsabilite</h2>
             <p>
-              FinSoft est un outil d&apos;aide a la comptabilite. Il ne remplace pas
+              Worthify est un outil d&apos;aide a la comptabilite. Il ne remplace pas
               le conseil d&apos;un expert-comptable diplome. L&apos;utilisateur reste responsable
               de ses declarations fiscales et comptables.
             </p>

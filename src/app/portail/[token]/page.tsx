@@ -96,10 +96,10 @@ export default function PortailClientPublicPage() {
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">F</span>
+            <span className="text-white font-bold text-sm">W</span>
           </div>
           <div>
-            <p className="font-semibold text-gray-900 text-sm">FinSoft — Espace client</p>
+            <p className="font-semibold text-gray-900 text-sm">Worthify — Espace client</p>
             <p className="text-xs text-gray-500">{portail?.client_nom}</p>
           </div>
         </div>
@@ -201,7 +201,7 @@ export default function PortailClientPublicPage() {
       </div>
 
       <footer className="max-w-2xl mx-auto px-4 py-6 text-center">
-        <p className="text-xs text-gray-400">Espace sécurisé FinSoft · Données chiffrées · Ne partagez pas ce lien</p>
+        <p className="text-xs text-gray-400">Espace sécurisé Worthify · Données chiffrées · Ne partagez pas ce lien</p>
       </footer>
     </div>
   )

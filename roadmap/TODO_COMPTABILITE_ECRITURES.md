@@ -2,7 +2,7 @@
 
 ## Contexte
 Un expert-comptable travaille au niveau des écritures comptables (journal, grand livre,
-balance). FinSoft n'a pas de module de saisie d'écritures comptables PCG.
+balance). Worthify n'a pas de module de saisie d'écritures comptables PCG.
 
 ## Problème actuel
 - `/transactions` = transactions bancaires (revenus/dépenses), pas des écritures comptables

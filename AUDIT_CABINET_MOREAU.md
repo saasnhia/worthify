@@ -1,9 +1,9 @@
-# Audit FinSoft — Cabinet Moreau & Associés
+# Audit Worthify — Cabinet Moreau & Associés
 **Auditeur fictif** : Jean-Pierre Moreau, Expert-Comptable, Paris
 **Cabinet** : Moreau & Associés — 3 collaborateurs, 45 dossiers clients
 **Référence** : Habitué Cegid Expert, cherche alternative moderne
 **Date de l'audit** : 26 février 2026
-**URL testée** : https://finpilote.vercel.app
+**URL testée** : https://worthify.vercel.app
 **Compte** : harounchikh71@gmail.com (plan Cabinet)
 
 ---
@@ -209,7 +209,7 @@
 
 ---
 
-## Ce qui m'empêcherait d'adopter FinSoft aujourd'hui
+## Ce qui m'empêcherait d'adopter Worthify aujourd'hui
 
 1. **Aucune saisie de facture client** — fonctionnalité de base manquante
 2. **Pas d'export CERFA ni de télétransmission** — je ne peux pas remplacer mon workflow TVA actuel
@@ -219,12 +219,12 @@
 
 ---
 
-## Verdict final : Achèterais-je FinSoft aujourd'hui ?
+## Verdict final : Achèterais-je Worthify aujourd'hui ?
 
 ### ❌ Non — mais dans 6 mois probablement oui.
 
 **Pourquoi pas aujourd'hui :**
-FinSoft est un excellent outil de suivi des paiements et d'automatisation bancaire, mais ce n'est pas encore un logiciel de gestion comptable cabinet. Il lui manque les briques fondamentales : saisie de factures clients, journal comptable, export CERFA. Je ne peux pas migrer un cabinet de 45 dossiers sur un outil sans ces fonctionnalités.
+Worthify est un excellent outil de suivi des paiements et d'automatisation bancaire, mais ce n'est pas encore un logiciel de gestion comptable cabinet. Il lui manque les briques fondamentales : saisie de factures clients, journal comptable, export CERFA. Je ne peux pas migrer un cabinet de 45 dossiers sur un outil sans ces fonctionnalités.
 
 **Pourquoi dans 6 mois :**
 L'OCR + enrichissement SIREN est vraiment différenciant. Le matching bancaire intelligent, si les données s'affichent correctement, peut faire gagner 2-3h par semaine. Si l'équipe corrige les bugs identifiés, ajoute la saisie facture et le journal, je signe.

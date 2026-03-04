@@ -111,9 +111,9 @@ export default function SignupPage() {
         </div>
         <div className="relative w-full max-w-md">
           <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-            <Image src="/logo.png" alt="FinSoft" width={40} height={40} />
+            <Image src="/logo.png" alt="Worthify" width={40} height={40} />
             <span className="font-display font-bold text-2xl text-white">
-              Fin<span className="text-emerald-400">Soft</span>
+              Worthify
             </span>
           </Link>
           <Card>
@@ -153,9 +153,9 @@ export default function SignupPage() {
       <div className="relative w-full max-w-md">
         {/* Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <Image src="/logo.png" alt="FinSoft" width={40} height={40} />
+          <Image src="/logo.png" alt="Worthify" width={40} height={40} />
           <span className="font-display font-bold text-2xl text-white">
-            Fin<span className="text-emerald-400">Soft</span>
+            Worthify
           </span>
         </Link>
 

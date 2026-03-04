@@ -395,7 +395,7 @@ export function Sidebar() {
         <UserCountBadge />
         <PlanBadge />
         <p className="text-[10px] text-neutral-600 text-center">
-          FinSoft v2.1
+          Worthify v2.1
         </p>
       </div>
     </aside>

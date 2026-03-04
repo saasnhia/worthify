@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'Conditions Generales de Vente | FinSoft',
+  title: 'Conditions Generales de Vente | Worthify',
 }
 
 export default function CGVPage() {
@@ -11,9 +11,9 @@ export default function CGVPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">FS</span>
+              <span className="text-white font-bold text-sm">W</span>
             </div>
-            <span className="font-bold text-xl text-slate-900">FinSoft</span>
+            <span className="font-bold text-xl text-slate-900">Worthify</span>
           </Link>
         </div>
       </nav>
@@ -25,23 +25,23 @@ export default function CGVPage() {
           <section>
             <h2 className="text-lg font-bold text-slate-900 mb-3">1. Objet</h2>
             <p>
-              Les presentes CGV regissent l&apos;utilisation du service FinSoft,
-              logiciel SaaS de comptabilite accessible sur finsoft.app.
+              Les presentes CGV regissent l&apos;utilisation du service Worthify,
+              logiciel SaaS de comptabilite accessible sur worthify.app.
             </p>
           </section>
 
           <section>
             <h2 className="text-lg font-bold text-slate-900 mb-3">2. Editeur du service</h2>
             <p>
-              FinSoft — Projet en cours d&apos;immatriculation, fonde en 2026.
-              Contact : contact@finsoft.app
+              Worthify — Projet en cours d&apos;immatriculation, fonde en 2026.
+              Contact : contact@worthify.app
             </p>
           </section>
 
           <section>
             <h2 className="text-lg font-bold text-slate-900 mb-3">3. Description du service</h2>
             <p>
-              FinSoft est un logiciel de comptabilite en ligne (SaaS) destine
+              Worthify est un logiciel de comptabilite en ligne (SaaS) destine
               aux cabinets d&apos;expertise comptable, independants et TPE/PME francaises.
             </p>
           </section>

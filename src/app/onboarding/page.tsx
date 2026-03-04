@@ -157,10 +157,10 @@ export default function OnboardingPage() {
       <div className="mb-8 text-center">
         <div className="inline-flex items-center gap-2 mb-2">
           <div className="w-9 h-9 bg-[#22D3A5] rounded-xl flex items-center justify-center">
-            <span className="text-[#0F172A] font-black text-lg">F</span>
+            <span className="text-[#0F172A] font-black text-lg">W</span>
           </div>
           <span className="text-2xl font-bold text-white tracking-tight">
-            Fin<span className="text-[#22D3A5]">Soft</span>
+            Worthify
           </span>
         </div>
         <p className="text-sm text-slate-400">Configurons votre espace en quelques étapes</p>
@@ -450,7 +450,7 @@ export default function OnboardingPage() {
               className="flex items-center gap-2 px-6 py-2.5 bg-[#22D3A5] text-[#0F172A] rounded-xl font-bold text-sm hover:bg-[#22D3A5]/90 transition-colors disabled:opacity-70"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              Commencer avec FinSoft →
+              Commencer avec Worthify →
             </button>
           )}
         </div>
