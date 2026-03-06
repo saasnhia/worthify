@@ -6,23 +6,28 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 const SLIDES = [
   {
-    src: '/screenshots/dashboard.png',
-    title: 'Tableau de bord complet',
-    description: 'KPIs en temps réel, balance âgée clients/fournisseurs, activité récente et recommandations IA',
+    src: '/screenshots/dashboard1.png',
+    title: 'Tableau de bord — KPIs en temps réel',
+    description: 'Dossiers actifs, factures en retard, alertes, solde bancaire et prévisionnel — tout en un coup d\'œil',
+  },
+  {
+    src: '/screenshots/factureocr.png',
+    title: 'OCR intelligent — factures extraites en 30s',
+    description: 'Fournisseur, montants HT/TVA, date et référence détectés automatiquement avec 95%+ de confiance',
+  },
+  {
+    src: '/screenshots/transactionn.png',
+    title: 'Transactions bancaires centralisées',
+    description: 'Import CSV, catégorisation automatique PCG et rapprochement IA en un clic',
   },
   {
     src: '/screenshots/relances.png',
-    title: 'Relances automatiques',
+    title: 'Relances automatiques impayés',
     description: 'Suivi des impayés par niveau J+7, J+30, mise en demeure — sans aucune saisie manuelle',
   },
   {
-    src: '/screenshots/assistant.png',
-    title: 'Assistant PCG & BOFIP',
-    description: 'Réponses réglementaires instantanées, entraîné sur le droit fiscal français, données anonymisées',
-  },
-  {
     src: '/screenshots/einvoicing.png',
-    title: 'E-invoicing 2026 conforme',
+    title: 'E-invoicing 2026 natif',
     description: 'Norme Factur-X, profil EN16931, validation automatique des 16 champs obligatoires DGFiP',
   },
 ]

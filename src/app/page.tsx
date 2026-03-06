@@ -5,8 +5,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   CheckCircle2, ChevronDown, ArrowRight, ScanLine, ArrowRightLeft,
-  BookOpen, Users2, Bell, Menu, Shield, Zap, Globe,
-  Clock, Scale, Sparkles, Euro, TrendingUp, Wrench,
+  Users2, Bell, Menu, Shield, Zap, Globe,
+  Scale, Euro, TrendingUp, Wrench,
 } from 'lucide-react'
 import { ScreenshotCarousel } from '@/components/ScreenshotCarousel'
 import { PricingPlans } from '@/components/PricingPlans'
@@ -17,12 +17,12 @@ import { ComparatifSection } from '@/components/ComparatifSection'
 // ─────────────────────────────────────────────────────────────
 
 const FAQ_ITEMS: { q: string; r: string; cta?: { text: string; href: string } }[] = [
-  { q: 'Worthifast est-il conforme RGPD ?', r: "Oui. Notre infrastructure utilise des serveurs europeens certifies. Aucune donnee n'est transmise a des tiers sans votre consentement. Worthifast est conforme au RGPD et utilise des modeles IA heberges en Europe." },
-  { q: 'Vous utilisez Sage ou Cegid ?', r: "Worthifast s'integre avec Sage et Cegid via notre connecteur. Ce qui est repris : FEC, plan comptable personnalise, balances N-1. Immobilisations : import CSV, migration accompagnee sur demande. Notre equipe vous guide etape par etape.", cta: { text: 'Parler de ma migration \u2192', href: 'mailto:contact@worthifast.app?subject=Migration Sage' } },
-  { q: "Comment fonctionne l'essai gratuit ?", r: "Vous creez votre compte sans carte bancaire. Acces complet pendant 30 jours. A l'issue de la periode d'essai, l'acces est suspendu sauf souscription a un abonnement payant. Vous pouvez resilier a tout moment en 1 clic depuis vos parametres." },
-  { q: "Qu'est-ce que l'e-invoicing 2026 ?", r: "A partir de 2026, la facturation electronique sera obligatoire entre entreprises francaises. Worthifast vous prepare des maintenant avec le format Factur-X et le statut d'Operateur de Dematerialisation." },
-  { q: "Puis-je annuler mon abonnement a tout moment ?", r: "Absolument. Pas d'engagement, pas de frais de resiliation. Resiliez en 1 clic depuis vos parametres. Vous pouvez exporter toutes vos donnees a tout moment au format standard (FEC, CSV, PDF)." },
-  { q: "Quelles fonctionnalites arrivent prochainement ?", r: "Lettrage avance, gestion multi-exercice et teledeclaration EDI-TDFC sont prevus pour T3 2026. Vous voulez influencer nos priorites ? Parlez-nous directement.", cta: { text: 'Partager mon retour \u2192', href: 'mailto:contact@worthifast.app?subject=Roadmap Worthifast' } },
+  { q: 'Worthifast est-il conforme RGPD ?', r: "Oui. Notre infrastructure utilise des serveurs européens certifiés. Aucune donnée n'est transmise à des tiers sans votre consentement. Worthifast est conforme au RGPD et utilise des modèles IA hébergés en Europe." },
+  { q: 'Vous utilisez Sage ou Cegid ?', r: "Worthifast s'intègre avec Sage et Cegid via notre connecteur. Ce qui est repris : FEC, plan comptable personnalisé, balances N-1. Immobilisations : import CSV, migration accompagnée sur demande. Notre équipe vous guide étape par étape.", cta: { text: 'Parler de ma migration \u2192', href: 'mailto:contact@worthifast.app?subject=Migration Sage' } },
+  { q: "Comment fonctionne l'essai gratuit ?", r: "Vous créez votre compte sans carte bancaire. Accès complet pendant 30 jours. À l'issue de la période d'essai, l'accès est suspendu sauf souscription à un abonnement payant. Vous pouvez résilier à tout moment en 1 clic depuis vos paramètres." },
+  { q: "Qu'est-ce que l'e-invoicing 2026 ?", r: "À partir de 2026, la facturation électronique sera obligatoire entre entreprises françaises. Worthifast vous prépare dès maintenant avec le format Factur-X et le statut d'Opérateur de Dématérialisation." },
+  { q: "Puis-je annuler mon abonnement à tout moment ?", r: "Absolument. Pas d'engagement, pas de frais de résiliation. Résiliez en 1 clic depuis vos paramètres. Vous pouvez exporter toutes vos données à tout moment au format standard (FEC, CSV, PDF)." },
+  { q: "Quelles fonctionnalités arrivent prochainement ?", r: "Lettrage avancé, gestion multi-exercice et télédéclaration EDI-TDFC sont prévus pour T3 2026. Vous voulez influencer nos priorités ? Parlez-nous directement.", cta: { text: 'Partager mon retour \u2192', href: 'mailto:contact@worthifast.app?subject=Roadmap Worthifast' } },
 ]
 
 export default function HomePage() {
@@ -56,10 +56,10 @@ export default function HomePage() {
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-            <a href="#features" className="hover:text-slate-900 transition-colors">Fonctionnalites</a>
+            <a href="#features" className="hover:text-slate-900 transition-colors">Fonctionnalités</a>
             <a href="#pricing" className="hover:text-slate-900 transition-colors">Tarifs</a>
             <a href="#faq" className="hover:text-slate-900 transition-colors">FAQ</a>
-            <Link href="/about" className="hover:text-slate-900 transition-colors">A propos</Link>
+            <Link href="/about" className="hover:text-slate-900 transition-colors">À propos</Link>
             <a href="#contact" className="hover:text-slate-900 transition-colors">Contact</a>
           </div>
 
@@ -81,10 +81,10 @@ export default function HomePage() {
         {mobileMenu && (
           <div className="md:hidden border-t border-gray-100 bg-white px-4 py-4 space-y-3">
             {[
-              { href: '#features', label: 'Fonctionnalites' },
+              { href: '#features', label: 'Fonctionnalités' },
               { href: '#pricing', label: 'Tarifs' },
               { href: '#faq', label: 'FAQ' },
-              { href: '/about', label: 'A propos' },
+              { href: '/about', label: 'À propos' },
               { href: '#contact', label: 'Contact' },
             ].map(item => (
               <a key={item.href} href={item.href} onClick={() => setMobileMenu(false)}
@@ -109,13 +109,13 @@ export default function HomePage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-6">
-            La comptabilité intelligente<br />
-            <span className="text-emerald-500">pour les cabinets français</span>
+            Vos factures fournisseurs<br />
+            <span className="text-emerald-500">traitées en 30 secondes</span>
           </h1>
 
           <p className="text-lg text-slate-500 max-w-2xl mx-auto mb-8 leading-relaxed">
-            Multi-dossiers illimites, portail client et e-invoicing 2026
-            — a partir de 99&euro;/mois.
+            OCR intelligent, rapprochement IA et conformité e-invoicing 2026
+            — le tout hébergé en France, conforme RGPD.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
@@ -162,25 +162,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── SOCIAL PROOF + CRÉDIBILITÉ ── */}
-      <section className="border-y border-gray-100 py-14 px-4 bg-white">
+      {/* ── CRÉDIBILITÉ ── */}
+      <section className="border-y border-gray-100 py-10 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
-          {/* Chiffres clés */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-10">
-            {[
-              { value: '120+', label: 'Cabinets en beta' },
-              { value: '45 000', label: 'Factures traitées' },
-              { value: '99,2%', label: 'Précision OCR' },
-              { value: '4,8/5', label: 'Satisfaction beta' },
-            ].map(stat => (
-              <div key={stat.label} className="text-center">
-                <p className="text-2xl sm:text-3xl font-extrabold text-emerald-600">{stat.value}</p>
-                <p className="text-sm text-slate-500 mt-1">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Badges de crédibilité */}
           <div className="flex flex-wrap items-center justify-center gap-3">
             {[
               '\uD83C\uDF93 IAE Dijon \u2014 \u00C9cole de Management',
@@ -196,120 +180,37 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FEATURES — 3 visual blocks ── */}
+      {/* ── FONCTIONNALITÉS ── */}
       <section id="features" className="py-24 px-4 bg-slate-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Tout ce dont vous avez besoin</h2>
-            <p className="text-slate-500 max-w-xl mx-auto">Une plateforme unifiée pour la comptabilité, la conformité et la collaboration client.</p>
+            <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Ce que Worthifast fait pour vous</h2>
+            <p className="text-slate-500 max-w-xl mx-auto">Comptabilité, conformité et collaboration — dans une seule plateforme conçue pour les cabinets français.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Block 1 — Gain de temps */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 mb-5">
-                <Clock className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Gain de temps</h3>
-              <p className="text-sm text-slate-500 mb-5">Automatisez la saisie et le rapprochement pour gagner des heures chaque semaine.</p>
-              <ul className="space-y-3">
-                {[
-                  { icon: ScanLine, text: 'OCR intelligent — scan, extraction et classement automatique' },
-                  { icon: ArrowRightLeft, text: 'Rapprochement bancaire IA qui apprend vos habitudes' },
-                  { icon: Sparkles, text: 'Catégorisation automatique des écritures (PCG)' },
-                ].map(item => (
-                  <li key={item.text} className="flex items-start gap-3 text-sm text-slate-700">
-                    <item.icon className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                    <span>{item.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Block 2 — Conformité française */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 mb-5">
-                <Scale className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Conformité FR</h3>
-              <p className="text-sm text-slate-500 mb-5">PCG, BOFIP, TVA CA3, FEC, e-invoicing 2026 — tout est intégré nativement.</p>
-              <ul className="space-y-3">
-                {[
-                  { icon: BookOpen, text: 'Assistant PCG & BOFIP avec références contextualisées' },
-                  { icon: Shield, text: 'TVA CA3 automatique + export FEC conforme' },
-                  { icon: Zap, text: 'E-invoicing 2026 natif (Factur-X, OD agréé)' },
-                ].map(item => (
-                  <li key={item.text} className="flex items-start gap-3 text-sm text-slate-700">
-                    <item.icon className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <span>{item.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Block 3 — Collaboration cabinet */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-violet-50 text-violet-600 mb-5">
-                <Users2 className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Cabinet & clients</h3>
-              <p className="text-sm text-slate-500 mb-5">Portail client, multi-dossiers et relances automatiques pour votre cabinet.</p>
-              <ul className="space-y-3">
-                {[
-                  { icon: Users2, text: 'Portail client sécurisé — zéro email, zéro pièce jointe' },
-                  { icon: Bell, text: 'Relances automatiques impayés (J+7, J+15, J+30)' },
-                  { icon: Globe, text: 'Multi-dossiers + intégrations Cegid & Sage' },
-                ].map(item => (
-                  <li key={item.text} className="flex items-start gap-3 text-sm text-slate-700">
-                    <item.icon className="w-4 h-4 text-violet-500 flex-shrink-0 mt-0.5" />
-                    <span>{item.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── POURQUOI WORTHIFAST — 3 cards honnetes ── */}
-      <section className="py-24 px-4 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Pourquoi Worthifast ?</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 mb-5">
-                <Euro className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-3">Prix qui ne punit pas la croissance</h3>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                Les solutions existantes facturent a l&apos;utilisateur ou au dossier.
-                Plus votre cabinet grandit, plus vous payez.
-                Worthifast Cabinet : dossiers illimites a partir de 99&euro;/mois.
-              </p>
-            </div>
-            <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 mb-5">
-                <TrendingUp className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-3">IA francaise integree</h3>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                Assistant PCG &amp; BOFIP entraine sur la reglementation francaise.
-                Repond aux questions comptables complexes, pas juste des generalites.
-                Donnees traitees en Europe, hebergement conforme RGPD.
-              </p>
-            </div>
-            <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-violet-50 text-violet-600 mb-5">
-                <Wrench className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-3">Construit avec des comptables</h3>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                Developpe avec le departement Comptabilite-Finance de l&apos;IAE Dijon.
-                Chaque fonctionnalite validee par des praticiens du metier.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {([
+              { icon: ScanLine, color: 'emerald' as const, title: 'OCR intelligent', desc: 'Scannez une facture, Worthifast extrait fournisseur, montants, TVA et classe automatiquement en PCG.' },
+              { icon: ArrowRightLeft, color: 'emerald' as const, title: 'Rapprochement IA', desc: 'L\'IA apprend vos habitudes de lettrage et rapproche factures et relevés bancaires automatiquement.' },
+              { icon: Scale, color: 'blue' as const, title: 'Conformité française native', desc: 'TVA CA3 automatique, export FEC certifié, assistant PCG & BOFIP avec références contextualisées.' },
+              { icon: Zap, color: 'blue' as const, title: 'E-invoicing 2026 prêt', desc: 'Factur-X natif, norme EN16931, validation des 16 champs obligatoires DGFiP. Prêt pour l\'obligation.' },
+              { icon: Users2, color: 'violet' as const, title: 'Portail client sécurisé', desc: 'Zéro email, zéro pièce jointe. Vos clients déposent leurs documents dans un espace dédié.' },
+              { icon: Bell, color: 'violet' as const, title: 'Relances automatiques', desc: 'Impayés détectés et relancés en J+7, J+15, J+30. Configurable par client et par seuil.' },
+              { icon: Euro, color: 'emerald' as const, title: 'Prix transparent', desc: 'Dossiers illimités dès le plan Cabinet. Pas de facturation à l\'utilisateur ni au dossier.' },
+              { icon: TrendingUp, color: 'blue' as const, title: 'IA française intégrée', desc: 'Assistant entraîné sur le PCG, BOFIP et CGI. Données traitées en Europe, conforme RGPD.' },
+              { icon: Wrench, color: 'violet' as const, title: 'Construit avec des comptables', desc: 'Développé avec le département Comptabilité-Finance de l\'IAE Dijon. Validé par des praticiens.' },
+            ]).map(item => {
+              const colorMap = { emerald: 'bg-emerald-50 text-emerald-600', blue: 'bg-blue-50 text-blue-600', violet: 'bg-violet-50 text-violet-600' }
+              return (
+                <div key={item.title} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                  <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl ${colorMap[item.color]} mb-4`}>
+                    <item.icon className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-base font-bold text-slate-900 mb-2">{item.title}</h3>
+                  <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -386,14 +287,14 @@ export default function HomePage() {
             Essayez Worthifast gratuitement
           </h2>
           <p className="text-slate-400 max-w-xl mx-auto mb-8">
-            30 jours gratuits &middot; Sans carte bancaire &middot; Resiliable a tout moment
+            30 jours gratuits &middot; Sans carte bancaire &middot; Résiliable à tout moment
           </p>
           <Link href="/signup"
             className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-500 text-white font-semibold rounded-xl hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20 text-lg">
-            Demarrer gratuitement &rarr;
+            Démarrer gratuitement &rarr;
           </Link>
           <p className="text-xs text-slate-500 mt-4">
-            30 jours gratuits &middot; Sans carte bancaire &middot; Resiliez en 1 clic
+            30 jours gratuits &middot; Sans carte bancaire &middot; Résiliez en 1 clic
           </p>
         </div>
       </section>
@@ -483,10 +384,10 @@ export default function HomePage() {
             <div>
               <h4 className="text-sm font-semibold text-white mb-4">Légal</h4>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions legales</Link></li>
+                <li><Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link></li>
                 <li><Link href="/legal/cgv" className="hover:text-white transition-colors">CGV</Link></li>
                 <li><Link href="/legal/cgu" className="hover:text-white transition-colors">CGU</Link></li>
-                <li><Link href="/legal/politique-confidentialite" className="hover:text-white transition-colors">Confidentialite (RGPD)</Link></li>
+                <li><Link href="/legal/politique-confidentialite" className="hover:text-white transition-colors">Confidentialité (RGPD)</Link></li>
               </ul>
             </div>
           </div>
