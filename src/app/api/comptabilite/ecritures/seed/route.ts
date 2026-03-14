@@ -1,30 +1,43 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createServiceClient } from '@supabase/supabase-js'
 
 /**
  * POST /api/comptabilite/ecritures/seed
  * Seeds 100+ demo écritures comptables pour le Cabinet Moreau.
- * Utilise les comptes PCG existants (pcg_sources).
+ * Uses service_role key for INSERT (bypasses RLS) while still
+ * requiring user auth for the user_id.
  */
 
 export async function POST() {
   try {
+    // Auth: get user_id from session
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
     }
 
+    // Admin client: bypasses RLS for INSERT
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    if (!serviceKey) {
+      return NextResponse.json({ error: 'SUPABASE_SERVICE_ROLE_KEY manquante' }, { status: 500 })
+    }
+    const admin = createServiceClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      serviceKey
+    )
+
     // Vérifier si la table existe et s'il y a déjà des écritures
-    const { count: existing, error: checkError } = await supabase
+    const { count: existing, error: checkError } = await admin
       .from('ecritures_comptables')
       .select('id', { count: 'exact', head: true })
       .eq('user_id', user.id)
 
     if (checkError) {
       return NextResponse.json({
-        error: `Table ecritures_comptables inaccessible: ${checkError.message}. Vérifiez que la migration 034 est appliquée.`,
-        hint: 'Exécutez: npx supabase db push',
+        error: `Table inaccessible: ${checkError.message}. Migration 034 appliquée ?`,
+        hint: 'npx supabase db push',
       }, { status: 500 })
     }
 
@@ -45,9 +58,8 @@ export async function POST() {
       return num
     }
 
-    // ─── Janvier 2026 — Ouverture + premiers achats ─────────────────────────
+    // ─── Janvier 2026 — Ouverture ──────────────────────────────────────────────
 
-    // AN — Bilan d'ouverture
     const anNum = makeNum()
     ecritures.push(
       { user_id: user.id, ecriture_num: anNum, journal_code: 'AN', date_ecriture: '2026-01-01', compte_num: '512', compte_lib: 'Banque', debit: 85000, credit: 0, libelle: 'Solde ouverture banque', source: 'manual' },
@@ -57,7 +69,8 @@ export async function POST() {
       { user_id: user.id, ecriture_num: anNum, journal_code: 'AN', date_ecriture: '2026-01-01', compte_num: '110', compte_lib: 'Report à nouveau', debit: 0, credit: 59000, libelle: 'Report à nouveau créditeur', source: 'manual' },
     )
 
-    // AC — Achats Janvier
+    // ─── AC — Achats (Jan-Mars) ────────────────────────────────────────────────
+
     const months = ['01', '02', '03']
     const fournisseurs = [
       { nom: 'Office Depot', ht: 1200, tva: 240, ttc: 1440, compte: '606' },
@@ -80,7 +93,8 @@ export async function POST() {
       }
     }
 
-    // VE — Ventes (factures clients)
+    // ─── VE — Ventes (Jan-Mars) ────────────────────────────────────────────────
+
     const clients = [
       { nom: 'Boulangerie Martin', ht: 2400, tva: 480, ttc: 2880 },
       { nom: 'Restaurant Le Gourmet', ht: 3600, tva: 720, ttc: 4320 },
@@ -102,10 +116,11 @@ export async function POST() {
       }
     }
 
-    // BQ — Encaissements clients
+    // ─── BQ — Encaissements clients ────────────────────────────────────────────
+
     for (const month of months) {
       for (const c of clients) {
-        if (Math.random() > 0.3) { // 70% des clients paient
+        if (Math.random() > 0.3) {
           const day = String(15 + Math.floor(Math.random() * 13)).padStart(2, '0')
           const num = makeNum()
           ecritures.push(
@@ -116,7 +131,8 @@ export async function POST() {
       }
     }
 
-    // BQ — Paiements fournisseurs
+    // ─── BQ — Paiements fournisseurs ───────────────────────────────────────────
+
     for (const month of months) {
       for (const f of fournisseurs) {
         if (Math.random() > 0.2) {
@@ -130,7 +146,8 @@ export async function POST() {
       }
     }
 
-    // SA — Salaires (Janvier-Mars)
+    // ─── SA — Salaires (Jan-Mars) ──────────────────────────────────────────────
+
     for (const month of months) {
       const num = makeNum()
       ecritures.push(
@@ -142,7 +159,8 @@ export async function POST() {
       )
     }
 
-    // OD — TVA déclaration (fin janvier)
+    // ─── OD — TVA déclaration ──────────────────────────────────────────────────
+
     const odNum = makeNum()
     ecritures.push(
       { user_id: user.id, ecriture_num: odNum, journal_code: 'OD', date_ecriture: '2026-01-31', compte_num: '44571', compte_lib: 'TVA collectée', debit: 2700, credit: 0, libelle: 'Déclaration TVA janvier — collectée', source: 'manual' },
@@ -150,13 +168,19 @@ export async function POST() {
       { user_id: user.id, ecriture_num: odNum, journal_code: 'OD', date_ecriture: '2026-01-31', compte_num: '44551', compte_lib: 'TVA à décaisser', debit: 0, credit: 2196.2, libelle: 'TVA nette à payer janvier', source: 'manual' },
     )
 
-    // Insérer par batch de 50
+    // ─── INSERT via admin (bypasses RLS) ───────────────────────────────────────
+
     let insertedCount = 0
     for (let i = 0; i < ecritures.length; i += 50) {
       const batch = ecritures.slice(i, i + 50)
-      const { error } = await supabase.from('ecritures_comptables').insert(batch)
+      const { error } = await admin.from('ecritures_comptables').insert(batch)
       if (error) {
-        return NextResponse.json({ error: error.message, inserted_so_far: insertedCount }, { status: 500 })
+        return NextResponse.json({
+          error: `Batch ${Math.floor(i / 50) + 1} failed: ${error.message}`,
+          detail: error.details,
+          inserted_so_far: insertedCount,
+          total_planned: ecritures.length,
+        }, { status: 500 })
       }
       insertedCount += batch.length
     }
