@@ -24,7 +24,7 @@
 | Clarté du produit en 5 secondes | 7/10 → **9.5/10** | ~~"Automatisez votre comptabilité en 30s" est clair. Mais "comptabilité" est trop générique~~ **CORRIGÉ** — H1 "Votre cabinet comptable automatisé" cible directement les cabinets. Pipeline visuel OCR → Journal PCG → TVA → Envoi. Positionnement vs Cegid immédiat. |
 | Pricing lisible | 8/10 | 4 profils (Indépendant/TPE/PME/Cabinet) avec plans adaptés. Prix HT clairement indiqués. |
 | Démo ou essai gratuit | 5/10 → **9/10** | ~~Pas d'essai sans rendez-vous~~ **CORRIGÉ** — CTA gold "Essai gratuit 30 jours" visible en <3s. Dual CTA : essai + "Voir la démo (8min)". Sans carte bancaire. |
-| Design inspire confiance | 7/10 → **9/10** | ~~"Fait avec ❤️ à Dijon" artisanal~~ **CORRIGÉ** — Design premium dark + gold gradient. Social proof animé : 12 cabinets beta, 47k factures, note 9.5/10. Badge "Cabinet Moreau & Associés" 5 étoiles. |
+| Design inspire confiance | 7/10 → **9/10** | ~~"Fait avec ❤️ à Dijon" artisanal~~ **CORRIGÉ** — Design premium dark + gold gradient. Aucune fake data. Trust via badges réels (IAE Dijon, RGPD, e-invoicing 2026) et 5 screenshots authentiques dans l'ordre conversion. |
 | FAQ / Témoignages / À propos | 3/10 → **8/10** | ~~Un seul témoignage~~ **CORRIGÉ** — FAQ 6 questions pertinentes (RGPD, Sage/Cegid, essai, e-invoicing, résiliation, roadmap). Badges crédibilité IAE Dijon + e-invoicing 2026. Social proof cabinets. |
 
 **Note Phase 1 : 6/10 → 9/10**

@@ -1,14 +1,14 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import {
   CheckCircle2, ChevronDown, ArrowRight, ScanLine, ArrowRightLeft,
   Users2, Bell, Menu, Shield, Zap, Globe, X as XIcon,
   Scale, Euro, TrendingUp, Wrench, Play, Sparkles,
-  FileText, BookOpen, Receipt, Send, Star,
+  FileText, BookOpen, Receipt, Send,
 } from 'lucide-react'
 import { ScreenshotCarousel } from '@/components/ScreenshotCarousel'
 import { PricingPlans } from '@/components/PricingPlans'
@@ -56,35 +56,6 @@ function StaggerChildren({ children, className = '' }: { children: React.ReactNo
 const staggerChild = {
   hidden: { opacity: 0, y: 24 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
-}
-
-// Animated counter for social proof
-function AnimatedCounter({ target, suffix = '', duration = 2 }: { target: number; suffix?: string; duration?: number }) {
-  const [count, setCount] = useState(0)
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
-
-  useEffect(() => {
-    if (!inView) return
-    let start = 0
-    const increment = target / (duration * 60)
-    const timer = setInterval(() => {
-      start += increment
-      if (start >= target) {
-        setCount(target)
-        clearInterval(timer)
-      } else {
-        setCount(Math.floor(start))
-      }
-    }, 1000 / 60)
-    return () => clearInterval(timer)
-  }, [inView, target, duration])
-
-  return (
-    <span ref={ref}>
-      {count.toLocaleString('fr-FR')}{suffix}
-    </span>
-  )
 }
 
 // Animated workflow pipeline step
@@ -319,58 +290,11 @@ export default function HomePage() {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
               </span>
             </Link>
-            <a href="#demo"
+            <a href="mailto:contact@worthifast.app?subject=Demande%20de%20demo%20Worthifast"
               className="group flex items-center gap-2 px-8 py-4 border border-white/15 text-slate-300 font-medium rounded-2xl hover:bg-white/5 hover:border-white/25 transition-all text-lg backdrop-blur-sm">
               <Play className="w-4 h-4 text-amber-400" />
-              Voir la démo (8 min)
+              Demander une démo
             </a>
-          </motion.div>
-
-          {/* Social proof — animated counters */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.85 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 mb-8"
-          >
-            {/* Testimonial card */}
-            <div className="flex items-center gap-3 px-5 py-3 bg-white/[0.04] border border-white/10 rounded-2xl backdrop-blur-sm">
-              <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center text-sm font-bold text-slate-900">
-                M
-              </div>
-              <div className="text-left">
-                <div className="flex items-center gap-1 mb-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
-                  ))}
-                </div>
-                <p className="text-xs text-slate-400">Cabinet Moreau &amp; Associés</p>
-              </div>
-            </div>
-
-            {/* Counter metrics */}
-            <div className="flex items-center gap-6 sm:gap-8">
-              <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-black text-white">
-                  <AnimatedCounter target={12} />
-                </div>
-                <p className="text-xs text-slate-500">cabinets beta</p>
-              </div>
-              <div className="w-px h-8 bg-white/10" />
-              <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-black text-white">
-                  <AnimatedCounter target={47} suffix="k" />
-                </div>
-                <p className="text-xs text-slate-500">factures traitées</p>
-              </div>
-              <div className="w-px h-8 bg-white/10" />
-              <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-transparent">
-                  9.5<span className="text-lg">/10</span>
-                </div>
-                <p className="text-xs text-slate-500">satisfaction</p>
-              </div>
-            </div>
           </motion.div>
 
           {/* Trust signals row */}

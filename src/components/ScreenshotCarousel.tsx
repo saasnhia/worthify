@@ -6,30 +6,35 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const SLIDES = [
+  // 1. WOW effect — Dashboard KPIs, la vue que le prospect voit en premier
   {
     src: '/screenshots/dashboard1.png',
-    title: 'Tableau de bord — KPIs en temps réel',
-    description: 'Dossiers actifs, factures en retard, alertes, solde bancaire et prévisionnel — tout en un coup d\'œil',
+    title: 'Tableau de bord cabinet — Tous vos KPIs en 1 écran',
+    description: 'Dossiers actifs, factures en retard, alertes, trésorerie et OCR — pilotage complet instantané.',
   },
+  // 2. Workflow — OCR factures, la feature la plus différenciante
   {
     src: '/screenshots/factureocr.png',
-    title: 'OCR intelligent — factures extraites en 30s',
-    description: 'Fournisseur, montants HT/TVA, date et référence détectés automatiquement avec 95%+ de confiance',
+    title: 'OCR intelligent — 12 factures classées automatiquement',
+    description: 'Fournisseur, montants HT/TVA et référence extraits à 95%+ de confiance. Classement PCG automatique.',
   },
-  {
-    src: '/screenshots/transactionn.png',
-    title: 'Transactions bancaires centralisées',
-    description: 'Import CSV, catégorisation automatique PCG et rapprochement IA en un clic',
-  },
+  // 3. Profondeur financière — Trésorerie, BFR, recouvrement
   {
     src: '/screenshots/dashboard2.png',
-    title: 'Pilotage financier complet',
-    description: 'CA, charges, marge brute, BFR et rapprochement clients — toutes vos données financières en un écran',
+    title: 'Trésorerie, BFR et recouvrement clients',
+    description: 'Solde bancaire, BFR, encours client, DSO et balance âgée — indicateurs décisionnels en temps réel.',
   },
+  // 4. Banking — Transactions avec rapprochement
+  {
+    src: '/screenshots/transactionn.png',
+    title: 'Transactions bancaires et rapprochement',
+    description: 'Import CSV, catégorisation PCG automatique et statut de rapprochement par transaction.',
+  },
+  // 5. Automatisation — Balance âgée + recommandations IA
   {
     src: '/screenshots/screen3.png',
-    title: 'Balance âgée et activité récente',
-    description: 'Suivi fournisseurs, rapprochements validés, import de fichiers et recommandations IA',
+    title: 'Balance âgée, rapprochements et IA',
+    description: 'Suivi fournisseurs, rapprochements validés, import universel et recommandations comptables IA.',
   },
 ]
 
