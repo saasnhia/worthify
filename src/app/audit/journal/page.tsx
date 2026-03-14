@@ -117,7 +117,9 @@ export default function JournalPage() {
         setTotal(data.total ?? 0)
         setTotals(data.totals ?? { debit: 0, credit: 0, solde: 0 })
       }
-    } catch { /* silent */ }
+    } catch (err) {
+      console.error('Journal fetch error:', err)
+    }
     setLoading(false)
   }, [page, journal, search, dateFrom, dateTo])
 
@@ -290,39 +292,41 @@ export default function JournalPage() {
               <Loader2 className="w-6 h-6 text-brand-green-action animate-spin" />
             </div>
           ) : ecritures.length === 0 ? (
-            <div className="text-center py-16">
-              <BookOpen className="w-10 h-10 text-neutral-600 mx-auto mb-3" />
-              <p className="text-neutral-300 mb-2 font-medium">Aucune écriture comptable</p>
-              <p className="text-neutral-500 text-sm mb-6">Créez votre première écriture, importez un FEC, ou chargez les données de démonstration.</p>
-              <div className="flex items-center justify-center gap-3">
-                <Button variant="primary" size="sm" onClick={() => setShowModal(true)} icon={<Plus className="w-4 h-4" />}>
-                  Nouvelle écriture
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={async () => {
-                    setLoading(true)
-                    try {
-                      const res = await fetch('/api/comptabilite/ecritures/seed', { method: 'POST' })
-                      const data = await res.json() as { success?: boolean; count?: number; message?: string; error?: string }
-                      if (data.success) {
-                        toast.success(`${data.count ?? 0} écritures chargées`)
-                        fetchEcritures()
-                      } else {
-                        toast.error(data.error ?? 'Erreur lors du seed')
-                        console.error('Seed error:', data)
-                        setLoading(false)
-                      }
-                    } catch (err) {
-                      toast.error('Erreur réseau — vérifiez la console')
-                      console.error('Seed fetch error:', err)
+            <div className="text-center py-20">
+              <BookOpen className="w-14 h-14 text-neutral-600 mx-auto mb-4" />
+              <p className="text-neutral-200 mb-2 text-lg font-semibold">Aucune écriture comptable</p>
+              <p className="text-neutral-500 text-sm mb-8">Créez votre première écriture, importez un FEC, ou chargez les données de démonstration.</p>
+
+              {/* CTA principal — gros bouton démo */}
+              <button
+                onClick={async () => {
+                  setLoading(true)
+                  try {
+                    const res = await fetch('/api/comptabilite/ecritures/seed', { method: 'POST' })
+                    const data = await res.json() as { success?: boolean; count?: number; message?: string; error?: string }
+                    if (data.success) {
+                      toast.success(`${data.count ?? 0} écritures chargées`)
+                      fetchEcritures()
+                    } else {
+                      toast.error(data.error ?? 'Erreur lors du seed')
+                      console.error('Seed error:', data)
                       setLoading(false)
                     }
-                  }}
-                  icon={<BookOpen className="w-4 h-4" />}
-                >
-                  Charger données démo
+                  } catch (err) {
+                    toast.error('Erreur réseau — vérifiez la console')
+                    console.error('Seed fetch error:', err)
+                    setLoading(false)
+                  }
+                }}
+                className="inline-flex items-center gap-3 mt-4 px-10 py-5 text-lg font-bold rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/25 hover:from-emerald-400 hover:to-emerald-500 transition-all"
+              >
+                <Download className="w-6 h-6" />
+                Charger 100+ écritures démo PCG
+              </button>
+
+              <div className="mt-6">
+                <Button variant="outline" size="sm" onClick={() => setShowModal(true)} icon={<Plus className="w-4 h-4" />}>
+                  Ou saisir manuellement
                 </Button>
               </div>
             </div>
