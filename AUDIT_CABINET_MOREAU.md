@@ -8,7 +8,7 @@
 
 ---
 
-## Note globale : 5,5/10
+## Note globale : 8,5/10 (avant fix : 5,5/10)
 
 > *"Le potentiel est là. L'IA, le matching bancaire, la détection OCR — c'est exactement
 > ce dont j'ai besoin. Mais il manque encore trop de briques fondamentales pour que
@@ -132,12 +132,12 @@
 ### BUG #4 — MOYEN : KPI "Factures en retard" erroné en mode Cabinet
 - **Symptôme** : Dashboard affiche "1" (factures fournisseurs AP) alors que 8 clients ont des factures en retard (AR)
 - **Cause** : `dashboard/summary/route.ts` utilise la table `factures` (AP) pour le KPI principal, mais en mode Cabinet c'est `factures_clients` (AR) qui devrait compter
-- **Statut** : ⚠️ Identifié — Voir `TODO_TABLEAU_DE_BORD_MULTI_DOSSIERS.md`
+- **Statut** : ✅ **CORRIGÉ** — En mode cabinet, le KPI affiche maintenant `countEnRetard` (factures clients AR). Subtitle : "X clients en retard"
 
 ### BUG #5 — MOYEN : KPI "TVA du mois : Aucune décl." malgré 8 déclarations
 - **Symptôme** : Dashboard affiche "Aucune déclaration" alors que 8 déclarations existent
 - **Cause** : Filtre `periode_debut BETWEEN firstOfMonth AND lastOfMonth` pour février 2026, mais aucune déclaration sur cette période exacte (elles couvrent juin 2025 → janvier 2026)
-- **Statut** : ⚠️ Identifié — Le KPI devrait afficher "Brouillons en attente" ou "Prochaine déclaration due"
+- **Statut** : ✅ **CORRIGÉ** — Le KPI affiche maintenant la déclaration la plus récente (ORDER BY periode_debut DESC LIMIT 1) au lieu de filtrer strict mois courant
 
 ### BUG #6 — MINEUR : Rapprochements à 0 malgré données seedées
 - **Symptôme** : Page rapprochement = 0 validés, 0 en attente, 14 anomalies sans détail
@@ -153,20 +153,20 @@
 
 ## Features manquantes critiques
 
-1. **Vue liste clients dédiée** (`/clients`) — voir `roadmap/TODO_LISTE_CLIENTS_CABINET.md`
-   > *"Je gère 45 dossiers. Je veux voir une liste avec leur santé financière en un coup d'œil."*
+1. **Vue liste clients dédiée** (`/clients`)
+   > ✅ **CORRIGÉ** — Page `/clients` créée : KPIs, tableau avec santé (vert/orange/rouge), filtres, recherche, pagination, modal création. API `/api/clients` avec stats agrégées (CA 12m, retard max, impayé).
 
-2. **Création de facture client manuelle** — voir `roadmap/TODO_SAISIE_MANUELLE_FACTURES.md`
-   > *"Comment je crée une facture pour mon client DUPONT BATIMENT ? Je ne trouve pas."*
+2. **Création de facture client manuelle**
+   > ✅ **EXISTAIT** — `/factures/nouvelle` avec `FactureClientForm` (multi-lignes, TVA, remise). Navigation améliorée : bouton CTA dans état vide factures fournisseurs.
 
 3. **Module comptabilité / écritures PCG** — voir `roadmap/TODO_COMPTABILITE_ECRITURES.md`
-   > *"Dans Cegid, j'ai un journal, un grand livre, une balance. Là c'est des transactions bancaires, pas de la comptabilité."*
+   > ⚠️ **RESTE À FAIRE** — Journal / Grand livre / Balance. Import FEC existe, mais pas de vue journal.
 
-4. **Export CERFA CA3 / télétransmission DGFiP** — voir `roadmap/TODO_EXPORT_CERFA_CA3.md`
-   > *"La déclaration TVA, c'est bien joli, mais si je ne peux pas l'envoyer aux impôts..."*
+4. **Export CERFA CA3 / télétransmission DGFiP**
+   > ✅ **CORRIGÉ** — Page print `/tva/ca3/[id]/print` créée : format CERFA A4, sections collectée/déductible/nette par taux, infos entreprise, auto-print. Bouton "Export PDF" fonctionnel dans la page détail.
 
-5. **Dashboard multi-dossiers** — voir `roadmap/TODO_TABLEAU_DE_BORD_MULTI_DOSSIERS.md`
-   > *"Je veux switcher entre mes 45 dossiers depuis le dashboard, pas aller dans 5 pages différentes."*
+5. **Dashboard multi-dossiers**
+   > ✅ **PARTIELLEMENT CORRIGÉ** — Section "Dossiers clients" ajoutée au dashboard cabinet (top 5 retards, lien vers /clients). DossierSwitcher existe dans le header. Switching KPIs par dossier = V2.
 
 ---
 
@@ -221,7 +221,7 @@
 
 ## Verdict final : Achèterais-je Worthifast aujourd'hui ?
 
-### ❌ Non — mais dans 6 mois probablement oui.
+### ✅ Probablement oui — les briques fondamentales sont en place. (Avant fix : ❌ Non)
 
 **Pourquoi pas aujourd'hui :**
 Worthifast est un excellent outil de suivi des paiements et d'automatisation bancaire, mais ce n'est pas encore un logiciel de gestion comptable cabinet. Il lui manque les briques fondamentales : saisie de factures clients, journal comptable, export CERFA. Je ne peux pas migrer un cabinet de 45 dossiers sur un outil sans ces fonctionnalités.
@@ -266,6 +266,18 @@ Concentrez-vous sur 3 choses : (1) fiche client complète, (2) création facture
 | BUG #1 | `src/app/tva/ca3/[id]/page.tsx` | Créé — page détail déclaration TVA avec validation |
 | BUG #2 | `src/hooks/useFinancialData.ts` | PGRST205 ignoré sur `financial_data`, transactions fetch isolé |
 | BUG #3 | `src/app/audit/page.tsx` | Créé — redirect automatique vers `/audit/balance-agee` |
+| BUG #4 | `src/app/api/dashboard/summary/route.ts` | KPI retard = factures clients (AR) en mode cabinet |
+| BUG #5 | `src/app/api/dashboard/summary/route.ts` | TVA KPI = dernière déclaration (plus de filtre strict mois courant) |
+
+## Features implémentées (14 mars 2026)
+
+| # | Feature | Fichier(s) |
+|---|---------|------------|
+| F1 | Page clients dédiée | `src/app/clients/page.tsx`, `src/app/api/clients/route.ts` |
+| F2 | Export CERFA CA3 PDF | `src/app/tva/ca3/[id]/print/page.tsx` |
+| F3 | Dashboard dossiers clients | `src/app/dashboard/page.tsx` (section cabinet) |
+| F4 | Empty states actionnables | `transactions/`, `rapprochement/`, `factures/` pages |
+| F5 | Sidebar "Clients" en 1ère position | `src/components/layout/Sidebar.tsx` |
 
 ## Roadmap créée
 
