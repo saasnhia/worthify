@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { generateNumeroFacture } from '@/lib/factures/calculs'
+import { generateAutoEcritures } from '@/lib/comptabilite/auto-ecritures'
 import type { LigneFacture } from '@/types'
 
 /**
@@ -115,6 +116,22 @@ export async function POST(req: NextRequest) {
 
     if (error) {
       return NextResponse.json({ error: 'Erreur création facture: ' + error.message }, { status: 500 })
+    }
+
+    // Auto-génération écriture comptable (fire-and-forget)
+    if (facture) {
+      const clientNom = Array.isArray(facture.client) ? facture.client[0]?.nom : facture.client?.nom
+      void generateAutoEcritures(supabase, {
+        type: 'facture_client',
+        facture_client_id: facture.id,
+        user_id: user.id,
+        date: facture.date_emission,
+        client_nom: clientNom ?? 'Client',
+        montant_ht: facture.montant_ht ?? 0,
+        tva: facture.tva ?? 0,
+        montant_ttc: facture.montant_ttc ?? 0,
+        numero_facture: facture.numero_facture,
+      })
     }
 
     return NextResponse.json({ success: true, facture }, { status: 201 })

@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
-import Anthropic from '@anthropic-ai/sdk'
+import { Mistral } from '@mistralai/mistralai'
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+const mistral = new Mistral({ apiKey: process.env.MISTRAL_API_KEY ?? '' })
 
 export interface FactureEnRetardRelance {
   id: string
@@ -167,24 +167,30 @@ export async function genererEmailRelance(
     .replace('{JOURS}', String(facture.jours_retard))
     .replace('{SIGNATURE}', signature ?? 'Cordialement,\nLe service comptabilité')
 
-  // Use Claude to personalize if API key available
-  if (!process.env.ANTHROPIC_API_KEY) return baseContent
+  // Use Mistral to personalize if API key available
+  if (!process.env.MISTRAL_API_KEY) return baseContent
 
   try {
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5',
-      max_tokens: 512,
+    const response = await mistral.chat.complete({
+      model: 'mistral-large-latest',
+      maxTokens: 512,
       temperature: 0.4,
-      system: `Tu es un expert en recouvrement de créances français.
+      messages: [
+        {
+          role: 'system',
+          content: `Tu es un expert en recouvrement de créances français.
 Améliore légèrement le texte de relance suivant pour le rendre plus professionnel et persuasif,
 mais garde le même ton (${ton}) et le même niveau (${niveau}/3).
 Ne change pas les informations factuelles. Réponds uniquement avec le texte amélioré.`,
-      messages: [{
-        role: 'user',
-        content: `Client : ${facture.client_nom}\n\nTexte à améliorer :\n${baseContent}`,
-      }],
+        },
+        {
+          role: 'user',
+          content: `Client : ${facture.client_nom}\n\nTexte à améliorer :\n${baseContent}`,
+        },
+      ],
     })
-    return response.content[0]?.type === 'text' ? response.content[0].text : baseContent
+    const text = response.choices?.[0]?.message?.content
+    return typeof text === 'string' ? text : baseContent
   } catch {
     return baseContent // Fallback to template if AI fails
   }

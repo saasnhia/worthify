@@ -71,6 +71,8 @@ const sections: SidebarSection[] = [
     label: 'Audit & Automatisation',
     icon: Shield,
     items: [
+      { name: 'Journal', href: '/audit/journal', icon: FileText },
+      { name: 'Grand Livre', href: '/audit/grand-livre', icon: FolderOpen },
       { name: 'Balance âgée', href: '/audit/balance-agee', icon: BarChart3 },
       { name: 'Tri comptes', href: '/audit/comptes', icon: FolderOpen },
       { name: 'Automatisation', href: '/automatisation', icon: Zap },

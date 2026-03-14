@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import Anthropic from '@anthropic-ai/sdk'
+import { Mistral } from '@mistralai/mistralai'
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+const mistral = new Mistral({ apiKey: process.env.MISTRAL_API_KEY ?? '' })
 
 interface MessageParam {
   role: 'user' | 'assistant'
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     if (!agent.actif) return NextResponse.json({ error: 'Agent désactivé' }, { status: 400 })
 
     // Build system prompt with docs context
-    let systemPrompt = agent.system_prompt
+    let systemPrompt: string = agent.system_prompt
     if (agent.docs && agent.docs.length > 0) {
       const docsContext = agent.docs
         .map((d: { nom?: string; contenu?: string }) => `=== ${d.nom ?? 'Document'} ===\n${d.contenu ?? ''}`)
@@ -44,22 +44,22 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       systemPrompt += `\n\n--- BASE DE CONNAISSANCES DU CABINET ---\n${docsContext}`
     }
 
-    // Build messages
-    const messages: MessageParam[] = [
-      ...conversation_history.slice(-10),
+    // Build messages with system prompt first
+    const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
+      { role: 'system', content: systemPrompt },
+      ...conversation_history.slice(-10).map(m => ({ role: m.role, content: m.content })),
       { role: 'user', content: message },
     ]
 
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5',
-      max_tokens: 1024,
+    const response = await mistral.chat.complete({
+      model: 'mistral-large-latest',
+      maxTokens: 1024,
       temperature: agent.temperature ?? 0.3,
-      system: systemPrompt,
       messages,
     })
 
-    const responseText = response.content[0]?.type === 'text' ? response.content[0].text : ''
-    const tokensUsed = response.usage.input_tokens + response.usage.output_tokens
+    const responseText = response.choices?.[0]?.message?.content ?? ''
+    const tokensUsed = (response.usage?.promptTokens ?? 0) + (response.usage?.completionTokens ?? 0)
 
     // Increment conversation count (non-blocking)
     void supabase
@@ -68,7 +68,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       .eq('id', id)
       .then(() => {/* non-critical */})
 
-    return NextResponse.json({ success: true, response: responseText, tokens_used: tokensUsed })
+    return NextResponse.json({
+      success: true,
+      response: typeof responseText === 'string' ? responseText : '',
+      tokens_used: tokensUsed,
+    })
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : 'Erreur IA'
     return NextResponse.json({ error: msg }, { status: 500 })

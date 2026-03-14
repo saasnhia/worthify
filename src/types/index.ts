@@ -978,6 +978,49 @@ export interface HistoriqueDocument {
   created_at: string
 }
 
+// ═══════════════════════════════════════
+// JOURNAL COMPTABLE PCG (migration 034)
+// ═══════════════════════════════════════
+
+export type JournalCode = 'VE' | 'AC' | 'BQ' | 'OD' | 'AN' | 'SA' | 'CA'
+export type EcritureSource = 'manual' | 'auto_facture' | 'auto_transaction' | 'import_fec' | 'import_csv'
+
+export interface EcritureComptable {
+  id: string
+  user_id: string
+  ecriture_num: string
+  journal_code: JournalCode
+  date_ecriture: string
+  date_piece: string | null
+  piece_ref: string | null
+  compte_num: string
+  compte_lib: string | null
+  debit: number
+  credit: number
+  libelle: string
+  lettrage: string | null
+  date_lettrage: string | null
+  facture_fournisseur_id: string | null
+  facture_client_id: string | null
+  transaction_id: string | null
+  is_validated: boolean
+  validated_at: string | null
+  source: EcritureSource
+  metadata: Record<string, unknown>
+  created_at: string
+  updated_at: string
+}
+
+export interface CompteGrandLivre {
+  compte_num: string
+  compte_lib: string
+  classe: number
+  total_debit: number
+  total_credit: number
+  solde: number
+  nb_ecritures: number
+}
+
 export interface ImportEcriture {
   id: string
   user_id: string

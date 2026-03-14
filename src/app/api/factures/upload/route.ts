@@ -10,6 +10,7 @@ import { logMetrics, startTimer } from '@/lib/metrics';
 import { enrichirFournisseur } from '@/lib/api/api-entreprise';
 import { suggestCategorization } from '@/lib/categorization/matcher';
 import { logAutomation } from '@/lib/automation/log';
+import { generateAutoEcritures } from '@/lib/comptabilite/auto-ecritures';
 import type { ExtractedInvoiceData } from '@/types';
 import type { CategorizationRule } from '@/lib/categorization/matcher';
 import { rateLimit } from '@/lib/utils/rate-limit';
@@ -677,7 +678,22 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Step 6: Return response
+    // Step 6: Auto-generate écriture comptable (fire-and-forget)
+    if (facture && extractedData.montant_ht != null) {
+      void generateAutoEcritures(supabase, {
+        type: 'facture_fournisseur',
+        facture_id: facture.id,
+        user_id: user_id,
+        date: extractedData.date_facture ?? new Date().toISOString().split('T')[0],
+        fournisseur: extractedData.nom_fournisseur ?? 'Fournisseur inconnu',
+        montant_ht: extractedData.montant_ht ?? 0,
+        montant_tva: extractedData.tva ?? 0,
+        montant_ttc: extractedData.montant_ttc ?? (extractedData.montant_ht ?? 0) + (extractedData.tva ?? 0),
+        numero_facture: extractedData.numero_facture ?? undefined,
+      });
+    }
+
+    // Step 7: Return response
     return NextResponse.json({
       success: true,
       facture,

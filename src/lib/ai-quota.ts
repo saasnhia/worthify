@@ -15,14 +15,14 @@ export function getMonthlyQuota(plan: string): number {
 }
 
 /**
- * Modèle Anthropic selon le plan utilisateur.
- * Plan basique → Haiku (rapide, économique)
- * Autres → Sonnet (performant)
+ * Modèle Mistral selon le plan utilisateur.
+ * Plan basique → mistral-small (rapide, économique)
+ * Autres → mistral-large (performant)
  */
 export function getModelForPlan(plan: string): string {
   switch (plan) {
-    case 'basique':  return 'claude-haiku-4-5-20251001'
-    default:         return 'claude-sonnet-4-5-20241022'
+    case 'basique':  return 'mistral-small-latest'
+    default:         return 'mistral-large-latest'
   }
 }
 

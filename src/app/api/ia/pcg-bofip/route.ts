@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import Anthropic from '@anthropic-ai/sdk'
+import { Mistral } from '@mistralai/mistralai'
 import { rateLimit } from '@/lib/utils/rate-limit'
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+const mistral = new Mistral({ apiKey: process.env.MISTRAL_API_KEY ?? '' })
 
 const SYSTEM_PROMPTS: Record<string, string> = {
   pcg: `Tu es un expert-comptable français spécialisé dans le Plan Comptable Général (PCG 2025).
@@ -51,7 +51,6 @@ export async function POST(req: NextRequest) {
     let systemPrompt = SYSTEM_PROMPTS[contexte] ?? SYSTEM_PROMPTS.pcg
 
     // Inject dossier context if available
-    let dossierContext = ''
     if (dossier_id) {
       const { data: dossier } = await supabase
         .from('dossiers')
@@ -61,14 +60,13 @@ export async function POST(req: NextRequest) {
         .single()
 
       if (dossier) {
-        dossierContext = `\n\nCONTEXTE DU DOSSIER CLIENT :\n` +
+        systemPrompt += `\n\nCONTEXTE DU DOSSIER CLIENT :\n` +
           `- Nom : ${dossier.nom ?? 'Non renseigné'}\n` +
           `- Forme juridique : ${dossier.forme_juridique ?? 'Non renseignée'}\n` +
           `- Régime TVA : ${dossier.regime_tva ?? 'Non renseigné'}\n` +
           `- Code NAF : ${dossier.code_naf ?? 'Non renseigné'}\n` +
           `- CA : ${dossier.chiffre_affaires ? dossier.chiffre_affaires + ' €' : 'Non renseigné'}\n` +
           `Adapte tes réponses à ce contexte spécifique.`
-        systemPrompt += dossierContext
       }
     }
 
@@ -92,19 +90,21 @@ export async function POST(req: NextRequest) {
 
     const userMessage = question + pcgContext
 
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5',
-      max_tokens: 1024,
+    const response = await mistral.chat.complete({
+      model: 'mistral-large-latest',
       temperature: 0.1,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userMessage }],
+      maxTokens: 1024,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage },
+      ],
     })
 
-    const responseText = response.content[0]?.type === 'text' ? response.content[0].text : ''
+    const responseText = response.choices?.[0]?.message?.content ?? ''
 
     return NextResponse.json({
       success: true,
-      response: responseText,
+      response: typeof responseText === 'string' ? responseText : '',
       contexte,
       sources_trouvees: !!pcgContext,
     })

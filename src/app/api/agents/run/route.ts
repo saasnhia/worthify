@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
+import { Mistral } from '@mistralai/mistralai'
 import { createClient } from '@/lib/supabase/server'
 import { checkAndConsumeTokens, getModelForPlan } from '@/lib/ai-quota'
 
-function getAnthropicClient() {
-  return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
+function getMistralClient() {
+  return new Mistral({ apiKey: process.env.MISTRAL_API_KEY ?? '' })
 }
 
 interface AgentRow {
@@ -79,19 +79,21 @@ export async function POST(request: NextRequest) {
     }).select('id').single()
     const logId = (logData as { id: string } | null)?.id
 
-    // Call Claude
-    const anthropic = getAnthropicClient()
-    const response = await anthropic.messages.create({
+    // Call Mistral
+    const client = getMistralClient()
+    const response = await client.chat.complete({
       model,
-      max_tokens: 1024,
-      system: 'Tu es un assistant comptable expert. Tu réponds de manière concise et professionnelle en français.',
-      messages: [{ role: 'user', content: finalPrompt }],
+      maxTokens: 1024,
+      messages: [
+        { role: 'system', content: 'Tu es un assistant comptable expert. Tu réponds de manière concise et professionnelle en français.' },
+        { role: 'user', content: finalPrompt },
+      ],
     })
 
-    const responseText = response.content[0]?.type === 'text' ? response.content[0].text : ''
+    const responseText = response.choices?.[0]?.message?.content ?? ''
 
     // Log actual token usage (adjust the pre-estimated 300)
-    const actualTokens = (response.usage?.input_tokens ?? 0) + (response.usage?.output_tokens ?? 0)
+    const actualTokens = (response.usage?.promptTokens ?? 0) + (response.usage?.completionTokens ?? 0)
     if (actualTokens > 300) {
       void supabase.from('ai_usage').insert({
         user_id: user.id,
@@ -105,11 +107,11 @@ export async function POST(request: NextRequest) {
     if (logId) {
       void supabase.from('agent_logs').update({
         statut: 'success',
-        output_data: { result: responseText, tokens: actualTokens },
+        output_data: { result: typeof responseText === 'string' ? responseText : '', tokens: actualTokens },
       }).eq('id', logId).then(() => {})
     }
 
-    return NextResponse.json({ success: true, output: responseText })
+    return NextResponse.json({ success: true, output: typeof responseText === 'string' ? responseText : '' })
 
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Erreur inconnue'

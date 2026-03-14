@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
+import { Mistral } from '@mistralai/mistralai'
 import { createClient } from '@/lib/supabase/server'
 import { checkAndConsumeTokens, getModelForPlan } from '@/lib/ai-quota'
 
-function getAnthropicClient() {
-  return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
+function getMistralClient() {
+  return new Mistral({ apiKey: process.env.MISTRAL_API_KEY ?? '' })
 }
 
 const SYSTEM_PROMPT = `Tu es un expert-comptable français spécialisé dans le Plan Comptable Général (PCG) et le BOFIP (Bulletin Officiel des Finances Publiques).
@@ -82,10 +82,13 @@ export async function POST(request: NextRequest) {
       .order('created_at', { ascending: true })
       .limit(20)
 
-    const messages: Anthropic.MessageParam[] = (history ?? []).map((m: MessageRow) => ({
-      role: m.role as 'user' | 'assistant',
-      content: m.content,
-    }))
+    const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...(history ?? []).map((m: MessageRow) => ({
+        role: m.role as 'user' | 'assistant',
+        content: m.content,
+      })),
+    ]
 
     let fullResponse = ''
     const encoder = new TextEncoder()
@@ -97,36 +100,34 @@ export async function POST(request: NextRequest) {
     const readable = new ReadableStream({
       async start(controller) {
         try {
-          const anthropic = getAnthropicClient()
-          const stream = anthropic.messages.stream({
+          const mistral = getMistralClient()
+          const stream = await mistral.chat.stream({
             model,
-            max_tokens: 2048,
-            system: SYSTEM_PROMPT,
+            maxTokens: 2048,
             messages,
           })
 
-          for await (const chunk of stream) {
-            if (
-              chunk.type === 'content_block_delta' &&
-              chunk.delta.type === 'text_delta'
-            ) {
-              const text = chunk.delta.text
+          let totalTokens = 0
+
+          for await (const event of stream) {
+            const choice = event.data.choices[0]
+            const text = choice?.delta?.content ?? ''
+            if (typeof text === 'string' && text) {
               fullResponse += text
               controller.enqueue(encoder.encode(text))
             }
+
+            // Capture usage from the final chunk
+            if (event.data.usage) {
+              totalTokens = (event.data.usage.promptTokens ?? 0) + (event.data.usage.completionTokens ?? 0)
+            }
           }
 
-          // Get final message for actual token counts
-          const finalMessage = await stream.finalMessage()
-          const inputTokens = finalMessage.usage?.input_tokens ?? 0
-          const outputTokens = finalMessage.usage?.output_tokens ?? 0
-          const actualTokens = inputTokens + outputTokens
-
           // Log actual token delta (we pre-logged 500 estimate)
-          if (actualTokens > 500) {
+          if (totalTokens > 500) {
             void capturedSupabase.from('ai_usage').insert({
               user_id: capturedUserId,
-              tokens_used: actualTokens - 500,
+              tokens_used: totalTokens - 500,
               model,
               endpoint: 'assistant',
             }).then(() => {})
