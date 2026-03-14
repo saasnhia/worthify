@@ -54,8 +54,9 @@ export function UploadReleve({ bankAccounts, onImportSuccess }: UploadReleveProp
       } else {
         toast.error(data.error || 'Erreur lors de l\'analyse')
       }
-    } catch (error: any) {
-      toast.error('Erreur réseau: ' + error.message)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+      toast.error('Erreur réseau: ' + msg)
     } finally {
       setUploading(false)
     }
@@ -116,8 +117,9 @@ export function UploadReleve({ bankAccounts, onImportSuccess }: UploadReleveProp
       } else {
         toast.error(data.error || 'Erreur lors de l\'import')
       }
-    } catch (error: any) {
-      toast.error('Erreur réseau: ' + error.message)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+      toast.error('Erreur réseau: ' + msg)
     } finally {
       setImporting(false)
     }

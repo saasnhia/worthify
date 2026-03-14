@@ -118,10 +118,11 @@ export async function POST(req: NextRequest) {
       unmatched_manual_count: matchResult.unmatchedManual.length,
       unmatched_bank_count: matchResult.unmatchedBank.length,
     } as ReconciliationResponse)
-  } catch (error: any) {
-    console.error('Error reconciling transactions:', error)
+  } catch (err: unknown) {
+    console.error('Error reconciling transactions:', err)
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
     return NextResponse.json(
-      { error: 'Erreur serveur interne: ' + error.message },
+      { error: 'Erreur serveur interne: ' + msg },
       { status: 500 }
     )
   }
@@ -216,10 +217,11 @@ export async function PUT(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Error updating reconciliation:', error)
+  } catch (err: unknown) {
+    console.error('Error updating reconciliation:', err)
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
     return NextResponse.json(
-      { error: 'Erreur serveur interne: ' + error.message },
+      { error: 'Erreur serveur interne: ' + msg },
       { status: 500 }
     )
   }

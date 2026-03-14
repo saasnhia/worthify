@@ -26,8 +26,9 @@ export function useTVADeclarations(userId: string | undefined) {
       } else {
         setError(data.error || 'Erreur lors de la récupération des déclarations')
       }
-    } catch (err: any) {
-      setError('Erreur réseau: ' + err.message)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+      setError('Erreur réseau: ' + msg)
     } finally {
       setLoading(false)
     }
@@ -50,8 +51,9 @@ export function useTVADeclarations(userId: string | undefined) {
         } else {
           return { success: false, error: data.error }
         }
-      } catch (err: any) {
-        return { success: false, error: 'Erreur réseau: ' + err.message }
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+        return { success: false, error: 'Erreur réseau: ' + msg }
       }
     },
     []
@@ -81,8 +83,9 @@ export function useTVADeclarations(userId: string | undefined) {
         } else {
           return { success: false, error: data.error }
         }
-      } catch (err: any) {
-        return { success: false, error: 'Erreur réseau: ' + err.message }
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+        return { success: false, error: 'Erreur réseau: ' + msg }
       }
     },
     [fetchDeclarations]
@@ -99,8 +102,9 @@ export function useTVADeclarations(userId: string | undefined) {
       } else {
         return { success: false, error: data.error }
       }
-    } catch (err: any) {
-      return { success: false, error: 'Erreur réseau: ' + err.message }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+      return { success: false, error: 'Erreur réseau: ' + msg }
     }
   }, [])
 
@@ -128,8 +132,9 @@ export function useTVADeclarations(userId: string | undefined) {
         } else {
           return { success: false, error: data.error }
         }
-      } catch (err: any) {
-        return { success: false, error: 'Erreur réseau: ' + err.message }
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+        return { success: false, error: 'Erreur réseau: ' + msg }
       }
     },
     []
@@ -152,8 +157,9 @@ export function useTVADeclarations(userId: string | undefined) {
         } else {
           return { success: false, error: data.error }
         }
-      } catch (err: any) {
-        return { success: false, error: 'Erreur réseau: ' + err.message }
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+        return { success: false, error: 'Erreur réseau: ' + msg }
       }
     },
     []

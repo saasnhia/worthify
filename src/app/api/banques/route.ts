@@ -36,8 +36,8 @@ export async function GET() {
     }
 
     return NextResponse.json({ success: true, accounts: accounts as BankAccount[] })
-  } catch (error: any) {
-    console.error('Unexpected error:', error)
+  } catch (err: unknown) {
+    console.error('Unexpected error:', err)
     return NextResponse.json(
       { error: 'Erreur serveur interne' },
       { status: 500 }
@@ -124,8 +124,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, account: account as BankAccount })
-  } catch (error: any) {
-    console.error('Unexpected error:', error)
+  } catch (err: unknown) {
+    console.error('Unexpected error:', err)
     return NextResponse.json(
       { error: 'Erreur serveur interne' },
       { status: 500 }

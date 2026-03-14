@@ -55,6 +55,7 @@ const sections: SidebarSection[] = [
       { name: 'Factures', href: '/factures', icon: FileText },
       { name: 'Relances', href: '/relances', icon: RefreshCw, badge: 'relances' },
       { name: 'Notifications', href: '/notifications', icon: Bell, badge: 'overdue' },
+      { name: 'Open Banking', href: '/banking', icon: Landmark },
       { name: 'Banques', href: '/parametres/banques', icon: Building2 },
       { name: 'Import Relevé', href: '/import-releve', icon: Upload },
       { name: 'TVA', href: '/tva', icon: Euro },

@@ -9,7 +9,16 @@ interface DataInputFormProps {
   initialData?: FinancialData | null
   onSave: (data: Partial<FinancialData>) => Promise<void>
   disabled?: boolean
-  importedData?: any // Ajouté pour l'import automatique
+  importedData?: Partial<{
+    rent: number
+    salary: number
+    insurance: number
+    subscriptions: number
+    loans: number
+    other_expenses: number
+    variable_cost_rate: number
+    revenue: number
+  }>
 }
 
 export function DataInputForm({ initialData, onSave, disabled, importedData }: DataInputFormProps) {

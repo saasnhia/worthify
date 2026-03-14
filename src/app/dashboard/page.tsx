@@ -599,11 +599,25 @@ if (!authLoading && initialized && user && !isActive) {
         </div>
 
         {/* KPI Cards — adaptatifs selon profile_type */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {kpiCards.map((card, i) => (
-            <SimpleKPICard key={i} {...card} />
-          ))}
-        </div>
+        {loading && !data ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white rounded-xl p-5 border border-navy-100">
+                <div className="animate-pulse space-y-3">
+                  <div className="h-3 bg-navy-100 rounded w-2/3" />
+                  <div className="h-8 bg-navy-100 rounded w-1/2" />
+                  <div className="h-3 bg-navy-100 rounded w-1/3" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {kpiCards.map((card, i) => (
+              <SimpleKPICard key={i} {...card} />
+            ))}
+          </div>
+        )}
 
         {/* ── Mini graphique activité semaine ──────────────────────────── */}
         {!loading && transactions.length > 0 && (() => {

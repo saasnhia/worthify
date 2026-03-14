@@ -21,12 +21,24 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
       compte_comptable?: string
       code_tva?: string
       categorie?: string
+      fournisseur?: string
+      numero_facture?: string
+      date_facture?: string
+      montant_ht?: number
+      montant_tva?: number
+      montant_ttc?: number
     }
 
+    const ALLOWED_FIELDS = [
+      'compte_comptable', 'code_tva', 'categorie',
+      'fournisseur', 'numero_facture', 'date_facture',
+      'montant_ht', 'montant_tva', 'montant_ttc',
+    ] as const
+
     const updates: Record<string, unknown> = {}
-    if (body.compte_comptable !== undefined) updates.compte_comptable = body.compte_comptable
-    if (body.code_tva !== undefined) updates.code_tva = body.code_tva
-    if (body.categorie !== undefined) updates.categorie = body.categorie
+    for (const field of ALLOWED_FIELDS) {
+      if (body[field] !== undefined) updates[field] = body[field]
+    }
 
     if (Object.keys(updates).length === 0) {
       return NextResponse.json({ error: 'Aucun champ à mettre à jour' }, { status: 400 })

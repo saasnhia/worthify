@@ -29,7 +29,7 @@ export async function PUT(
     const { account_name, bank_name, current_balance, is_active } = body
 
     // Build update object (only include provided fields)
-    const updates: any = {}
+    const updates: Record<string, string | number | boolean> = {}
     if (account_name !== undefined) updates.account_name = account_name
     if (bank_name !== undefined) updates.bank_name = bank_name
     if (current_balance !== undefined) updates.current_balance = current_balance
@@ -67,8 +67,8 @@ export async function PUT(
     }
 
     return NextResponse.json({ success: true, account: account as BankAccount })
-  } catch (error: any) {
-    console.error('Unexpected error:', error)
+  } catch (err: unknown) {
+    console.error('Unexpected error:', err)
     return NextResponse.json(
       { error: 'Erreur serveur interne' },
       { status: 500 }
@@ -130,8 +130,8 @@ export async function DELETE(
     }
 
     return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Unexpected error:', error)
+  } catch (err: unknown) {
+    console.error('Unexpected error:', err)
     return NextResponse.json(
       { error: 'Erreur serveur interne' },
       { status: 500 }

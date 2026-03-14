@@ -52,10 +52,11 @@ export async function GET(
       declaration,
       lignes: lignes || [],
     })
-  } catch (error: any) {
-    console.error('Error fetching declaration:', error)
+  } catch (err: unknown) {
+    console.error('Error fetching declaration:', err)
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
     return NextResponse.json(
-      { error: 'Erreur serveur interne: ' + error.message },
+      { error: 'Erreur serveur interne: ' + msg },
       { status: 500 }
     )
   }
@@ -121,10 +122,11 @@ export async function PUT(
     }
 
     return NextResponse.json({ success: true, declaration })
-  } catch (error: any) {
-    console.error('Error updating declaration:', error)
+  } catch (err: unknown) {
+    console.error('Error updating declaration:', err)
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
     return NextResponse.json(
-      { error: 'Erreur serveur interne: ' + error.message },
+      { error: 'Erreur serveur interne: ' + msg },
       { status: 500 }
     )
   }
@@ -187,10 +189,11 @@ export async function DELETE(
     }
 
     return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Error deleting declaration:', error)
+  } catch (err: unknown) {
+    console.error('Error deleting declaration:', err)
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
     return NextResponse.json(
-      { error: 'Erreur serveur interne: ' + error.message },
+      { error: 'Erreur serveur interne: ' + msg },
       { status: 500 }
     )
   }

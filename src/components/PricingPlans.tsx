@@ -470,7 +470,7 @@ function PlanCard({ plan, annual, onSubscribe, subscribing }: PlanCardProps) {
           {isLoading ? (
             <span className="inline-flex items-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" />
-              Redirection sécurisée…
+              Redirection vers Stripe…
             </span>
           ) : plan.cta}
         </button>

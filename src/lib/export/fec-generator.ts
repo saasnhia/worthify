@@ -230,7 +230,7 @@ export function fecToText(entries: FECEntry[]): string {
   const lines = [headers.join('\t')]
 
   for (const entry of entries) {
-    const row = headers.map(h => (entry as any)[h] || '')
+    const row = headers.map(h => entry[h as keyof FECEntry] || '')
     lines.push(row.join('\t'))
   }
 
@@ -266,7 +266,7 @@ export function fecToCSV(entries: FECEntry[]): string {
 
   for (const entry of entries) {
     const row = headers.map(h => {
-      const val = (entry as any)[h] || ''
+      const val = entry[h as keyof FECEntry] || ''
       // Escape semicolons and quotes
       if (val.includes(';') || val.includes('"')) {
         return `"${val.replace(/"/g, '""')}"`

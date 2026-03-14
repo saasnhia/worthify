@@ -108,7 +108,21 @@ export function updateSupplierHistory(
  * Charge l'historique fournisseur depuis les donnees Supabase.
  * Compatible avec le format JSON stocke en base.
  */
-export function parseSupplierHistories(rows: any[]): SupplierHistory[] {
+interface SupplierHistoryRow {
+  id: string
+  user_id: string
+  supplier_name: string
+  supplier_normalized: string
+  transaction_patterns: string[] | string
+  iban_patterns: string[] | string
+  avg_amount: number
+  match_count: number
+  last_matched_at: string
+  created_at: string
+  updated_at: string
+}
+
+export function parseSupplierHistories(rows: SupplierHistoryRow[]): SupplierHistory[] {
   return rows.map(row => ({
     id: row.id,
     user_id: row.user_id,

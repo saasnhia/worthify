@@ -23,8 +23,20 @@ function parseMontant(val: string | undefined): number | undefined {
   return isNaN(n) ? undefined : n;
 }
 
+interface ExtractedFields {
+  chiffreAffaires?: number
+  loyer?: number
+  salaires?: number
+  assurances?: number
+  abonnements?: number
+  emprunts?: number
+  autres?: number
+  tauxChargesVariables?: number
+  detectedFields: string[]
+}
+
 function extractFields(text: string) {
-  const result: any = {};
+  const result: ExtractedFields = { detectedFields: [] };
   const detectedFields: string[] = [];
   for (const [key, regex] of Object.entries(regexes)) {
     const match = text.match(regex);
@@ -32,7 +44,7 @@ function extractFields(text: string) {
       const montant = match[2] || match[3] || match[4] || match[5] || match[6] || match[7];
       const value = parseMontant(montant);
       if (value !== undefined) {
-        result[key] = value;
+        (result as unknown as Record<string, unknown>)[key] = value;
         detectedFields.push(key);
       }
     }
@@ -41,18 +53,18 @@ function extractFields(text: string) {
   return result;
 }
 
-async function parseFile(file: File): Promise<any> {
+async function parseFile(file: File): Promise<ExtractedFields> {
   const buffer = Buffer.from(await file.arrayBuffer());
   const name = file.name.toLowerCase();
   if (name.endsWith('.pdf')) {
     // Extraction texte PDF avec pdf2json
     const pdfParser = new PDFParser();
     return new Promise((resolve, reject) => {
-      pdfParser.on('pdfParser_dataError', (errData: any) => reject(errData.parserError));
-      pdfParser.on('pdfParser_dataReady', (pdfData: any) => {
+      pdfParser.on('pdfParser_dataError', (errData: { parserError: string }) => reject(errData.parserError));
+      pdfParser.on('pdfParser_dataReady', (pdfData: { formImage: { Pages: Array<{ Texts: Array<{ R: Array<{ T: string }> }> }> } }) => {
         // Concaténer tout le texte extrait
-        const text = pdfData.formImage.Pages.map((page: any) =>
-          page.Texts.map((t: any) => decodeURIComponent(t.R.map((r: any) => r.T).join(''))).join(' ')
+        const text = pdfData.formImage.Pages.map((page: { Texts: Array<{ R: Array<{ T: string }> }> }) =>
+          page.Texts.map((t: { R: Array<{ T: string }> }) => decodeURIComponent(t.R.map((r: { T: string }) => r.T).join(''))).join(' ')
         ).join(' ');
         resolve(extractFields(text));
       });
@@ -100,7 +112,8 @@ export async function POST(req: NextRequest) {
       tauxChargesVariables: fields.tauxChargesVariables || 0,
       detectedFields: fields.detectedFields || [],
     });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : 'Erreur inconnue';
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

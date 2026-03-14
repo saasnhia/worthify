@@ -61,10 +61,11 @@ export async function GET(req: NextRequest) {
       anomalies: all,
       stats,
     })
-  } catch (error: any) {
-    console.error('Error fetching anomalies:', error)
+  } catch (err: unknown) {
+    console.error('Error fetching anomalies:', err)
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
     return NextResponse.json(
-      { error: 'Erreur serveur interne: ' + error.message },
+      { error: 'Erreur serveur interne: ' + msg },
       { status: 500 }
     )
   }
@@ -134,10 +135,11 @@ export async function PUT(req: NextRequest) {
       success: true,
       message: `Anomalie ${statut === 'resolue' ? 'résolue' : 'ignorée'}`,
     })
-  } catch (error: any) {
-    console.error('Error updating anomaly:', error)
+  } catch (err: unknown) {
+    console.error('Error updating anomaly:', err)
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
     return NextResponse.json(
-      { error: 'Erreur serveur interne: ' + error.message },
+      { error: 'Erreur serveur interne: ' + msg },
       { status: 500 }
     )
   }

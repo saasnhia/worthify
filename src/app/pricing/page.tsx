@@ -69,16 +69,17 @@ export default function PricingPage() {
 
       if (!res.ok || !data.url) {
         setError(data.error ?? 'Erreur lors de la création du checkout')
+        setSubscribing(null)
         return
       }
 
-      // Redirect to Stripe Checkout
+      // Redirect to Stripe Checkout — keep subscribing state active during navigation
       console.log('[pricing] Redirecting to Stripe:', data.url)
       window.location.href = data.url
+      // Do NOT reset subscribing here — the page is navigating away
     } catch (err) {
       console.error('[pricing] Fetch error:', err)
       setError('Erreur réseau. Veuillez réessayer.')
-    } finally {
       setSubscribing(null)
     }
   }, [user, authLoading, router])

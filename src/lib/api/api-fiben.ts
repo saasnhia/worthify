@@ -48,7 +48,7 @@ export async function checkSolvabilite(siren: string): Promise<ScoreSolvabilite>
       throw new Error(`API Pappers erreur: ${response.status}`)
     }
 
-    const data = await response.json()
+    const data = await response.json() as PappersData
 
     // 3. Calculer le score de risque (1-10)
     const scoreRisque = calculerScoreRisque(data)
@@ -106,7 +106,14 @@ export async function checkSolvabilite(siren: string): Promise<ScoreSolvabilite>
  * Calcule un score de risque base sur les donnees financieres.
  * Score 1-10 (1=tres risque, 10=tres sur)
  */
-function calculerScoreRisque(data: any): number {
+interface PappersData {
+  finances?: { resultat?: number; chiffre_affaires?: number }
+  situation_financiere?: { resultat_net?: number; chiffre_affaires?: number; effectif?: number }
+  effectif?: number
+  procedures_collectives?: unknown[]
+}
+
+function calculerScoreRisque(data: PappersData): number {
   let score = 5
 
   // Critere 1 : Resultat net

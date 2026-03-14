@@ -145,7 +145,8 @@ export async function GET(req: NextRequest) {
       previous_month: previousMonth,
       comparison,
     })
-  } catch (error: any) {
-    return NextResponse.json({ error: 'Erreur serveur: ' + error.message }, { status: 500 })
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+    return NextResponse.json({ error: 'Erreur serveur: ' + msg }, { status: 500 })
   }
 }

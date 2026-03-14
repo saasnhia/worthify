@@ -61,10 +61,11 @@ export async function POST(req: NextRequest) {
       success: true,
       preview,
     } as BankImportResponse)
-  } catch (error: any) {
-    console.error('Error parsing CSV:', error)
+  } catch (err: unknown) {
+    console.error('Error parsing CSV:', err)
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
     return NextResponse.json(
-      { error: 'Erreur lors du parsing du CSV: ' + error.message },
+      { error: 'Erreur lors du parsing du CSV: ' + msg },
       { status: 500 }
     )
   }

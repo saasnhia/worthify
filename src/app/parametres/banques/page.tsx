@@ -50,7 +50,7 @@ export default function BankAccountsPage() {
       } else {
         toast.error(result.error || 'Erreur lors de l\'ajout')
       }
-    } catch (error: any) {
+    } catch (_err: unknown) {
       toast.error('Erreur réseau')
     } finally {
       setFormLoading(false)

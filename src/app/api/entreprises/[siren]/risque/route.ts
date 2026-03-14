@@ -20,10 +20,11 @@ export async function GET(
     const score = await checkSolvabilite(siren)
 
     return NextResponse.json({ success: true, score })
-  } catch (error: any) {
-    const status = error.message?.includes('invalide') ? 400 : 500
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+    const status = msg.includes('invalide') ? 400 : 500
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: msg },
       { status }
     )
   }

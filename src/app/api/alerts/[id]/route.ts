@@ -38,8 +38,9 @@ export async function GET(
     }
 
     return NextResponse.json({ success: true, alert })
-  } catch (error: any) {
-    return NextResponse.json({ error: 'Erreur serveur: ' + error.message }, { status: 500 })
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+    return NextResponse.json({ error: 'Erreur serveur: ' + msg }, { status: 500 })
   }
 }
 
@@ -87,7 +88,8 @@ export async function PUT(
     }
 
     return NextResponse.json({ success: true })
-  } catch (error: any) {
-    return NextResponse.json({ error: 'Erreur serveur: ' + error.message }, { status: 500 })
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+    return NextResponse.json({ error: 'Erreur serveur: ' + msg }, { status: 500 })
   }
 }

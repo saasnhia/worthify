@@ -55,8 +55,9 @@ export async function GET() {
       insights,
       has_data: true,
     })
-  } catch (error: any) {
-    return NextResponse.json({ error: 'Erreur serveur: ' + error.message }, { status: 500 })
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+    return NextResponse.json({ error: 'Erreur serveur: ' + msg }, { status: 500 })
   }
 }
 
@@ -95,7 +96,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true })
-  } catch (error: any) {
-    return NextResponse.json({ error: 'Erreur serveur: ' + error.message }, { status: 500 })
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+    return NextResponse.json({ error: 'Erreur serveur: ' + msg }, { status: 500 })
   }
 }

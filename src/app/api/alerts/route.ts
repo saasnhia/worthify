@@ -45,8 +45,9 @@ export async function GET(req: NextRequest) {
         warning: all.filter(a => a.severite === 'warning' && a.statut !== 'resolue' && a.statut !== 'ignoree').length,
       },
     })
-  } catch (error: any) {
-    return NextResponse.json({ error: 'Erreur serveur: ' + error.message }, { status: 500 })
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+    return NextResponse.json({ error: 'Erreur serveur: ' + msg }, { status: 500 })
   }
 }
 
@@ -204,7 +205,7 @@ export async function POST(req: NextRequest) {
     if (latestFinData && latestFinData.length > 0) {
       const fd = latestFinData[0]
       const fixedCosts = fd.fixed_costs || {}
-      const totalFixed = Object.values(fixedCosts).reduce((s: number, c: any) => s + (Number(c) || 0), 0)
+      const totalFixed = Object.values(fixedCosts).reduce((s: number, c: unknown) => s + (Number(c) || 0), 0)
       const marginRate = 1 - (fd.variable_cost_rate / 100)
       const breakEvenPoint = marginRate > 0 ? totalFixed / marginRate : 0
       const annualRevenue = fd.revenue * 12

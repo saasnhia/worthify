@@ -24,8 +24,8 @@ function extractTextFromPdf(pdfBuffer: Buffer): Promise<string> {
       resolve(text.trim());
     });
 
-    pdfParser.on('pdfParser_dataError', (errData: any) => {
-      const msg = errData?.parserError || errData;
+    pdfParser.on('pdfParser_dataError', (errData: Error | { parserError: Error }) => {
+      const msg = 'parserError' in errData ? errData.parserError : errData;
       console.error('PDF extraction error:', msg);
       reject(new Error(String(msg)));
     });
@@ -687,10 +687,11 @@ export async function POST(req: NextRequest) {
         : [],
     });
 
-  } catch (error: any) {
-    console.error('[API] Error processing invoice:', error);
+  } catch (err: unknown) {
+    console.error('[API] Error processing invoice:', err);
+    const msg = err instanceof Error ? err.message : 'Erreur lors du traitement de la facture.'
     return NextResponse.json({
-      error: error.message || 'Erreur lors du traitement de la facture.'
+      error: msg
     }, { status: 500 });
   }
 }

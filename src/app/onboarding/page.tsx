@@ -146,8 +146,8 @@ export default function OnboardingPage() {
     }
   }
 
-  const inputClass = 'w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#22D3A5]/50 focus:border-[#22D3A5]/50'
-  const selectClass = 'w-full bg-[#0F172A] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#22D3A5]/50'
+  const inputClass = 'w-full max-w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#22D3A5]/50 focus:border-[#22D3A5]/50'
+  const selectClass = 'w-full max-w-full bg-[#0F172A] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#22D3A5]/50'
   const labelClass = 'block text-xs font-medium text-slate-300 mb-1.5'
 
   return (
@@ -167,7 +167,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* Step indicator */}
-      <div className="flex items-center w-full max-w-md mb-8">
+      <div className="flex items-center w-full max-w-md px-2 sm:px-0 mb-8">
         {STEPS.map((s, idx) => (
           <div key={s.n} className="flex-1 flex items-center">
             <div className="flex flex-col items-center flex-1">
@@ -395,7 +395,7 @@ export default function OnboardingPage() {
               ].map(row => (
                 <div key={row.label} className="flex items-start justify-between gap-4">
                   <span className="text-xs text-slate-500 flex-shrink-0">{row.label}</span>
-                  <span className="text-xs text-white text-right truncate max-w-[220px]">{row.value}</span>
+                  <span className="text-xs text-white text-right truncate max-w-[140px] sm:max-w-[220px]">{row.value}</span>
                 </div>
               ))}
             </div>

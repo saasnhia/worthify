@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, Button, Input } from '@/components/ui'
 import { Upload, Loader2, CheckCircle, AlertCircle, Edit2, Save, X } from 'lucide-react'
 import { toast } from 'react-hot-toast'
@@ -11,8 +12,10 @@ interface UploadFactureProps {
 }
 
 export function UploadFacture({ onUploadSuccess }: UploadFactureProps) {
+  const router = useRouter()
   const [dragActive, setDragActive] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [extractedData, setExtractedData] = useState<Facture | null>(null)
   const [editMode, setEditMode] = useState(false)
   const [editedFields, setEditedFields] = useState<Partial<Facture>>({})
@@ -57,8 +60,9 @@ export function UploadFacture({ onUploadSuccess }: UploadFactureProps) {
       } else {
         toast.error(data.error || 'Erreur lors du traitement')
       }
-    } catch (error: any) {
-      toast.error('Erreur réseau: ' + error.message)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erreur réseau'
+      toast.error('Erreur réseau: ' + msg)
     } finally {
       setUploading(false)
     }
@@ -80,19 +84,74 @@ export function UploadFacture({ onUploadSuccess }: UploadFactureProps) {
   }
 
   // Field editing handlers
-  const handleFieldEdit = (field: keyof Facture, value: any) => {
+  const handleFieldEdit = (field: keyof Facture, value: string | number | null) => {
     setEditedFields(prev => ({ ...prev, [field]: value }))
   }
 
   const handleSaveEdits = async () => {
     if (!extractedData) return
 
-    try {
-      // TODO: Call API to update facture with edited fields
-      toast.success('Modifications enregistrées')
+    // Merge original + edits to get current state
+    const merged = {
+      fournisseur: editedFields.fournisseur ?? extractedData.fournisseur,
+      date_facture: editedFields.date_facture ?? extractedData.date_facture,
+      montant_ht: editedFields.montant_ht ?? extractedData.montant_ht,
+      montant_tva: editedFields.montant_tva ?? extractedData.montant_tva,
+      montant_ttc: editedFields.montant_ttc ?? extractedData.montant_ttc,
+      numero_facture: editedFields.numero_facture ?? extractedData.numero_facture,
+    }
+
+    // Validate required fields
+    const missing: string[] = []
+    if (!merged.fournisseur) missing.push('Fournisseur')
+    if (!merged.date_facture) missing.push('Date')
+    if (merged.montant_ht == null || isNaN(Number(merged.montant_ht))) missing.push('Montant HT')
+    if (merged.montant_tva == null || isNaN(Number(merged.montant_tva))) missing.push('TVA')
+
+    if (missing.length > 0) {
+      toast.error(`Champs obligatoires manquants : ${missing.join(', ')}`)
+      return
+    }
+
+    // Only send fields that were actually edited
+    if (Object.keys(editedFields).length === 0) {
+      toast.success('Aucune modification')
       setEditMode(false)
-    } catch (error) {
-      toast.error('Erreur lors de la sauvegarde')
+      return
+    }
+
+    setSaving(true)
+    try {
+      const response = await fetch(`/api/factures/${extractedData.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editedFields),
+      })
+
+      const data = await response.json() as { success?: boolean; facture?: Facture; error?: string }
+
+      if (!response.ok || !data.success) {
+        toast.error(data.error ?? 'Erreur lors de la sauvegarde')
+        return
+      }
+
+      // Update local state with saved data
+      const updated = data.facture ?? { ...extractedData, ...editedFields }
+      setExtractedData(updated)
+      setEditedFields({})
+      setEditMode(false)
+      toast.success('Modifications enregistrées')
+
+      if (onUploadSuccess) {
+        onUploadSuccess(updated)
+      }
+
+      router.push('/factures')
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erreur réseau'
+      toast.error(msg)
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -289,6 +348,8 @@ export function UploadFacture({ onUploadSuccess }: UploadFactureProps) {
                 <Button
                   variant="primary"
                   onClick={handleSaveEdits}
+                  loading={saving}
+                  disabled={saving}
                   icon={<Save className="w-4 h-4" />}
                   className="flex-1"
                 >

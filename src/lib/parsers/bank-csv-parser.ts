@@ -204,11 +204,12 @@ export async function parseBankCSV(
             transactions,
             warnings,
           })
-        } catch (error: any) {
-          reject(new Error(`Erreur lors du parsing CSV: ${error.message}`))
+        } catch (err: unknown) {
+          const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+          reject(new Error(`Erreur lors du parsing CSV: ${msg}`))
         }
       },
-      error: (error: any) => {
+      error: (error: Error) => {
         reject(new Error(`Erreur Papa Parse: ${error.message}`))
       },
     })

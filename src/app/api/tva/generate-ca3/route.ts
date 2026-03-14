@@ -148,10 +148,11 @@ export async function POST(req: NextRequest) {
       declaration,
       lignes,
     } as TVAGenerateCA3Response)
-  } catch (error: any) {
-    console.error('Error generating CA3:', error)
+  } catch (err: unknown) {
+    console.error('Error generating CA3:', err)
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
     return NextResponse.json(
-      { error: 'Erreur serveur interne: ' + error.message },
+      { error: 'Erreur serveur interne: ' + msg },
       { status: 500 }
     )
   }
