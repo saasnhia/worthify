@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { AppShell } from '@/components/layout'
 import { Card, Button, Input } from '@/components/ui'
 import { useAuth } from '@/hooks/useAuth'
@@ -22,6 +23,7 @@ import {
   Loader2,
   X,
   ArrowRightLeft,
+  Upload,
 } from 'lucide-react'
 
 // ----------------------------------------------------------------
@@ -41,6 +43,7 @@ interface RapprochementInfo {
 
 export default function TransactionsPage() {
   const { user, loading: authLoading } = useAuth()
+  const router = useRouter()
   const { transactions, loading: dataLoading, addTransaction, deleteTransaction } = useFinancialData(user?.id)
   const { can } = useUserPlan()
   const canRapprochement = can('rapprochement_auto')
@@ -345,10 +348,22 @@ export default function TransactionsPage() {
           {filteredTransactions.length === 0 ? (
             <div className="py-12 text-center">
               <p className="text-navy-500">Aucune transaction</p>
-              {!user && (
+              {!user ? (
                 <p className="text-sm text-navy-400 mt-2">
                   Connectez-vous pour ajouter des transactions
                 </p>
+              ) : (
+                <div className="mt-4">
+                  <p className="text-sm text-navy-400 mb-3">
+                    Importez un relevé bancaire pour alimenter vos transactions
+                  </p>
+                  <Button
+                    onClick={() => router.push('/import-releve')}
+                    icon={<Upload className="w-4 h-4" />}
+                  >
+                    Importer un relevé bancaire
+                  </Button>
+                </div>
               )}
             </div>
           ) : (

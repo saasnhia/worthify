@@ -117,13 +117,13 @@ export async function GET() {
       .eq('user_id', user.id)
       .eq('is_active', true),
 
-    // TVA du mois
+    // TVA : prochaine déclaration (due ≥ aujourd'hui) ou la plus récente
     supabase
       .from('declarations_tva')
-      .select('tva_nette, statut')
+      .select('tva_nette, statut, periode_debut, periode_fin')
       .eq('user_id', user.id)
-      .gte('periode_debut', firstOfMonth)
-      .lte('periode_debut', lastOfMonth)
+      .order('periode_debut', { ascending: false })
+      .limit(1)
       .maybeSingle(),
 
     // Alertes actives
@@ -252,9 +252,13 @@ export async function GET() {
     profile_type: profileType,
     // KPIs communs
     kpis: {
-      // Mode cabinet
+      // Mode cabinet — retards clients (AR) en priorité, fournisseurs en fallback
       dossiers_actifs: dossiersActifs,
-      factures_en_retard_count: countFournisseursEnRetard,
+      factures_en_retard_count: profileType === 'cabinet'
+        ? countEnRetard || countFournisseursEnRetard
+        : countFournisseursEnRetard,
+      factures_clients_en_retard: countEnRetard,
+      factures_fournisseurs_en_retard: countFournisseursEnRetard,
       // Mode entreprise
       encours_clients: totalEncoursClients,
       count_en_attente: countEncoursClients,

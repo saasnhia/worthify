@@ -404,17 +404,17 @@ if (!authLoading && initialized && user && !isActive) {
           title: 'Factures en retard',
           value: kpis ? String(kpis.factures_en_retard_count) : '—',
           subtitle: kpis && kpis.factures_en_retard_count > 0
-            ? `Éch. fournisseurs dépassée`
-            : 'Aucun retard fournisseur',
+            ? `${kpis.factures_en_retard_count} client${kpis.factures_en_retard_count > 1 ? 's' : ''} en retard`
+            : 'Tous les clients à jour',
           icon: <Clock className="w-5 h-5 text-red-600" />,
           accent: 'bg-red-500',
           variant: kpis && kpis.factures_en_retard_count > 0 ? 'danger' : 'default',
           loading,
         },
         {
-          title: 'TVA du mois',
+          title: 'TVA',
           value: kpis?.tva_nette != null ? formatCurrency(kpis.tva_nette) : 'Aucune décl.',
-          subtitle: kpis?.tva_statut ? `Statut : ${kpis.tva_statut}` : 'Pas de déclaration',
+          subtitle: kpis?.tva_statut ? `Dernière : ${kpis.tva_statut}` : 'Pas de déclaration',
           icon: <Euro className="w-5 h-5 text-amber-600" />,
           accent: 'bg-amber-500',
           variant: kpis?.tva_nette != null && kpis.tva_nette > 0 ? 'warning' : 'default',
@@ -823,6 +823,84 @@ if (!authLoading && initialized && user && !isActive) {
           <div className="mb-8">
             <EntrepriseDashboardPanel />
           </div>
+        )}
+
+        {/* ── Dossiers clients (cabinet mode only) ────────────────── */}
+        {profileType === 'cabinet' && (
+          <Card className="mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-navy-500" />
+                <h2 className="text-base font-display font-semibold text-navy-900">Dossiers clients</h2>
+              </div>
+              <Link href="/clients" className="text-xs text-emerald-600 hover:underline flex items-center gap-1">
+                Voir tous <ChevronRight className="w-3 h-3" />
+              </Link>
+            </div>
+
+            {loading ? (
+              <div className="space-y-2">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-10 bg-navy-50 animate-pulse rounded-lg" />
+                ))}
+              </div>
+            ) : (data?.balance_agee_clients ?? []).length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <Users className="w-10 h-10 text-navy-200 mx-auto mb-2" />
+                <p className="text-sm font-medium text-navy-600">Aucun client en retard</p>
+                <p className="text-xs text-navy-400 mt-1 mb-3">Toutes les factures clients sont à jour</p>
+                <Link
+                  href="/clients"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors border border-emerald-200"
+                >
+                  Voir tous les clients
+                </Link>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-xs font-medium text-navy-400 border-b border-navy-100">
+                      <th className="text-left pb-2">Nom</th>
+                      <th className="text-right pb-2">Montant dû</th>
+                      <th className="text-right pb-2">Jours retard</th>
+                      <th className="text-right pb-2">Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-navy-50">
+                    {[...(data?.balance_agee_clients ?? [])]
+                      .sort((a, b) => b.resteA - a.resteA)
+                      .slice(0, 5)
+                      .map(c => (
+                        <tr key={c.id} className="hover:bg-navy-50/50 transition-colors">
+                          <td className="py-2.5 pr-3 font-medium text-navy-800 truncate max-w-[150px]">
+                            {c.nom}
+                          </td>
+                          <td className="py-2.5 pr-3 text-right font-mono font-semibold text-navy-900">
+                            {formatCurrency(c.resteA)}
+                          </td>
+                          <td className="py-2.5 pr-3 text-right text-navy-500">
+                            {c.joursRetard > 0 ? `${c.joursRetard}j` : '—'}
+                          </td>
+                          <td className="py-2.5 text-right">
+                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[11px] ${TRANCHE_COLORS[c.tranche]}`}>
+                              {TRANCHE_LABELS[c.tranche]}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+                {(data?.balance_agee_clients ?? []).length > 5 && (
+                  <div className="mt-3 text-center">
+                    <Link href="/clients" className="text-xs text-emerald-600 hover:underline">
+                      + {(data?.balance_agee_clients ?? []).length - 5} autres clients
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+          </Card>
         )}
 
         {/* Row 1: Balance âgée (2/3) + Rapprochements (1/3) */}

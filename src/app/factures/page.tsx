@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { AppShell } from '@/components/layout'
-import { Card } from '@/components/ui'
+import { Card, Button } from '@/components/ui'
 import { UploadFacture } from '@/components/factures/UploadFacture'
 import { FacturesClientsList } from '@/components/factures/FacturesClientsList'
 import { useAuth } from '@/hooks/useAuth'
@@ -15,11 +16,13 @@ import {
   CheckCircle,
   AlertCircle,
   XCircle,
+  PenLine,
 } from 'lucide-react'
 
 type Tab = 'fournisseurs' | 'clients'
 
 export default function FacturesPage() {
+  const router = useRouter()
   const { user, loading: authLoading } = useAuth()
   const { factures, loading: dataLoading } = useFactures(user?.id)
   const [activeTab, setActiveTab] = useState<Tab>('fournisseurs')
@@ -213,9 +216,16 @@ export default function FacturesPage() {
                 <Card className="text-center py-12">
                   <FileText className="w-16 h-16 text-navy-300 mx-auto mb-4" />
                   <p className="text-navy-500">Aucune facture importée</p>
-                  <p className="text-sm text-navy-400 mt-1">
+                  <p className="text-sm text-navy-400 mt-1 mb-4">
                     Glissez-déposez une facture ci-dessus pour commencer
                   </p>
+                  <Button
+                    onClick={() => router.push('/factures?tab=clients')}
+                    variant="outline"
+                    icon={<PenLine className="w-4 h-4" />}
+                  >
+                    Créer une facture client
+                  </Button>
                 </Card>
               </div>
             ) : null}

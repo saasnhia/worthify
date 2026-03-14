@@ -158,7 +158,7 @@ export default function TVADetailPage() {
               <Button
                 variant="outline"
                 icon={<Send className="w-4 h-4" />}
-                onClick={() => toast.success('Export CERFA disponible en V2')}
+                onClick={() => toast('T\u00e9l\u00e9transmission DGFiP \u2014 bient\u00f4t disponible', { icon: '\u2139\ufe0f' })}
               >
                 Envoyer aux impôts
               </Button>
@@ -166,7 +166,7 @@ export default function TVADetailPage() {
             <Button
               variant="ghost"
               icon={<Download className="w-4 h-4" />}
-              onClick={() => toast.success('Export PDF disponible en V2')}
+              onClick={() => router.push(`/tva/ca3/${id}/print`)}
             >
               Export PDF
             </Button>

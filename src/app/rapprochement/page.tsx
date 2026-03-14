@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { useRapprochement } from '@/hooks/useRapprochement'
 import { Card, Button } from '@/components/ui'
@@ -14,9 +15,11 @@ import {
   Loader2,
   Play,
   RefreshCw,
+  Upload,
 } from 'lucide-react'
 
 export default function RapprochementDashboardPage() {
+  const router = useRouter()
   const { user } = useAuth()
   const {
     rapprochements,
@@ -155,6 +158,36 @@ export default function RapprochementDashboardPage() {
           </div>
         </Card>
       </div>
+
+      {/* Empty state CTA when no data at all */}
+      {!loading && (rapprochementStats.auto_valide + rapprochementStats.manuels + rapprochementStats.suggestions + anomalyStats.ouvertes) === 0 && (
+        <Card className="mb-6">
+          <div className="text-center py-4">
+            <ArrowRightLeft className="w-10 h-10 text-navy-200 mx-auto mb-3" />
+            <p className="text-sm text-navy-600 font-medium mb-1">
+              Aucun rapprochement disponible
+            </p>
+            <p className="text-xs text-navy-400 mb-4">
+              Importez des transactions et factures pour lancer le rapprochement automatique.
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              <Button
+                onClick={() => router.push('/import-releve')}
+                icon={<Upload className="w-4 h-4" />}
+              >
+                Importer relevé
+              </Button>
+              <Button
+                onClick={() => router.push('/factures')}
+                variant="outline"
+                icon={<FileText className="w-4 h-4" />}
+              >
+                Importer factures
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {/* Quick Links */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

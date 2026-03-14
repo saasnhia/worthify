@@ -51,6 +51,7 @@ const sections: SidebarSection[] = [
     label: 'Comptabilité',
     icon: Receipt,
     items: [
+      { name: 'Clients', href: '/clients', icon: Users },
       { name: 'Transactions', href: '/transactions', icon: Receipt },
       { name: 'Factures', href: '/factures', icon: FileText },
       { name: 'Relances', href: '/relances', icon: RefreshCw, badge: 'relances' },
