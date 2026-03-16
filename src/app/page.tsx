@@ -1,13 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   CheckCircle2, ChevronDown, ArrowRight, ScanLine, ArrowRightLeft,
-  Users2, Bell, Menu, Shield, Zap, Globe, X as XIcon,
+  Users2, Bell, Menu, Shield, Zap, X as XIcon,
   Scale, Euro, TrendingUp, Wrench, Play, Sparkles,
   FileText, BookOpen, Receipt, Send,
 } from 'lucide-react'
@@ -18,11 +17,6 @@ import { FloatingOrbs } from '@/components/landing/FloatingOrbs'
 import { FeatureCard } from '@/components/landing/FeatureCards'
 import { useHeroAnimation, useScrollAnimations } from '@/components/landing/HeroAnimations'
 
-// Lazy load 3D scene (desktop only, no SSR)
-const HeroScene3D = dynamic(
-  () => import('@/components/landing/HeroScene3D').then(m => ({ default: m.HeroScene3D })),
-  { ssr: false, loading: () => <div className="absolute inset-0 bg-[#080810]" /> }
-)
 
 // ─────────────────────────────────────────────────────────────
 // PIPELINE
@@ -84,11 +78,6 @@ export default function HomePage() {
   const [contactForm, setContactForm] = useState({ nom: '', cabinet: '', email: '', message: '' })
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
-  const [isMobile, setIsMobile] = useState(true) // Default true to avoid SSR flash
-
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 768)
-  }, [])
 
   // GSAP animations
   useHeroAnimation()
@@ -168,14 +157,26 @@ export default function HomePage() {
         )}
       </nav>
 
-      {/* ── HERO — 3D Premium ── */}
+      {/* ── HERO — Screenshot Background ── */}
       <section className="relative min-h-screen flex items-center overflow-hidden bg-[#080810]">
-        {/* 3D Scene (desktop) / CSS Orbs (mobile) */}
-        {!isMobile && <HeroScene3D />}
-        <FloatingOrbs />
+        {/* Screenshot feature clé en arrière-plan */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/screenshots/dashboard1.png"
+            alt=""
+            fill
+            className="object-cover object-top opacity-20 scale-110"
+            priority
+          />
+          {/* Overlay gradient multi-couche */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#080810]/60 via-[#080810]/40 to-[#080810]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#080810]/80 via-transparent to-[#080810]/80" />
+          {/* Glow amber centre */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-3xl" />
+        </div>
 
-        {/* Overlay gradient for text readability */}
-        <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[#080810]/80 via-[#080810]/40 to-transparent pointer-events-none" />
+        {/* CSS Orbs par-dessus */}
+        <FloatingOrbs />
 
         {/* Subtle grid */}
         <div className="absolute inset-0 opacity-[0.02] z-[2]"
