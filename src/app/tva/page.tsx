@@ -58,7 +58,7 @@ export default function TVADashboardPage() {
               <FileText className="w-5 h-5 text-emerald-600" />
             </div>
             <div>
-              <p className="text-sm text-navy-500">Total</p>
+              <p className="text-sm text-gray-600">Total</p>
               <p className="text-2xl font-bold text-navy-900">{stats.total}</p>
             </div>
           </div>
@@ -70,7 +70,7 @@ export default function TVADashboardPage() {
               <Calendar className="w-5 h-5 text-navy-600" />
             </div>
             <div>
-              <p className="text-sm text-navy-500">Brouillons</p>
+              <p className="text-sm text-gray-600">Brouillons</p>
               <p className="text-2xl font-bold text-navy-900">{stats.brouillons}</p>
             </div>
           </div>
@@ -82,7 +82,7 @@ export default function TVADashboardPage() {
               <FileText className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <p className="text-sm text-navy-500">Envoyées</p>
+              <p className="text-sm text-gray-600">Envoyées</p>
               <p className="text-2xl font-bold text-navy-900">{stats.envoyees}</p>
             </div>
           </div>
@@ -94,7 +94,7 @@ export default function TVADashboardPage() {
               <Euro className="w-5 h-5 text-gold-600" />
             </div>
             <div>
-              <p className="text-sm text-navy-500">TVA Payée</p>
+              <p className="text-sm text-gray-600">TVA Payée</p>
               <p className="text-2xl font-bold text-navy-900">
                 {stats.montantTotal.toFixed(0)}€
               </p>
@@ -107,7 +107,7 @@ export default function TVADashboardPage() {
       {declarations.length === 0 ? (
         <Card>
           <div className="text-center py-12">
-            <FileText className="w-16 h-16 text-navy-300 mx-auto mb-4" />
+            <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-navy-900 mb-2">
               Aucune déclaration TVA
             </h3>
@@ -122,57 +122,57 @@ export default function TVADashboardPage() {
       ) : (
         <Card>
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-navy-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-navy-700">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
+                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-800">
                     Période
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-navy-700">
+                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-800">
                     Régime
                   </th>
-                  <th className="px-4 py-3 text-right text-sm font-medium text-navy-700">
+                  <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-800">
                     TVA Collectée
                   </th>
-                  <th className="px-4 py-3 text-right text-sm font-medium text-navy-700">
+                  <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-800">
                     TVA Déductible
                   </th>
-                  <th className="px-4 py-3 text-right text-sm font-medium text-navy-700">
+                  <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-800">
                     TVA Nette
                   </th>
-                  <th className="px-4 py-3 text-center text-sm font-medium text-navy-700">
+                  <th className="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider text-gray-800">
                     Statut
                   </th>
-                  <th className="px-4 py-3 text-right text-sm font-medium text-navy-700">
+                  <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-800">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-navy-100">
-                {declarations.map(decl => (
-                  <tr key={decl.id} className="hover:bg-navy-50">
-                    <td className="px-4 py-3 text-sm text-navy-900">
+              <tbody>
+                {declarations.map((decl, idx) => (
+                  <tr key={decl.id} className={`border-b border-gray-100 hover:bg-amber-50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                    <td className="px-6 py-4 text-sm font-semibold text-gray-900">
                       {new Date(decl.periode_debut).toLocaleDateString('fr-FR', {
                         month: 'short',
                         year: 'numeric',
                       })}
                     </td>
-                    <td className="px-4 py-3 text-sm text-navy-600">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-700">
                       {decl.regime === 'reel_normal' ? 'Réel normal' : 'Réel simplifié'}
                     </td>
-                    <td className="px-4 py-3 text-sm text-right font-mono text-emerald-600">
+                    <td className="px-6 py-4 text-sm text-right font-mono font-semibold text-emerald-700 tabular-nums">
                       +{decl.tva_collectee.toFixed(2)} €
                     </td>
-                    <td className="px-4 py-3 text-sm text-right font-mono text-coral-600">
+                    <td className="px-6 py-4 text-sm text-right font-mono font-semibold text-rose-700 tabular-nums">
                       -{decl.tva_deductible.toFixed(2)} €
                     </td>
-                    <td className="px-4 py-3 text-sm text-right font-mono font-semibold text-navy-900">
+                    <td className="px-6 py-4 text-sm text-right font-mono font-bold text-gray-900 tabular-nums">
                       {decl.tva_nette.toFixed(2)} €
                     </td>
-                    <td className="px-4 py-3 text-center">
+                    <td className="px-6 py-4 text-center">
                       <TVAStatusBadge statut={decl.statut} size="sm" />
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-6 py-4 text-right">
                       <Link href={`/tva/ca3/${decl.id}`}>
                         <Button variant="outline" size="sm">
                           Voir

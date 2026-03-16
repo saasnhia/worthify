@@ -60,7 +60,7 @@ export default function FacturesPage() {
         {/* Page Header */}
         <div className="mb-6">
           <h1 className="text-3xl font-display font-bold text-navy-900">Factures</h1>
-          <p className="mt-1 text-navy-500">Gestion de vos factures fournisseurs et clients</p>
+          <p className="mt-1 text-gray-600">Gestion de vos factures fournisseurs et clients</p>
         </div>
 
         {/* Not Logged In Banner */}
@@ -141,82 +141,81 @@ export default function FacturesPage() {
               <div className="mt-8 flex items-center justify-center py-12">
                 <div className="flex flex-col items-center gap-4">
                   <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
-                  <p className="text-navy-500">Chargement des factures...</p>
+                  <p className="text-gray-600">Chargement des factures...</p>
                 </div>
               </div>
             ) : factures.length > 0 ? (
               <div className="mt-8">
-                <Card padding="none">
-                  <div className="px-6 py-4 border-b border-navy-100">
-                    <h3 className="text-lg font-display font-semibold text-navy-900">
-                      Factures fournisseurs ({factures.length})
-                    </h3>
-                  </div>
-                  <div className="divide-y divide-navy-100">
-                    {factures.map((facture) => (
-                      <div key={facture.id} className="px-6 py-4 hover:bg-navy-50 transition-colors">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-start gap-4">
-                            <div className="p-3 bg-emerald-100 rounded-lg">
-                              <FileText className="w-6 h-6 text-emerald-600" />
-                            </div>
-                            <div>
-                              <div className="flex items-center gap-2 mb-1">
-                                <p className="font-medium text-navy-900">
-                                  {facture.fournisseur ?? 'Fournisseur inconnu'}
-                                </p>
-                                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-navy-100 rounded-full">
-                                  {getStatusIcon(facture.statut)}
-                                  <span className="text-xs text-navy-600">{getStatusLabel(facture.statut)}</span>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-4 text-sm text-navy-500">
-                                {facture.numero_facture && (
-                                  <span className="flex items-center gap-1">
-                                    <FileText className="w-3 h-3" />
-                                    {facture.numero_facture}
-                                  </span>
-                                )}
-                                {facture.date_facture && (
-                                  <span className="flex items-center gap-1">
-                                    <Calendar className="w-3 h-3" />
-                                    {new Date(facture.date_facture).toLocaleDateString('fr-FR')}
-                                  </span>
-                                )}
-                              </div>
-                              {facture.ocr_confidence !== null && facture.ocr_confidence !== undefined && (
-                                <div className="mt-2 text-xs text-navy-400">
-                                  Confiance OCR: {(facture.ocr_confidence * 100).toFixed(0)}%
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            {facture.montant_ttc != null && (
-                              <div className="font-mono font-semibold text-lg text-navy-900">
-                                {formatCurrency(facture.montant_ttc)}
-                              </div>
-                            )}
-                            {(facture.montant_ht != null || facture.montant_tva != null) && (
-                              <div className="text-xs text-navy-500 mt-1">
-                                {facture.montant_ht != null && <>HT: {formatCurrency(facture.montant_ht)}</>}
-                                {facture.montant_ht != null && facture.montant_tva != null && ' + '}
-                                {facture.montant_tva != null && <>TVA: {formatCurrency(facture.montant_tva)}</>}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </Card>
+                <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
+                        <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-800">Fournisseur</th>
+                        <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-800">N° Facture</th>
+                        <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-800">Date</th>
+                        <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-800">Montant HT</th>
+                        <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-800">TVA</th>
+                        <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-800">TTC</th>
+                        <th className="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider text-gray-800">Confiance</th>
+                        <th className="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider text-gray-800">Statut</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {factures.map((facture, idx) => {
+                        const confidence = facture.ocr_confidence != null ? Math.round(facture.ocr_confidence * 100) : null
+                        return (
+                          <tr key={facture.id} className={`border-b border-gray-100 hover:bg-amber-50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                            <td className="px-6 py-4 text-sm font-semibold text-gray-900">
+                              {facture.fournisseur ?? 'Inconnu'}
+                            </td>
+                            <td className="px-6 py-4 text-sm font-mono text-gray-800">
+                              {facture.numero_facture ?? '-'}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-700">
+                              {facture.date_facture ? new Date(facture.date_facture).toLocaleDateString('fr-FR') : '-'}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-right font-mono font-medium text-gray-900 tabular-nums">
+                              {facture.montant_ht != null ? formatCurrency(facture.montant_ht) : '-'}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-right font-mono text-gray-700 tabular-nums">
+                              {facture.montant_tva != null ? formatCurrency(facture.montant_tva) : '-'}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-right font-mono font-bold text-gray-900 tabular-nums">
+                              {facture.montant_ttc != null ? formatCurrency(facture.montant_ttc) : '-'}
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              {confidence != null ? (
+                                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${
+                                  confidence >= 95 ? 'bg-emerald-100 text-emerald-800' : confidence >= 85 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'
+                                }`}>
+                                  {confidence}%
+                                </span>
+                              ) : '-'}
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${
+                                facture.statut === 'validee' ? 'bg-emerald-100 text-emerald-800' :
+                                facture.statut === 'en_attente' ? 'bg-amber-100 text-amber-800' :
+                                facture.statut === 'rejetee' ? 'bg-rose-100 text-rose-800' :
+                                'bg-gray-100 text-gray-800'
+                              }`}>
+                                {getStatusIcon(facture.statut)}
+                                {getStatusLabel(facture.statut)}
+                              </span>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             ) : user ? (
               <div className="mt-8">
                 <Card className="text-center py-12">
-                  <FileText className="w-16 h-16 text-navy-300 mx-auto mb-4" />
-                  <p className="text-navy-500">Aucune facture importée</p>
-                  <p className="text-sm text-navy-400 mt-1 mb-4">
+                  <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-700 font-medium">Aucune facture importée</p>
+                  <p className="text-sm text-gray-500 mt-1 mb-4">
                     Glissez-déposez une facture ci-dessus pour commencer
                   </p>
                   <Button
