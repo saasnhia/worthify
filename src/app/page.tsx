@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useInView, useScroll, useTransform } from 'framer-motion'
+import dynamic from 'next/dynamic'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   CheckCircle2, ChevronDown, ArrowRight, ScanLine, ArrowRightLeft,
   Users2, Bell, Menu, Shield, Zap, Globe, X as XIcon,
@@ -13,73 +14,41 @@ import {
 import { ScreenshotCarousel } from '@/components/ScreenshotCarousel'
 import { PricingPlans } from '@/components/PricingPlans'
 import { ComparatifSection } from '@/components/ComparatifSection'
+import { FloatingOrbs } from '@/components/landing/FloatingOrbs'
+import { FeatureCard } from '@/components/landing/FeatureCards'
+import { useHeroAnimation, useScrollAnimations } from '@/components/landing/HeroAnimations'
+
+// Lazy load Three.js particles (desktop only, no SSR)
+const ParticlesBackground = dynamic(
+  () => import('@/components/landing/ParticlesBackground').then(m => m.ParticlesBackground),
+  { ssr: false }
+)
 
 // ─────────────────────────────────────────────────────────────
-// ANIMATION HELPERS
+// PIPELINE
 // ─────────────────────────────────────────────────────────────
 
-function FadeIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease: 'easeOut' }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-function StaggerChildren({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
-  return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={inView ? 'visible' : 'hidden'}
-      variants={{
-        visible: { transition: { staggerChildren: 0.08 } },
-        hidden: {},
-      }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-const staggerChild = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
-}
-
-// Animated workflow pipeline step
 const PIPELINE_STEPS = [
-  { icon: ScanLine, label: 'OCR Facture', color: 'text-amber-400' },
-  { icon: BookOpen, label: 'Journal PCG', color: 'text-amber-400' },
-  { icon: Receipt, label: 'TVA CA3', color: 'text-amber-400' },
-  { icon: Send, label: 'Envoi client', color: 'text-amber-400' },
+  { icon: ScanLine, label: 'OCR Facture' },
+  { icon: BookOpen, label: 'Journal PCG' },
+  { icon: Receipt, label: 'TVA CA3' },
+  { icon: Send, label: 'Envoi client' },
 ]
 
 // ─────────────────────────────────────────────────────────────
 // DATA
 // ─────────────────────────────────────────────────────────────
 
-const FEATURES = [
-  { icon: ScanLine, color: 'emerald' as const, title: 'OCR intelligent', desc: 'Scannez une facture, Worthifast extrait fournisseur, montants, TVA et classe automatiquement en PCG.' },
-  { icon: ArrowRightLeft, color: 'emerald' as const, title: 'Rapprochement IA', desc: 'L\'IA apprend vos habitudes de lettrage et rapproche factures et relevés bancaires automatiquement.' },
-  { icon: Scale, color: 'cyan' as const, title: 'Conformité française native', desc: 'TVA CA3 automatique, export FEC certifié, assistant PCG & BOFIP avec références contextualisées.' },
-  { icon: Zap, color: 'cyan' as const, title: 'E-invoicing 2026 prêt', desc: 'Factur-X natif, norme EN16931, validation des 16 champs obligatoires DGFiP. Prêt pour l\'obligation.' },
-  { icon: Users2, color: 'violet' as const, title: 'Portail client sécurisé', desc: 'Zéro email, zéro pièce jointe. Vos clients déposent leurs documents dans un espace dédié.' },
-  { icon: Bell, color: 'violet' as const, title: 'Relances automatiques', desc: 'Impayés détectés et relancés en J+7, J+15, J+30. Configurable par client et par seuil.' },
-  { icon: Euro, color: 'emerald' as const, title: 'Prix transparent', desc: 'Dossiers illimités dès le plan Cabinet. Pas de facturation à l\'utilisateur ni au dossier.' },
-  { icon: TrendingUp, color: 'cyan' as const, title: 'IA française intégrée', desc: 'Assistant entraîné sur le PCG, BOFIP et CGI. Données traitées en Europe, conforme RGPD.' },
-  { icon: Wrench, color: 'violet' as const, title: 'Construit avec des comptables', desc: 'Développé avec le département Comptabilité-Finance de l\'IAE Dijon. Validé par des praticiens.' },
+const FEATURES: { icon: typeof ScanLine; color: 'emerald' | 'cyan' | 'violet'; title: string; desc: string }[] = [
+  { icon: ScanLine, color: 'emerald', title: 'OCR intelligent', desc: 'Scannez une facture, Worthifast extrait fournisseur, montants, TVA et classe automatiquement en PCG.' },
+  { icon: ArrowRightLeft, color: 'emerald', title: 'Rapprochement IA', desc: "L'IA apprend vos habitudes de lettrage et rapproche factures et relevés bancaires automatiquement." },
+  { icon: Scale, color: 'cyan', title: 'Conformité française native', desc: 'TVA CA3 automatique, export FEC certifié, assistant PCG & BOFIP avec références contextualisées.' },
+  { icon: Zap, color: 'cyan', title: 'E-invoicing 2026 prêt', desc: "Factur-X natif, norme EN16931, validation des 16 champs obligatoires DGFiP. Prêt pour l'obligation." },
+  { icon: Users2, color: 'violet', title: 'Portail client sécurisé', desc: 'Zéro email, zéro pièce jointe. Vos clients déposent leurs documents dans un espace dédié.' },
+  { icon: Bell, color: 'violet', title: 'Relances automatiques', desc: 'Impayés détectés et relancés en J+7, J+15, J+30. Configurable par client et par seuil.' },
+  { icon: Euro, color: 'emerald', title: 'Prix transparent', desc: "Dossiers illimités dès le plan Cabinet. Pas de facturation à l'utilisateur ni au dossier." },
+  { icon: TrendingUp, color: 'cyan', title: 'IA française intégrée', desc: 'Assistant entraîné sur le PCG, BOFIP et CGI. Données traitées en Europe, conforme RGPD.' },
+  { icon: Wrench, color: 'violet', title: 'Construit avec des comptables', desc: "Développé avec le département Comptabilité-Finance de l'IAE Dijon. Validé par des praticiens." },
 ]
 
 const FAQ_ITEMS: { q: string; r: string; cta?: { text: string; href: string } }[] = [
@@ -98,6 +67,13 @@ const CREDIBILITY_BADGES = [
   '\u2705 Conforme e-invoicing 2026 (Factur-X / EN16931)',
 ]
 
+const STATS = [
+  { value: 95, suffix: '%', label: "Précision OCR" },
+  { value: 3, suffix: 'h', label: "Gagnées / semaine" },
+  { value: 45, suffix: '', label: "Dossiers en 1 écran" },
+  { value: 30, suffix: 'j', label: "Essai gratuit" },
+]
+
 // ─────────────────────────────────────────────────────────────
 // COMPONENT
 // ─────────────────────────────────────────────────────────────
@@ -108,11 +84,15 @@ export default function HomePage() {
   const [contactForm, setContactForm] = useState({ nom: '', cabinet: '', email: '', message: '' })
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
+  const [isMobile, setIsMobile] = useState(true) // Default true to avoid SSR flash
 
-  const heroRef = useRef(null)
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 150])
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768)
+  }, [])
+
+  // GSAP animations
+  useHeroAnimation()
+  useScrollAnimations()
 
   const handleContact = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -128,10 +108,10 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0E1A] text-white overflow-x-hidden">
+    <div className="min-h-screen bg-[#080810] text-white overflow-x-hidden">
 
       {/* ── NAVBAR ── */}
-      <nav className="sticky top-0 z-50 bg-[#0A0E1A]/80 backdrop-blur-xl border-b border-white/5">
+      <nav className="sticky top-0 z-50 bg-[#080810]/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Image src="/logo-white.svg" alt="Worthifast" width={140} height={34} priority className="h-8 w-auto" />
@@ -166,7 +146,7 @@ export default function HomePage() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-white/5 bg-[#0A0E1A] px-4 py-4 space-y-3"
+            className="md:hidden border-t border-white/5 bg-[#080810] px-4 py-4 space-y-3"
           >
             {[
               { href: '#features', label: 'Fonctionnalités' },
@@ -188,219 +168,176 @@ export default function HomePage() {
         )}
       </nav>
 
-      {/* ── HERO — Cabinet Conversion ── */}
-      <section ref={heroRef} className="relative min-h-[90vh] flex items-center justify-center pt-12 pb-16 px-4 overflow-hidden">
-        {/* Animated background — gold/amber premium glow */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-amber-500/8 rounded-full blur-[150px] animate-pulse" />
-          <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-amber-400/6 rounded-full blur-[130px] animate-pulse" style={{ animationDelay: '1.5s' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-amber-500/3 rounded-full blur-[180px]" />
-          {/* Subtle grid */}
-          <div className="absolute inset-0 opacity-[0.02]"
-            style={{
-              backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
-              backgroundSize: '60px 60px',
-            }}
-          />
-        </div>
+      {/* ── HERO — 3D Premium ── */}
+      <section className="relative min-h-screen flex items-center overflow-hidden bg-[#080810]">
+        {/* WebGL Particles (desktop) / CSS Orbs (mobile) */}
+        {!isMobile && <ParticlesBackground />}
+        <FloatingOrbs />
 
-        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative max-w-5xl mx-auto text-center">
-          {/* Badge — positioning vs Cegid */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full text-xs font-semibold text-amber-400 mb-8 backdrop-blur-sm">
-              <Sparkles className="w-3.5 h-3.5" />
-              L&apos;alternative moderne à Cegid &amp; Sage
-            </div>
-          </motion.div>
+        {/* Subtle grid */}
+        <div className="absolute inset-0 opacity-[0.02] z-[1]"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+            backgroundSize: '60px 60px',
+          }}
+        />
 
-          {/* H1 — Gold gradient, cabinet-focused */}
-          <motion.h1
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.05] mb-6 tracking-tight"
-          >
-            Votre cabinet comptable
-            <br />
-            <span className="bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent">
+        <div className="relative z-10 container mx-auto text-center px-4">
+          {/* Badge */}
+          <div className="hero-badge inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-2 text-amber-400 text-sm mb-8">
+            <Sparkles className="w-3.5 h-3.5" />
+            L&apos;alternative moderne à Cegid &amp; Sage
+          </div>
+
+          {/* H1 */}
+          <h1 className="hero-h1 text-6xl md:text-8xl font-black text-white mb-6 leading-none">
+            Votre cabinet<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-300">
               automatisé
             </span>
-          </motion.h1>
+          </h1>
 
-          {/* Subtitle — specific value prop pipeline */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto mb-8 leading-relaxed"
-          >
+          {/* Subtitle */}
+          <p className="hero-subtitle text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto mb-8 leading-relaxed">
             OCR factures &rarr; Journal PCG automatique &rarr; 45 clients en 1 écran &rarr; Export CA3 légal.
             <br className="hidden sm:block" />
             <span className="font-semibold text-amber-400">3h/semaine gagnées</span> vs Cegid. Hébergé en France, conforme RGPD.
-          </motion.p>
+          </p>
 
-          {/* Animated workflow pipeline */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="flex items-center justify-center gap-1 sm:gap-2 mb-10 px-2"
-          >
+          {/* Pipeline steps */}
+          <div className="hero-pipeline flex items-center justify-center gap-3 mb-10 flex-wrap">
             {PIPELINE_STEPS.map((step, i) => (
-              <motion.div
-                key={step.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.6 + i * 0.12 }}
-                className="flex items-center gap-1 sm:gap-2"
-              >
-                <div className="flex items-center gap-1.5 px-2.5 py-2 sm:px-4 sm:py-2.5 bg-white/[0.04] border border-white/10 rounded-xl backdrop-blur-sm">
-                  <step.icon className={`w-4 h-4 ${step.color}`} />
-                  <span className="text-xs sm:text-sm font-medium text-slate-300 whitespace-nowrap">{step.label}</span>
-                </div>
-                {i < PIPELINE_STEPS.length - 1 && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.8 + i * 0.12 }}
-                  >
-                    <ArrowRight className="w-3.5 h-3.5 text-amber-500/50 flex-shrink-0" />
-                  </motion.div>
-                )}
-              </motion.div>
+              <div key={i} className="step flex items-center gap-3">
+                <span className="bg-gray-800 border border-amber-500/20 rounded-lg px-3 py-1.5 text-sm text-gray-300 flex items-center gap-1.5">
+                  <step.icon className="w-4 h-4 text-amber-400" />
+                  {step.label}
+                </span>
+                {i < PIPELINE_STEPS.length - 1 && <span className="text-amber-500/50">&rarr;</span>}
+              </div>
             ))}
-          </motion.div>
+          </div>
 
-          {/* Dual CTA — Gold primary */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
-          >
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link href="/signup"
-              className="group relative flex items-center gap-2 px-8 py-4 font-bold rounded-2xl text-slate-900 text-lg overflow-hidden transition-all shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40">
-              <span className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 transition-transform group-hover:scale-105" />
-              <span className="relative flex items-center gap-2">
-                Essai gratuit 30 jours
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-              </span>
+              className="hero-cta-primary group relative flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-bold px-10 py-5 text-lg rounded-2xl shadow-2xl shadow-amber-500/25 transition-all duration-300 hover:shadow-amber-500/50 hover:-translate-y-1">
+              Essai gratuit 30 jours
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
             <a href="mailto:contact@worthifast.app?subject=Demande%20de%20demo%20Worthifast"
-              className="group flex items-center gap-2 px-8 py-4 border border-white/15 text-slate-300 font-medium rounded-2xl hover:bg-white/5 hover:border-white/25 transition-all text-lg backdrop-blur-sm">
+              className="hero-cta-secondary group flex items-center justify-center gap-2 border border-white/20 text-white hover:bg-white/5 px-10 py-5 text-lg rounded-2xl transition-all">
               <Play className="w-4 h-4 text-amber-400" />
               Demander une démo
             </a>
-          </motion.div>
+          </div>
 
-          {/* Trust signals row */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 1.0 }}
-            className="flex flex-wrap items-center justify-center gap-5 text-sm text-slate-500"
-          >
+          {/* Trust badges */}
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-500">
             {[
               { icon: <span className="text-base">🇫🇷</span>, text: 'Hébergé en France' },
+              { icon: <Zap className="w-4 h-4 text-amber-500" />, text: 'Sans carte bancaire' },
               { icon: <Shield className="w-4 h-4 text-amber-500" />, text: 'RGPD natif' },
               { icon: <FileText className="w-4 h-4 text-amber-500" />, text: 'E-invoicing 2026' },
-              { icon: <Zap className="w-4 h-4 text-amber-500" />, text: 'Sans carte bancaire' },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-2">
-                {item.icon}
-                <span>{item.text}</span>
-              </div>
+            ].map((t, i) => (
+              <span key={i} className="hero-trust flex items-center gap-2">
+                {t.icon} {t.text}
+              </span>
             ))}
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* ── SCREENSHOT CAROUSEL ── */}
-      <section id="demo" className="relative pb-20 px-4">
-        <FadeIn className="max-w-5xl mx-auto">
-          <ScreenshotCarousel />
-          <p className="text-center text-sm text-slate-500 mt-6">
-            OCR &rarr; Journal PCG &rarr; TVA &rarr; Envoi client — tout automatisé
-          </p>
-        </FadeIn>
-      </section>
-
-      {/* ── CRÉDIBILITÉ ── */}
-      <section className="border-y border-white/5 py-10 px-4 bg-[#0D1220]">
-        <StaggerChildren className="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-3">
-          {CREDIBILITY_BADGES.map(badge => (
-            <motion.span
-              key={badge}
-              variants={staggerChild}
-              className="inline-flex items-center px-4 py-2.5 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300 font-medium backdrop-blur-sm"
-            >
-              {badge}
-            </motion.span>
-          ))}
-        </StaggerChildren>
-      </section>
-
-      {/* ── FONCTIONNALITÉS ── */}
-      <section id="features" className="py-24 px-4 bg-[#0A0E1A] relative">
-        {/* Background glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/5 rounded-full blur-[150px]" />
-
-        <div className="max-w-6xl mx-auto relative">
-          <FadeIn className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">Ce que Worthifast fait pour vous</h2>
-            <p className="text-slate-400 max-w-xl mx-auto">Comptabilité, conformité et collaboration — dans une seule plateforme conçue pour les cabinets français.</p>
-          </FadeIn>
-
-          <StaggerChildren className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {FEATURES.map(item => {
-              const colorMap = {
-                emerald: 'from-emerald-500/20 to-emerald-500/5 text-emerald-400 border-emerald-500/20',
-                cyan: 'from-cyan-500/20 to-cyan-500/5 text-cyan-400 border-cyan-500/20',
-                violet: 'from-violet-500/20 to-violet-500/5 text-violet-400 border-violet-500/20',
-              }
-              const iconBg = {
-                emerald: 'bg-emerald-500/10 text-emerald-400',
-                cyan: 'bg-cyan-500/10 text-cyan-400',
-                violet: 'bg-violet-500/10 text-violet-400',
-              }
-              return (
-                <motion.div
-                  key={item.title}
-                  variants={staggerChild}
-                  className={`group bg-gradient-to-b ${colorMap[item.color]} border rounded-2xl p-6 hover:border-opacity-50 transition-all hover:-translate-y-1 duration-300`}
-                >
-                  <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl ${iconBg[item.color]} mb-4`}>
-                    <item.icon className="w-5 h-5" />
-                  </div>
-                  <h3 className="text-base font-bold text-white mb-2">{item.title}</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
-                </motion.div>
-              )
-            })}
-          </StaggerChildren>
+          </div>
         </div>
       </section>
 
-      {/* ── COMPARATIF — keep existing component, wrap in dark ── */}
-      <div className="bg-[#0D1220]">
+      {/* ── STATS COUNTERS ── */}
+      <section className="py-16 px-4 bg-[#080810] border-y border-white/5">
+        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {STATS.map((stat, i) => (
+            <div key={i}>
+              <div className="text-4xl md:text-5xl font-black text-white mb-1">
+                <span className="counter" data-target={stat.value}>0</span>
+                <span className="text-amber-400">{stat.suffix}</span>
+              </div>
+              <p className="text-sm text-slate-500">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── BROWSER MOCKUP SCREENSHOT ── */}
+      <section id="demo" className="relative py-20 px-4 bg-[#080810]">
+        <div className="max-w-5xl mx-auto" style={{ perspective: '1200px' }}>
+          <div className="browser-mockup rounded-xl border border-white/10 shadow-2xl shadow-black/80 overflow-hidden">
+            <div className="bg-gray-900 flex items-center gap-2 px-4 py-3 border-b border-white/5">
+              <div className="flex gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500/70" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
+                <div className="w-3 h-3 rounded-full bg-green-500/70" />
+              </div>
+              <span className="text-gray-500 text-xs mx-auto">worthifast.vercel.app/dashboard</span>
+            </div>
+            <Image src="/screenshots/dashboard1.png" alt="Dashboard Worthifast" width={1200} height={700} className="w-full" />
+          </div>
+        </div>
+        <p className="text-center text-sm text-slate-500 mt-6">
+          OCR &rarr; Journal PCG &rarr; TVA &rarr; Envoi client — tout automatisé
+        </p>
+      </section>
+
+      {/* ── CRÉDIBILITÉ ── */}
+      <section className="credibility-section border-y border-white/5 py-10 px-4 bg-[#0D1220]">
+        <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-3">
+          {CREDIBILITY_BADGES.map(badge => (
+            <span
+              key={badge}
+              className="cred-badge inline-flex items-center px-4 py-2.5 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300 font-medium backdrop-blur-sm"
+            >
+              {badge}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* ── FONCTIONNALITÉS (3D Hover Cards) ── */}
+      <section id="features" className="features-section py-24 px-4 bg-[#080810] relative">
+        {/* Background glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-amber-500/5 rounded-full blur-[150px]" />
+
+        <div className="max-w-6xl mx-auto relative">
+          <div className="gsap-section-header text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">Ce que Worthifast fait pour vous</h2>
+            <p className="text-slate-400 max-w-xl mx-auto">Comptabilité, conformité et collaboration — dans une seule plateforme conçue pour les cabinets français.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {FEATURES.map(item => (
+              <FeatureCard key={item.title} {...item} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── SCREENSHOT CAROUSEL ── */}
+      <section className="relative pb-20 pt-4 px-4 bg-[#080810]">
+        <div className="max-w-5xl mx-auto">
+          <ScreenshotCarousel />
+        </div>
+      </section>
+
+      {/* ── COMPARATIF ── */}
+      <div className="comparatif-section bg-[#0D1220]">
         <ComparatifSection />
       </div>
 
       {/* ── PRICING ── */}
-      <div className="bg-[#0A0E1A]">
+      <div className="pricing-section bg-[#080810]">
         <PricingPlans sectionId="pricing" defaultProfile={3} />
       </div>
 
       {/* ── SECTION CABINET ── */}
-      <section className="py-24 px-4 bg-gradient-to-b from-[#0D1220] to-[#0A0E1A] relative overflow-hidden">
+      <section className="cabinet-section py-24 px-4 bg-gradient-to-b from-[#0D1220] to-[#080810] relative overflow-hidden">
         {/* Background orb */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[150px]" />
 
-        <FadeIn className="max-w-4xl mx-auto text-center relative">
+        <div className="cabinet-section-content max-w-4xl mx-auto text-center relative">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full text-xs font-semibold text-amber-400 mb-6">
             <Sparkles className="w-3.5 h-3.5" />
             Pour les cabinets 3-10 collaborateurs
@@ -413,14 +350,14 @@ export default function HomePage() {
             Migrez votre cabinet en important votre FEC — on s&apos;occupe du reste.
           </p>
 
-          <StaggerChildren className="flex flex-wrap items-center justify-center gap-6 mb-10">
+          <div className="flex flex-wrap items-center justify-center gap-6 mb-10">
             {['Multi-dossiers illimités', 'Portail client sécurisé', 'E-invoicing 2026 natif', 'Cegid & Sage — bientôt'].map(f => (
-              <motion.div key={f} variants={staggerChild} className="flex items-center gap-2 text-sm text-slate-300">
+              <div key={f} className="flex items-center gap-2 text-sm text-slate-300">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                 {f}
-              </motion.div>
+              </div>
             ))}
-          </StaggerChildren>
+          </div>
 
           <a href="mailto:contact@worthifast.app"
             className="group relative inline-flex items-center gap-2 px-8 py-4 font-bold rounded-2xl text-slate-900 overflow-hidden transition-all shadow-lg shadow-amber-500/20">
@@ -430,62 +367,62 @@ export default function HomePage() {
               <ArrowRight className="w-4 h-4" />
             </span>
           </a>
-        </FadeIn>
+        </div>
       </section>
 
-      {/* ── FAQ ── */}
-      <section id="faq" className="py-24 px-4 bg-[#0A0E1A]">
+      {/* ── FAQ (GSAP-animated) ── */}
+      <section id="faq" className="faq-section py-24 px-4 bg-[#080810]">
         <div className="max-w-3xl mx-auto">
-          <FadeIn className="text-center mb-12">
+          <div className="gsap-section-header text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">Questions fréquentes</h2>
-          </FadeIn>
+          </div>
           <div className="space-y-3">
             {FAQ_ITEMS.map((item, i) => (
-              <FadeIn key={i} delay={i * 0.05}>
-                <div className="bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden hover:border-white/15 transition-colors">
-                  <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="w-full flex items-center justify-between px-6 py-4 text-left">
-                    <span className="text-sm font-semibold text-white">{item.q}</span>
-                    <motion.div
-                      animate={{ rotate: openFaq === i ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <ChevronDown className="w-4 h-4 text-slate-500 flex-shrink-0 ml-4" />
-                    </motion.div>
-                  </button>
+              <div key={i} className="faq-item bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden hover:border-white/15 transition-colors">
+                <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between px-6 py-4 text-left">
+                  <span className="text-sm font-semibold text-white">{item.q}</span>
                   <motion.div
-                    initial={false}
-                    animate={{
-                      height: openFaq === i ? 'auto' : 0,
-                      opacity: openFaq === i ? 1 : 0,
-                    }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    className="overflow-hidden"
+                    animate={{ rotate: openFaq === i ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    <div className="px-6 pb-5">
-                      <p className="text-sm text-slate-400 leading-relaxed">{item.r}</p>
-                      {item.cta && (
-                        <a href={item.cta.href} className="inline-block mt-3 text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors">
-                          {item.cta.text}
-                        </a>
-                      )}
-                    </div>
+                    <ChevronDown className="w-4 h-4 text-slate-500 flex-shrink-0 ml-4" />
                   </motion.div>
-                </div>
-              </FadeIn>
+                </button>
+                <AnimatePresence initial={false}>
+                  {openFaq === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-6 pb-5">
+                        <p className="text-sm text-slate-400 leading-relaxed">{item.r}</p>
+                        {item.cta && (
+                          <a href={item.cta.href} className="inline-block mt-3 text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors">
+                            {item.cta.text}
+                          </a>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── FOOTER CTA ── */}
-      <section className="py-24 px-4 relative overflow-hidden">
-        {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A0E1A] via-[#0D1B2A] to-[#0A0E1A]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-emerald-500/10 rounded-full blur-[150px]" />
+      {/* ── FOOTER CTA (Parallax) ── */}
+      <section className="footer-cta-section py-24 px-4 relative overflow-hidden">
+        {/* Parallax background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#080810] via-[#0D1B2A] to-[#080810]" />
+        <div className="footer-cta-bg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-amber-500/10 rounded-full blur-[150px]" />
 
-        <FadeIn className="max-w-3xl mx-auto text-center relative">
-          <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-6">
+        <div className="max-w-3xl mx-auto text-center relative z-10">
+          <h2 className="gsap-section-header text-4xl sm:text-5xl font-extrabold text-white mb-6">
             Automatisez votre cabinet
             <br />
             <span className="bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent">
@@ -506,66 +443,64 @@ export default function HomePage() {
           <p className="text-xs text-slate-600 mt-6">
             Sans engagement &middot; Import FEC depuis Cegid/Sage &middot; Support réactif
           </p>
-        </FadeIn>
+        </div>
       </section>
 
       {/* ── CONTACT ── */}
-      <section id="contact" className="py-24 px-4 bg-[#0D1220]">
+      <section id="contact" className="contact-section py-24 px-4 bg-[#0D1220]">
         <div className="max-w-2xl mx-auto">
-          <FadeIn className="text-center mb-10">
+          <div className="gsap-section-header text-center mb-10">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">Nous contacter</h2>
             <p className="text-slate-400">Une question ? Notre équipe vous répond sous 24h.</p>
-          </FadeIn>
+          </div>
 
-          <FadeIn delay={0.1}>
-            {sent ? (
-              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-8 text-center">
-                <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-                <p className="text-lg font-semibold text-white mb-2">Message envoyé !</p>
-                <p className="text-slate-400 text-sm">Notre équipe vous contactera dans les 24h.</p>
+          {sent ? (
+            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-8 text-center">
+              <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
+              <p className="text-lg font-semibold text-white mb-2">Message envoyé !</p>
+              <p className="text-slate-400 text-sm">Notre équipe vous contactera dans les 24h.</p>
+            </div>
+          ) : (
+            <form onSubmit={e => void handleContact(e)} className="bg-white/[0.03] rounded-2xl border border-white/10 p-8 space-y-4 backdrop-blur-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1.5">Votre nom *</label>
+                  <input required value={contactForm.nom}
+                    onChange={e => setContactForm(p => ({ ...p, nom: e.target.value }))}
+                    placeholder="Marie Fontaine"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1.5">Cabinet / Entreprise</label>
+                  <input value={contactForm.cabinet}
+                    onChange={e => setContactForm(p => ({ ...p, cabinet: e.target.value }))}
+                    placeholder="Cabinet Fontaine & Associés"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition" />
+                </div>
               </div>
-            ) : (
-              <form onSubmit={e => void handleContact(e)} className="bg-white/[0.03] rounded-2xl border border-white/10 p-8 space-y-4 backdrop-blur-sm">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1.5">Votre nom *</label>
-                    <input required value={contactForm.nom}
-                      onChange={e => setContactForm(p => ({ ...p, nom: e.target.value }))}
-                      placeholder="Marie Fontaine"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1.5">Cabinet / Entreprise</label>
-                    <input value={contactForm.cabinet}
-                      onChange={e => setContactForm(p => ({ ...p, cabinet: e.target.value }))}
-                      placeholder="Cabinet Fontaine & Associés"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition" />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1.5">Email *</label>
-                  <input required type="email" value={contactForm.email}
-                    onChange={e => setContactForm(p => ({ ...p, email: e.target.value }))}
-                    placeholder="marie@cabinet-fontaine.fr"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1.5">Votre message</label>
-                  <textarea value={contactForm.message}
-                    onChange={e => setContactForm(p => ({ ...p, message: e.target.value }))}
-                    placeholder="Nombre de dossiers, logiciel actuel, fonctionnalités prioritaires…"
-                    rows={4}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition resize-none" />
-                </div>
-                <button type="submit" disabled={sending}
-                  className="group relative w-full py-3.5 rounded-xl font-bold text-sm text-slate-900 overflow-hidden disabled:opacity-50 transition-all">
-                  <span className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 transition-transform group-hover:scale-105" />
-                  <span className="relative">{sending ? 'Envoi en cours…' : 'Envoyer \u2192'}</span>
-                </button>
-                <p className="text-xs text-slate-600 text-center">Vos données ne sont jamais partagées avec des tiers.</p>
-              </form>
-            )}
-          </FadeIn>
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1.5">Email *</label>
+                <input required type="email" value={contactForm.email}
+                  onChange={e => setContactForm(p => ({ ...p, email: e.target.value }))}
+                  placeholder="marie@cabinet-fontaine.fr"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1.5">Votre message</label>
+                <textarea value={contactForm.message}
+                  onChange={e => setContactForm(p => ({ ...p, message: e.target.value }))}
+                  placeholder="Nombre de dossiers, logiciel actuel, fonctionnalités prioritaires..."
+                  rows={4}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition resize-none" />
+              </div>
+              <button type="submit" disabled={sending}
+                className="group relative w-full py-3.5 rounded-xl font-bold text-sm text-slate-900 overflow-hidden disabled:opacity-50 transition-all">
+                <span className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 transition-transform group-hover:scale-105" />
+                <span className="relative">{sending ? 'Envoi en cours...' : 'Envoyer \u2192'}</span>
+              </button>
+              <p className="text-xs text-slate-600 text-center">Vos données ne sont jamais partagées avec des tiers.</p>
+            </form>
+          )}
         </div>
       </section>
 

@@ -22,7 +22,7 @@ interface FAQItem {
 
 interface FAQSection {
   title: string
-  icon: React.ElementType
+  icon: React.ComponentType<{ className?: string }>
   items: FAQItem[]
 }
 

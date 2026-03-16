@@ -42,8 +42,8 @@ import { createClient } from '@/lib/supabase/client'
 
 interface SidebarSection {
   label: string
-  icon: React.ElementType
-  items: { name: string; href: string; icon: React.ElementType; badge?: 'overdue' | 'relances'; planTag?: string }[]
+  icon: React.ComponentType<{ className?: string }>
+  items: { name: string; href: string; icon: React.ComponentType<{ className?: string }>; badge?: 'overdue' | 'relances'; planTag?: string }[]
 }
 
 const sections: SidebarSection[] = [

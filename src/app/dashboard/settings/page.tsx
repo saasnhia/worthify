@@ -54,7 +54,7 @@ const DEFAULT_PROFILE: ProfileData = {
   notif_email_relances: true, notif_email_factures: true, notif_email_digest: 'weekly',
 }
 
-const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
+const TABS: { id: Tab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'entreprise',    label: 'Entreprise',      icon: Building2 },
   { id: 'compte',        label: 'Mon compte',       icon: User },
   { id: 'abonnement',    label: 'Abonnement',       icon: CreditCard },

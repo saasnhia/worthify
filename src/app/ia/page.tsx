@@ -26,7 +26,7 @@ import { MailAgent } from '@/components/ai/MailAgent'
 
 interface AgentCard {
   id: string
-  icon: React.ElementType
+  icon: React.ComponentType<{ className?: string }>
   iconColor: string
   title: string
   description: string
@@ -422,7 +422,7 @@ export default function IAPage() {
     }
   }, [tab])
 
-  const tabs: { id: Tab; label: string; icon: React.ElementType }[] = [
+  const tabs: { id: Tab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: 'worthifast', label: 'Agents Worthifast', icon: Sparkles },
     { id: 'mes-agents', label: 'Mes Agents', icon: Bot },
     { id: 'pcg', label: 'PCG & BOFIP', icon: BookOpen },

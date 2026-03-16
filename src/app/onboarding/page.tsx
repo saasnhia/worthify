@@ -67,7 +67,7 @@ function generateTVANumber(siret: string): string {
 
 interface UsageCard {
   type: UsageType
-  icon: React.ElementType
+  icon: React.ComponentType<{ className?: string }>
   title: string
   subtitle: string
   profile: ProfileType

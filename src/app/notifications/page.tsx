@@ -30,7 +30,7 @@ import type { FactureEnRetard, TypeRappel } from '@/types'
 
 type TabId = 'retards' | 'clients' | 'historique'
 
-const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
+const TABS: { id: TabId; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'retards', label: 'Retards de paiement', icon: AlertTriangle },
   { id: 'clients', label: 'Clients', icon: Users },
   { id: 'historique', label: 'Historique rappels', icon: Mail },
