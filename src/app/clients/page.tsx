@@ -312,14 +312,14 @@ export default function ClientsPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-navy-100 bg-navy-50/50">
-                      <th className="text-left px-5 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wider">Nom</th>
-                      <th className="text-left px-5 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wider">SIREN</th>
-                      <th className="text-left px-5 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wider">Email</th>
-                      <th className="text-center px-5 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wider">Factures ouvertes</th>
-                      <th className="text-right px-5 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wider">CA 12 mois</th>
-                      <th className="text-center px-5 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wider">Retard max</th>
-                      <th className="text-center px-5 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wider">Sante</th>
-                      <th className="text-center px-5 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wider">Actions</th>
+                      <th className="text-left px-5 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wider">Nom</th>
+                      <th className="text-left px-5 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wider">SIREN</th>
+                      <th className="text-left px-5 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wider">Email</th>
+                      <th className="text-center px-5 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wider">Factures ouvertes</th>
+                      <th className="text-right px-5 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wider">CA 12 mois</th>
+                      <th className="text-center px-5 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wider">Retard max</th>
+                      <th className="text-center px-5 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wider">Sante</th>
+                      <th className="text-center px-5 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-navy-100">
@@ -342,7 +342,7 @@ export default function ClientsPage() {
                                 {client.factures_ouvertes}
                               </span>
                             ) : (
-                              <span className="text-sm text-navy-400">0</span>
+                              <span className="text-sm text-navy-500">0</span>
                             )}
                           </td>
                           <td className="px-5 py-4 text-right text-sm font-medium text-navy-900">
@@ -352,7 +352,7 @@ export default function ClientsPage() {
                             {client.retard_max_jours > 0 ? (
                               <span className="font-semibold text-red-600">{client.retard_max_jours}j</span>
                             ) : (
-                              <span className="text-navy-400">-</span>
+                              <span className="text-navy-500">-</span>
                             )}
                           </td>
                           <td className="px-5 py-4 text-center">

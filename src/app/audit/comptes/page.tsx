@@ -519,13 +519,13 @@ export default function AuditComptesPage() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-navy-100">
-                          <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-500">Compte</th>
-                          <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-500">Libellé</th>
-                          <th className="px-4 py-2.5 text-center text-xs font-medium text-navy-500">Classe</th>
-                          <th className="px-4 py-2.5 text-right text-xs font-medium text-navy-500">Solde net</th>
-                          <th className="px-4 py-2.5 text-right text-xs font-medium text-navy-500">Mouvements</th>
-                          <th className="px-4 py-2.5 text-right text-xs font-medium text-navy-500">% Bilan</th>
-                          <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-500">Notes</th>
+                          <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700">Compte</th>
+                          <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700">Libellé</th>
+                          <th className="px-4 py-2.5 text-center text-xs font-medium text-navy-700">Classe</th>
+                          <th className="px-4 py-2.5 text-right text-xs font-medium text-navy-700">Solde net</th>
+                          <th className="px-4 py-2.5 text-right text-xs font-medium text-navy-700">Mouvements</th>
+                          <th className="px-4 py-2.5 text-right text-xs font-medium text-navy-700">% Bilan</th>
+                          <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700">Notes</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-navy-50">
@@ -544,10 +544,10 @@ export default function AuditComptesPage() {
                             <td className="px-4 py-2 text-right font-mono text-navy-600 text-xs">
                               {formatEuro(a.mouvement_total)}
                             </td>
-                            <td className="px-4 py-2 text-right font-mono text-navy-500 text-xs">
+                            <td className="px-4 py-2 text-right font-mono text-navy-600 text-xs">
                               {a.ratio_bilan}%
                             </td>
-                            <td className="px-4 py-2 text-xs text-navy-500 max-w-[200px] truncate" title={a.notes}>
+                            <td className="px-4 py-2 text-xs text-navy-600 max-w-[200px] truncate" title={a.notes}>
                               {a.notes || '-'}
                             </td>
                           </tr>

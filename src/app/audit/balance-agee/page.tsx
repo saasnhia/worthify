@@ -195,7 +195,7 @@ export default function BalanceAgeePage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-xs font-semibold text-navy-400 border-b border-navy-100">
+                  <tr className="text-xs font-semibold text-navy-700 border-b border-navy-100">
                     <th className="text-left pb-3 pr-4">Client</th>
                     <th className="text-left pb-3 pr-4">N° Facture</th>
                     <th className="text-left pb-3 pr-4">Échéance</th>
@@ -211,8 +211,8 @@ export default function BalanceAgeePage() {
                     return (
                       <tr key={f.id} className="hover:bg-navy-50/40 transition-colors group">
                         <td className="py-3 pr-4 font-medium text-navy-800">{f.client_nom}</td>
-                        <td className="py-3 pr-4 text-navy-500 font-mono text-xs">{f.numero_facture}</td>
-                        <td className="py-3 pr-4 text-navy-500">
+                        <td className="py-3 pr-4 text-navy-700 font-mono text-xs">{f.numero_facture}</td>
+                        <td className="py-3 pr-4 text-navy-700">
                           <div className="flex items-center gap-1.5">
                             {f.joursRetard > 30 && <Clock className="w-3.5 h-3.5 text-red-500" />}
                             {formatDate(f.date_echeance)}
@@ -224,7 +224,7 @@ export default function BalanceAgeePage() {
                         <td className="py-3 pr-4 text-right font-mono font-bold text-navy-900">
                           {formatCurrency(f.resteA)}
                         </td>
-                        <td className="py-3 pr-4 text-right text-navy-500">
+                        <td className="py-3 pr-4 text-right text-navy-700">
                           {f.joursRetard > 0 ? `${f.joursRetard}j` : '—'}
                         </td>
                         <td className="py-3 text-right">
@@ -238,7 +238,7 @@ export default function BalanceAgeePage() {
                 </tbody>
                 <tfoot>
                   <tr className="border-t-2 border-navy-200">
-                    <td colSpan={4} className="pt-3 text-xs font-semibold text-navy-500 uppercase tracking-wide">
+                    <td colSpan={4} className="pt-3 text-xs font-semibold text-navy-700 uppercase tracking-wide">
                       Total {filterTranche !== 'all' && `(${TRANCHE_CONFIG[filterTranche as Tranche].label})`}
                     </td>
                     <td className="pt-3 text-right font-mono font-bold text-navy-900">

@@ -282,11 +282,11 @@ export default function NotificationsPage() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-navy-100 bg-navy-50/50">
-                        <th className="px-4 py-3 text-left text-xs font-medium text-navy-500">Nom</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-navy-500">Email</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-navy-500">Téléphone</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-navy-500">SIREN</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-navy-500">Notes</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-navy-700">Nom</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-navy-700">Email</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-navy-700">Téléphone</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-navy-700">SIREN</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-navy-700">Notes</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-navy-50">
@@ -294,13 +294,13 @@ export default function NotificationsPage() {
                         <tr key={client.id} className="hover:bg-navy-50/30 transition-colors">
                           <td className="px-4 py-3 font-medium text-navy-900">{client.nom}</td>
                           <td className="px-4 py-3 text-navy-600">
-                            {client.email || <span className="text-navy-300 italic">—</span>}
+                            {client.email || <span className="text-navy-400 italic">—</span>}
                           </td>
                           <td className="px-4 py-3 text-navy-600">
-                            {client.telephone || <span className="text-navy-300 italic">—</span>}
+                            {client.telephone || <span className="text-navy-400 italic">—</span>}
                           </td>
                           <td className="px-4 py-3 font-mono text-xs text-navy-600">
-                            {client.siren || <span className="text-navy-300 italic">—</span>}
+                            {client.siren || <span className="text-navy-400 italic">—</span>}
                           </td>
                           <td className="px-4 py-3 text-xs text-navy-500 max-w-[200px] truncate">
                             {client.notes || '—'}

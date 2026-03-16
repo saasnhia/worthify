@@ -107,11 +107,11 @@ export default function BalanceGeneralePage() {
               <table className="w-full">
                 <thead>
                   <tr className="bg-navy-50 text-left">
-                    <th className="px-6 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wide">Catégorie</th>
-                    <th className="px-6 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wide text-right">Solde N</th>
-                    <th className="px-6 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wide text-right">Solde N-1</th>
-                    <th className="px-6 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wide text-right">Variation</th>
-                    <th className="px-6 py-3 text-xs font-semibold text-navy-500 uppercase tracking-wide text-right">Écritures</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wide">Catégorie</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wide text-right">Solde N</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wide text-right">Solde N-1</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wide text-right">Variation</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-navy-700 uppercase tracking-wide text-right">Écritures</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-navy-100">
@@ -121,8 +121,8 @@ export default function BalanceGeneralePage() {
                       <tr key={r.category} className="hover:bg-navy-50/50 transition-colors">
                         <td className="px-6 py-3 text-sm font-medium text-navy-900">{r.category}</td>
                         <td className="px-6 py-3 text-sm font-mono text-navy-900 text-right">{formatCurrency(r.totalN)}</td>
-                        <td className="px-6 py-3 text-sm font-mono text-navy-500 text-right">
-                          {r.totalN1 !== 0 ? formatCurrency(r.totalN1) : <span className="text-navy-300" title="Aucune donnée exercice précédent">—</span>}
+                        <td className="px-6 py-3 text-sm font-mono text-navy-700 text-right">
+                          {r.totalN1 !== 0 ? formatCurrency(r.totalN1) : <span className="text-navy-400" title="Aucune donnée exercice précédent">—</span>}
                         </td>
                         <td className="px-6 py-3 text-right">
                           {r.totalN1 !== 0 ? (
@@ -133,10 +133,10 @@ export default function BalanceGeneralePage() {
                               {variationPercent(r.totalN, r.totalN1)}
                             </span>
                           ) : (
-                            <span className="text-xs text-navy-300">—</span>
+                            <span className="text-xs text-navy-400">—</span>
                           )}
                         </td>
-                        <td className="px-6 py-3 text-sm text-navy-500 text-right">{r.count}</td>
+                        <td className="px-6 py-3 text-sm text-navy-700 text-right">{r.count}</td>
                       </tr>
                     )
                   })}
@@ -145,9 +145,9 @@ export default function BalanceGeneralePage() {
                   <tr className="bg-navy-50 font-semibold">
                     <td className="px-6 py-3 text-sm text-navy-900">TOTAL</td>
                     <td className="px-6 py-3 text-sm font-mono text-navy-900 text-right">{formatCurrency(totalDebitN - totalCreditN)}</td>
-                    <td className="px-6 py-3 text-sm font-mono text-navy-500 text-right">{formatCurrency(totalDebitN1 - totalCreditN1)}</td>
+                    <td className="px-6 py-3 text-sm font-mono text-navy-700 text-right">{formatCurrency(totalDebitN1 - totalCreditN1)}</td>
                     <td className="px-6 py-3" />
-                    <td className="px-6 py-3 text-sm text-navy-500 text-right">{rows.reduce((s, r) => s + r.count, 0)}</td>
+                    <td className="px-6 py-3 text-sm text-navy-700 text-right">{rows.reduce((s, r) => s + r.count, 0)}</td>
                   </tr>
                 </tfoot>
               </table>
