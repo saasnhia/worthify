@@ -18,10 +18,10 @@ import { FloatingOrbs } from '@/components/landing/FloatingOrbs'
 import { FeatureCard } from '@/components/landing/FeatureCards'
 import { useHeroAnimation, useScrollAnimations } from '@/components/landing/HeroAnimations'
 
-// Lazy load Three.js particles (desktop only, no SSR)
-const ParticlesBackground = dynamic(
-  () => import('@/components/landing/ParticlesBackground').then(m => m.ParticlesBackground),
-  { ssr: false }
+// Lazy load 3D scene (desktop only, no SSR)
+const HeroScene3D = dynamic(
+  () => import('@/components/landing/HeroScene3D').then(m => ({ default: m.HeroScene3D })),
+  { ssr: false, loading: () => <div className="absolute inset-0 bg-[#080810]" /> }
 )
 
 // ─────────────────────────────────────────────────────────────
@@ -170,12 +170,15 @@ export default function HomePage() {
 
       {/* ── HERO — 3D Premium ── */}
       <section className="relative min-h-screen flex items-center overflow-hidden bg-[#080810]">
-        {/* WebGL Particles (desktop) / CSS Orbs (mobile) */}
-        {!isMobile && <ParticlesBackground />}
+        {/* 3D Scene (desktop) / CSS Orbs (mobile) */}
+        {!isMobile && <HeroScene3D />}
         <FloatingOrbs />
 
+        {/* Overlay gradient for text readability */}
+        <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[#080810]/80 via-[#080810]/40 to-transparent pointer-events-none" />
+
         {/* Subtle grid */}
-        <div className="absolute inset-0 opacity-[0.02] z-[1]"
+        <div className="absolute inset-0 opacity-[0.02] z-[2]"
           style={{
             backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
             backgroundSize: '60px 60px',
