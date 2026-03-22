@@ -161,10 +161,25 @@ export async function updateSession(request: NextRequest) {
         }
 
         if (!isActive) {
-          const url = request.nextUrl.clone()
-          url.pathname = '/pricing'
-          url.searchParams.set('message', 'subscription_required')
-          return NextResponse.redirect(url)
+          // ── Read-only mode post-trial ──────────────────────────
+          // Pages : accès en lecture seule (données visibles)
+          // API mutations (POST/PUT/PATCH/DELETE) : bloquées → 403
+          // API GET : autorisé
+          if (pathname.startsWith('/api/')) {
+            const method = request.method
+            if (method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS') {
+              return NextResponse.json(
+                {
+                  success: false,
+                  error: 'trial_expired',
+                  message: 'Votre essai a expiré. Choisissez un plan pour continuer.',
+                },
+                { status: 403 },
+              )
+            }
+            // GET API requests pass through (read-only)
+          }
+          // Page routes: let through — TrialExpiredBanner shown client-side
         }
       }
     }

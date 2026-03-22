@@ -5,7 +5,9 @@ import Link from 'next/link'
 import { CheckCircle2, Loader2 } from 'lucide-react'
 
 // ─────────────────────────────────────────────────────────────
-// SOURCE DE VÉRITÉ PRICING — 4 plans Worthifast
+// SOURCE DE VÉRITÉ PRICING — 4 plans Worthifast (trial-led)
+// Zéro plan gratuit permanent. 14j essai sur tous les plans,
+// puis read-only post-trial (données visibles, mutations bloquées).
 // ─────────────────────────────────────────────────────────────
 
 interface PlanData {
@@ -19,7 +21,6 @@ interface PlanData {
   highlight: boolean
   badge?: string
   trial?: string
-  note?: string
   isContact?: boolean
 }
 
@@ -31,17 +32,16 @@ const PLANS: PlanData[] = [
     price: 29,
     annualPrice: 23,
     features: [
-      '1 utilisateur',
-      '20 dossiers clients',
-      'OCR illimité (Mistral IA)',
-      'Journal PCG + Grand livre',
-      'TVA CA3 automatique',
-      'Export FEC DGFiP',
-      'E-invoicing Factur-X 2026',
+      '1 utilisateur · 15 dossiers',
+      'OCR 50 factures/mois (Mistral IA)',
+      'Journal PCG + Grand livre + TVA CA3',
+      'Export FEC · E-invoicing 2026',
+      '1 Agent IA personnalisable',
       'Support email 48h',
     ],
-    cta: 'Commencer Solo',
+    cta: 'Essai 14j gratuit',
     highlight: false,
+    trial: '14 jours gratuits',
   },
   {
     id: 'cabinet',
@@ -50,12 +50,14 @@ const PLANS: PlanData[] = [
     price: 59,
     annualPrice: 47,
     features: [
+      '3 utilisateurs · 45 dossiers',
+      'OCR illimité',
       'Tout Solo +',
-      "Jusqu'à 3 utilisateurs",
-      '45 dossiers clients',
       'Rapprochement bancaire',
-      'Portail client (dépôt documents)',
+      'Portail client',
       'Relances automatiques',
+      '3 Agents IA personnalisables',
+      'Dashboard KPIs cabinet',
       'Support email 24h',
     ],
     cta: 'Essai 14j gratuit',
@@ -64,22 +66,25 @@ const PLANS: PlanData[] = [
     trial: '14 jours gratuits',
   },
   {
-    id: 'cabinet_plus',
-    name: 'Cabinet Plus',
+    id: 'cabinet_pro',
+    name: 'Cabinet Pro',
     description: 'Pour les cabinets en croissance',
     price: 99,
     annualPrice: 79,
     features: [
+      '10 utilisateurs · Dossiers illimités',
+      'OCR illimité',
       'Tout Cabinet +',
-      "Jusqu'à 10 utilisateurs",
-      'Dossiers illimités',
+      'Agents IA illimités',
       'API + webhooks',
       'Multi-cabinets',
+      'Intégrations Cegid/Sage (roadmap)',
       'Support prioritaire',
       'Paie (roadmap Q3 2026)',
     ],
     cta: 'Essai 14j gratuit',
     highlight: false,
+    trial: '14 jours gratuits',
   },
   {
     id: 'sur_mesure',
@@ -89,10 +94,8 @@ const PLANS: PlanData[] = [
     annualPrice: 0,
     features: [
       '+10 utilisateurs',
-      'Dossiers illimités',
-      'Intégrations Cegid/Sage',
       'SLA dédié',
-      'Onboarding accompagné',
+      'Migration accompagnée',
     ],
     cta: 'Nous contacter →',
     highlight: false,
@@ -119,7 +122,7 @@ export function PricingPlans({ sectionId, onSubscribe, subscribing }: PricingPla
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Tarifs clairs, sans surprise</h2>
-          <p className="text-slate-500 mb-8">25% moins cher que Pennylane dès le plan Cabinet. Prix affiché, pas de devis commercial.</p>
+          <p className="text-slate-500 mb-8">25% moins cher que Pennylane dès le plan Cabinet. 14 jours d&apos;essai gratuit sur tous les plans.</p>
 
           <div className="inline-flex items-center gap-1 bg-gray-100 rounded-xl p-1">
             <button onClick={() => setAnnual(false)}
@@ -242,7 +245,9 @@ export function PricingPlans({ sectionId, onSubscribe, subscribing }: PricingPla
             </div>
           ))}
         </div>
-        <p className="text-center text-xs text-slate-400 mt-4">Tous les prix sont HT — TVA 20% applicable</p>
+        <p className="text-center text-xs text-slate-400 mt-4">
+          Tous les prix sont HT — TVA 20% applicable · Après l&apos;essai, vos données restent accessibles en lecture seule
+        </p>
       </div>
     </section>
   )

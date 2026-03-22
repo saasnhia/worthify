@@ -11,17 +11,16 @@ const PLANS = [
     price: 29,
     description: 'Pour les indépendants et petits cabinets',
     features: [
-      '1 utilisateur',
-      '20 dossiers clients',
-      'OCR illimité (Mistral IA)',
-      'Journal PCG + Grand livre',
-      'TVA CA3 automatique',
-      'Export FEC DGFiP',
-      'E-invoicing Factur-X 2026',
+      '1 utilisateur · 15 dossiers',
+      'OCR 50 factures/mois (Mistral IA)',
+      'Journal PCG + Grand livre + TVA CA3',
+      'Export FEC · E-invoicing 2026',
+      '1 Agent IA personnalisable',
       'Support email 48h',
     ],
-    cta: 'Commencer Solo',
+    cta: 'Essai 14j gratuit',
     highlight: false,
+    trial: '14 jours gratuits',
   },
   {
     id: 'cabinet',
@@ -29,12 +28,14 @@ const PLANS = [
     price: 59,
     description: 'Pour les cabinets indépendants',
     features: [
+      '3 utilisateurs · 45 dossiers',
+      'OCR illimité',
       'Tout Solo +',
-      "Jusqu'à 3 utilisateurs",
-      '45 dossiers clients',
       'Rapprochement bancaire',
-      'Portail client (dépôt documents)',
+      'Portail client',
       'Relances automatiques',
+      '3 Agents IA personnalisables',
+      'Dashboard KPIs cabinet',
       'Support email 24h',
     ],
     cta: 'Essai 14j gratuit',
@@ -43,21 +44,24 @@ const PLANS = [
     trial: '14 jours gratuits',
   },
   {
-    id: 'cabinet_plus',
-    name: 'Cabinet Plus',
+    id: 'cabinet_pro',
+    name: 'Cabinet Pro',
     price: 99,
     description: 'Pour les cabinets en croissance',
     features: [
+      '10 utilisateurs · Dossiers illimités',
+      'OCR illimité',
       'Tout Cabinet +',
-      "Jusqu'à 10 utilisateurs",
-      'Dossiers illimités',
+      'Agents IA illimités',
       'API + webhooks',
       'Multi-cabinets',
+      'Intégrations Cegid/Sage (roadmap)',
       'Support prioritaire',
       'Paie (roadmap Q3 2026)',
     ],
     cta: 'Essai 14j gratuit',
     highlight: false,
+    trial: '14 jours gratuits',
   },
   {
     id: 'sur_mesure',
@@ -66,10 +70,8 @@ const PLANS = [
     description: 'Grands cabinets et besoins spécifiques',
     features: [
       '+10 utilisateurs',
-      'Dossiers illimités',
-      'Intégrations Cegid/Sage',
       'SLA dédié',
-      'Onboarding accompagné',
+      'Migration accompagnée',
     ],
     cta: 'Nous contacter →',
     highlight: false,
@@ -81,9 +83,9 @@ const PRICING_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   "itemListElement": [
-    { "@type": "Offer", "name": "Solo", "price": "29", "priceCurrency": "EUR", "description": "1 utilisateur, 20 dossiers, OCR illimité" },
-    { "@type": "Offer", "name": "Cabinet", "price": "59", "priceCurrency": "EUR", "description": "3 utilisateurs, 45 dossiers, rapprochement, portail" },
-    { "@type": "Offer", "name": "Cabinet Plus", "price": "99", "priceCurrency": "EUR", "description": "10 utilisateurs, dossiers illimités, API" },
+    { "@type": "Offer", "name": "Solo", "price": "29", "priceCurrency": "EUR", "description": "1 utilisateur, 15 dossiers, OCR 50/mois, 1 Agent IA" },
+    { "@type": "Offer", "name": "Cabinet", "price": "59", "priceCurrency": "EUR", "description": "3 utilisateurs, 45 dossiers, OCR illimité, portail, 3 Agents IA" },
+    { "@type": "Offer", "name": "Cabinet Pro", "price": "99", "priceCurrency": "EUR", "description": "10 utilisateurs, dossiers illimités, API, Agents IA illimités" },
   ],
 }
 
@@ -97,7 +99,7 @@ export function PricingSection() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-white mb-4">Tarifs clairs, sans surprise</h2>
-          <p className="text-slate-400 mb-8">25% moins cher que Pennylane dès le plan Cabinet. Prix affiché, pas de devis commercial.</p>
+          <p className="text-slate-400 mb-8">25% moins cher que Pennylane dès le plan Cabinet. 14 jours d&apos;essai gratuit sur tous les plans.</p>
 
           <div className="inline-flex items-center gap-1 bg-white/5 border border-white/10 rounded-xl p-1">
             <button onClick={() => setAnnual(false)}
@@ -114,9 +116,8 @@ export function PricingSection() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {PLANS.map(plan => {
-            const isFree = plan.price <= 0
             const isContact = 'isContact' in plan && plan.isContact
-            const displayPrice = !isFree && !isContact && annual ? Math.round(plan.price * 0.8) : plan.price
+            const displayPrice = !isContact && plan.price > 0 && annual ? Math.round(plan.price * 0.8) : plan.price
             return (
               <div key={plan.id} className={`relative rounded-2xl border p-6 flex flex-col ${
                 plan.highlight
@@ -142,7 +143,7 @@ export function PricingSection() {
                           <span className="text-4xl font-extrabold text-white">{displayPrice}€</span>
                           <span className="text-sm text-slate-400 mb-1">/mois HT</span>
                         </div>
-                        {annual && !isFree && (
+                        {annual && (
                           <p className="text-xs text-slate-500 mt-1">
                             <span className="line-through">{plan.price}€</span> → facturé {displayPrice * 12}€/an
                           </p>
@@ -184,7 +185,9 @@ export function PricingSection() {
           })}
         </div>
 
-        <p className="text-center text-xs text-slate-600 mt-6">Tous les prix sont HT — TVA 20% applicable</p>
+        <p className="text-center text-xs text-slate-600 mt-6">
+          Tous les prix sont HT — TVA 20% applicable · Après l&apos;essai, vos données restent accessibles en lecture seule
+        </p>
       </div>
     </section>
   )

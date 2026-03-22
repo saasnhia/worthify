@@ -6,6 +6,7 @@ import { Sidebar } from './Sidebar'
 import { DossierProvider } from '@/contexts/DossierContext'
 import { CommandPalette } from '@/components/CommandPalette'
 import { CommandPaletteContext } from '@/lib/search/use-command-palette'
+import { TrialExpiredBanner } from '@/components/TrialExpiredBanner'
 
 interface AppShellProps {
   children: React.ReactNode
@@ -22,6 +23,7 @@ export function AppShell({ children }: AppShellProps) {
     <DossierProvider>
       <CommandPaletteContext.Provider value={{ open: commandOpen, setOpen: setCommandOpen }}>
         <div className="min-h-screen bg-navy-50">
+          <TrialExpiredBanner />
           <Header />
           <div className="flex">
             <Sidebar />
