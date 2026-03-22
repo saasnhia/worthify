@@ -1,36 +1,62 @@
 import Image from 'next/image'
 import { BrowserFrame } from './browser-frame'
+import { OcrMockup, RapprochementMockup, TvaMockup } from './mockups'
 
-const STEPS = [
+interface Step {
+  number: string
+  icon: string
+  title: string
+  description: string
+  visual: 'ocr' | 'screenshot' | 'rapprochement' | 'tva'
+  screenshot?: string
+}
+
+const STEPS: Step[] = [
   {
     number: '01',
     icon: '📤',
     title: 'Déposez votre facture',
     description: 'Glissez un PDF, une photo ou importez depuis votre email. Tous formats acceptés.',
-    screenshot: '/screenshots/factureocr.png',
+    visual: 'ocr',
   },
   {
     number: '02',
     icon: '🤖',
     title: 'OCR + PCG automatique',
     description: "L'IA Mistral extrait les données et génère les écritures PCG en 30 secondes.",
-    screenshot: '/screenshots/dashboard2.png',
+    visual: 'screenshot',
+    screenshot: '/screenshots/factureocr.png',
   },
   {
     number: '03',
     icon: '🏦',
     title: 'Rapprochement bancaire',
     description: "Importez votre relevé — le matching automatique s'occupe du reste.",
-    screenshot: '/screenshots/transactionn.png',
+    visual: 'rapprochement',
   },
   {
     number: '04',
     icon: '📊',
     title: 'Déclarations & exports',
     description: 'TVA CA3 pré-remplie, FEC conforme DGFiP, reporting cabinet en temps réel.',
-    screenshot: '/screenshots/dashboard.png',
+    visual: 'tva',
   },
 ]
+
+function StepVisual({ step }: { step: Step }) {
+  switch (step.visual) {
+    case 'ocr':
+      return <OcrMockup />
+    case 'rapprochement':
+      return <RapprochementMockup />
+    case 'tva':
+      return <TvaMockup />
+    case 'screenshot':
+      return step.screenshot
+        ? <Image src={step.screenshot} alt={step.title} width={600} height={350} className="w-full" />
+        : null
+  }
+}
 
 export function WorkflowSection() {
   return (
@@ -55,7 +81,7 @@ export function WorkflowSection() {
                 </div>
               </div>
               <BrowserFrame className="group-hover:border-[#00A878]/30 transition-colors">
-                <Image src={step.screenshot} alt={step.title} width={600} height={350} className="w-full" />
+                <StepVisual step={step} />
               </BrowserFrame>
             </div>
           ))}

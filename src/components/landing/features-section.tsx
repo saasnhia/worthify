@@ -1,4 +1,7 @@
 import Image from 'next/image'
+import { OcrMockup, RapprochementMockup, TvaMockup, EinvoicingMockup, PortailMockup } from './mockups'
+
+type MockupType = 'ocr' | 'rapprochement' | 'tva' | 'einvoicing' | 'portail'
 
 interface Feature {
   size: 'large' | 'normal'
@@ -7,6 +10,7 @@ interface Feature {
   description: string
   badge?: string
   screenshot?: string
+  mockup?: MockupType
 }
 
 const FEATURES: Feature[] = [
@@ -22,18 +26,21 @@ const FEATURES: Feature[] = [
     icon: '🔍',
     title: 'OCR Intelligent',
     description: 'Taux de reconnaissance > 95%, correction manuelle possible, apprentissage continu.',
+    mockup: 'ocr',
   },
   {
     size: 'normal',
     icon: '🏦',
     title: 'Rapprochement bancaire',
     description: 'Import OFX/CSV, matching automatique, détection des anomalies.',
+    mockup: 'rapprochement',
   },
   {
     size: 'normal',
     icon: '📄',
     title: 'TVA & CERFA',
     description: 'CA3 pré-remplie depuis vos écritures, export PDF conforme adminfisc.',
+    mockup: 'tva',
   },
   {
     size: 'normal',
@@ -41,6 +48,7 @@ const FEATURES: Feature[] = [
     title: 'E-invoicing 2026',
     description: "Factur-X / EN16931 natif — conforme dès maintenant pour la réforme 2026.",
     badge: 'Inclus dans tous les plans',
+    mockup: 'einvoicing',
   },
   {
     size: 'large',
@@ -54,10 +62,21 @@ const FEATURES: Feature[] = [
     icon: '🤝',
     title: 'Portail client',
     description: 'Vos clients déposent leurs documents directement. Zéro email.',
+    mockup: 'portail',
   },
 ]
 
+const MOCKUP_COMPONENTS: Record<MockupType, React.FC<{ mini?: boolean }>> = {
+  ocr: OcrMockup,
+  rapprochement: RapprochementMockup,
+  tva: TvaMockup,
+  einvoicing: EinvoicingMockup,
+  portail: PortailMockup,
+}
+
 function FeatureCard({ feature }: { feature: Feature }) {
+  const MockupComponent = feature.mockup ? MOCKUP_COMPONENTS[feature.mockup] : null
+
   return (
     <div className={`bg-[#0F1117] border border-white/[0.08] rounded-2xl p-6 hover:border-[#00A878]/30 transition-colors ${
       feature.size === 'large' ? 'md:col-span-2' : ''
@@ -74,9 +93,16 @@ function FeatureCard({ feature }: { feature: Feature }) {
           <p className="text-sm text-slate-400 mt-1">{feature.description}</p>
         </div>
       </div>
+
       {feature.screenshot && (
         <div className="mt-4 rounded-lg overflow-hidden border border-white/5">
           <Image src={feature.screenshot} alt={feature.title} width={700} height={400} className="w-full" />
+        </div>
+      )}
+
+      {MockupComponent && (
+        <div className="mt-4 rounded-lg overflow-hidden border border-white/5">
+          <MockupComponent mini />
         </div>
       )}
     </div>
