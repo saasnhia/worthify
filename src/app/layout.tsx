@@ -3,17 +3,18 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
-  title: 'Worthifast — Comptabilité automatisée. En local.',
-  description: 'SaaS comptable local RGPD. OCR factures, TVA, rapprochement bancaire. Dès 299€.',
-  keywords: ['comptabilité', 'OCR factures', 'SIREN', 'TVA intracommunautaire', 'VIES', 'rapprochement bancaire', 'PME', 'cabinet comptable', 'RGPD', 'Dijon'],
+  metadataBase: new URL('https://worthifast.vercel.app'),
+  title: 'Worthifast — Comptabilité automatisée pour cabinets',
+  description: 'Comptabilité automatisée pour cabinets comptables. OCR factures, journal PCG, TVA CA3, rapprochement bancaire. Dès 99€/mois. Hébergé en France, RGPD natif.',
+  keywords: ['comptabilité', 'OCR factures', 'cabinet comptable', 'TVA CA3', 'rapprochement bancaire', 'PME', 'RGPD', 'e-invoicing 2026', 'Factur-X', 'Worthifast'],
   authors: [{ name: 'Worthifast' }],
   icons: {
     icon: '/favicon.svg',
     apple: '/images/worthifast-logo.svg',
   },
   openGraph: {
-    title: 'Worthifast — Comptabilité automatisée. En local.',
-    description: 'SaaS comptable local RGPD. OCR factures, TVA, rapprochement bancaire. Dès 299€.',
+    title: 'Worthifast — Comptabilité automatisée pour cabinets',
+    description: 'Comptabilité automatisée pour cabinets comptables. OCR factures, journal PCG, TVA CA3, rapprochement bancaire. Dès 99€/mois. Hébergé en France, RGPD natif.',
     type: 'website',
     locale: 'fr_FR',
     images: ['/images/worthifast-logo.svg'],

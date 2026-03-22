@@ -50,22 +50,20 @@ export async function POST(req: NextRequest) {
 
     let systemPrompt = SYSTEM_PROMPTS[contexte] ?? SYSTEM_PROMPTS.pcg
 
-    // Inject dossier context if available
+    // Inject anonymized dossier context (RGPD: no identifying data sent to LLM)
     if (dossier_id) {
       const { data: dossier } = await supabase
         .from('dossiers')
-        .select('nom, forme_juridique, regime_tva, code_naf, chiffre_affaires')
+        .select('forme_juridique, regime_tva, code_naf')
         .eq('id', dossier_id)
         .eq('cabinet_id', user.id)
         .single()
 
       if (dossier) {
-        systemPrompt += `\n\nCONTEXTE DU DOSSIER CLIENT :\n` +
-          `- Nom : ${dossier.nom ?? 'Non renseigné'}\n` +
+        systemPrompt += `\n\nCONTEXTE ANONYMISÉ DU DOSSIER :\n` +
           `- Forme juridique : ${dossier.forme_juridique ?? 'Non renseignée'}\n` +
           `- Régime TVA : ${dossier.regime_tva ?? 'Non renseigné'}\n` +
           `- Code NAF : ${dossier.code_naf ?? 'Non renseigné'}\n` +
-          `- CA : ${dossier.chiffre_affaires ? dossier.chiffre_affaires + ' €' : 'Non renseigné'}\n` +
           `Adapte tes réponses à ce contexte spécifique.`
       }
     }
