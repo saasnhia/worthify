@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast'
 export const metadata: Metadata = {
   metadataBase: new URL('https://worthifast.vercel.app'),
   title: 'Worthifast — Comptabilité automatisée pour cabinets',
-  description: 'Comptabilité automatisée pour cabinets comptables. OCR factures, journal PCG, TVA CA3, rapprochement bancaire. Dès 99€/mois. Hébergé en France, RGPD natif.',
+  description: 'Comptabilité automatisée pour cabinets comptables. OCR factures, journal PCG, TVA CA3, rapprochement bancaire. Dès 29€/mois. Hébergé en France, RGPD natif.',
   keywords: ['comptabilité', 'OCR factures', 'cabinet comptable', 'TVA CA3', 'rapprochement bancaire', 'PME', 'RGPD', 'e-invoicing 2026', 'Factur-X', 'Worthifast'],
   authors: [{ name: 'Worthifast' }],
   icons: {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Worthifast — Comptabilité automatisée pour cabinets',
-    description: 'Comptabilité automatisée pour cabinets comptables. OCR factures, journal PCG, TVA CA3, rapprochement bancaire. Dès 99€/mois. Hébergé en France, RGPD natif.',
+    description: 'Comptabilité automatisée pour cabinets comptables. OCR factures, journal PCG, TVA CA3, rapprochement bancaire. Dès 29€/mois. Hébergé en France, RGPD natif.',
     type: 'website',
     locale: 'fr_FR',
     images: ['/images/worthifast-logo.svg'],

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { CheckCircle2, Loader2 } from 'lucide-react'
 
 // ─────────────────────────────────────────────────────────────
-// SOURCE DE VÉRITÉ PRICING — 3 plans Worthifast
+// SOURCE DE VÉRITÉ PRICING — 4 plans Worthifast
 // ─────────────────────────────────────────────────────────────
 
 interface PlanData {
@@ -20,40 +20,42 @@ interface PlanData {
   badge?: string
   trial?: string
   note?: string
+  isContact?: boolean
 }
 
 const PLANS: PlanData[] = [
   {
-    id: 'decouverte',
-    name: 'Découverte',
-    description: 'Pour tester sans engagement',
-    price: 0,
-    annualPrice: 0,
+    id: 'solo',
+    name: 'Solo',
+    description: 'Pour les indépendants et petits cabinets',
+    price: 29,
+    annualPrice: 23,
     features: [
-      'Journal comptable',
-      'Grand livre',
-      'OCR 10 factures/mois',
-      '5 dossiers clients',
       '1 utilisateur',
+      '20 dossiers clients',
+      'OCR illimité (Mistral IA)',
+      'Journal PCG + Grand livre',
+      'TVA CA3 automatique',
+      'Export FEC DGFiP',
+      'E-invoicing Factur-X 2026',
+      'Support email 48h',
     ],
-    cta: 'Commencer gratuitement',
+    cta: 'Commencer Solo',
     highlight: false,
   },
   {
     id: 'cabinet',
     name: 'Cabinet',
     description: 'Pour les cabinets indépendants',
-    price: 49,
-    annualPrice: 39,
+    price: 59,
+    annualPrice: 47,
     features: [
-      'Tout Découverte +',
+      'Tout Solo +',
+      "Jusqu'à 3 utilisateurs",
       '45 dossiers clients',
-      'OCR illimité (Mistral IA)',
-      'TVA CA3 automatique',
       'Rapprochement bancaire',
-      'Export FEC DGFiP',
-      'E-invoicing Factur-X 2026',
-      "Jusqu'à 5 utilisateurs",
+      'Portail client (dépôt documents)',
+      'Relances automatiques',
       'Support email 24h',
     ],
     cta: 'Essai 14j gratuit',
@@ -62,15 +64,15 @@ const PLANS: PlanData[] = [
     trial: '14 jours gratuits',
   },
   {
-    id: 'cabinet_pro',
-    name: 'Cabinet Pro',
+    id: 'cabinet_plus',
+    name: 'Cabinet Plus',
     description: 'Pour les cabinets en croissance',
     price: 99,
     annualPrice: 79,
     features: [
       'Tout Cabinet +',
-      'Dossiers illimités',
       "Jusqu'à 10 utilisateurs",
+      'Dossiers illimités',
       'API + webhooks',
       'Multi-cabinets',
       'Support prioritaire',
@@ -78,7 +80,23 @@ const PLANS: PlanData[] = [
     ],
     cta: 'Essai 14j gratuit',
     highlight: false,
-    note: '+10 utilisateurs → tarif sur mesure',
+  },
+  {
+    id: 'sur_mesure',
+    name: 'Sur Mesure',
+    description: 'Grands cabinets et besoins spécifiques',
+    price: 0,
+    annualPrice: 0,
+    features: [
+      '+10 utilisateurs',
+      'Dossiers illimités',
+      'Intégrations Cegid/Sage',
+      'SLA dédié',
+      'Onboarding accompagné',
+    ],
+    cta: 'Nous contacter →',
+    highlight: false,
+    isContact: true,
   },
 ]
 
@@ -98,10 +116,10 @@ export function PricingPlans({ sectionId, onSubscribe, subscribing }: PricingPla
 
   return (
     <section id={sectionId} className="py-24 px-4 bg-slate-50">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Tarifs clairs, sans surprise</h2>
-          <p className="text-slate-500 mb-8">38% moins cher que Pennylane. Prix affiché, pas de devis commercial.</p>
+          <p className="text-slate-500 mb-8">25% moins cher que Pennylane dès le plan Cabinet. Prix affiché, pas de devis commercial.</p>
 
           <div className="inline-flex items-center gap-1 bg-gray-100 rounded-xl p-1">
             <button onClick={() => setAnnual(false)}
@@ -116,12 +134,12 @@ export function PricingPlans({ sectionId, onSubscribe, subscribing }: PricingPla
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {PLANS.map(plan => {
             const billing: 'monthly' | 'annual' = annual ? 'annual' : 'monthly'
             const displayPrice = annual ? plan.annualPrice : plan.price
             const isLoading = subscribing === plan.id
-            const useButton = !!onSubscribe && plan.price > 0
+            const useButton = !!onSubscribe && !plan.isContact && plan.price > 0
 
             return (
               <div key={plan.id} className={`relative rounded-2xl border p-6 flex flex-col ${
@@ -140,20 +158,20 @@ export function PricingPlans({ sectionId, onSubscribe, subscribing }: PricingPla
                   <p className={`text-xs mt-1 ${plan.highlight ? 'text-slate-400' : 'text-slate-500'}`}>{plan.description}</p>
 
                   <div className="mt-4">
-                    {plan.price === 0 ? (
-                      <span className={`text-4xl font-extrabold ${plan.highlight ? 'text-white' : 'text-slate-900'}`}>Gratuit</span>
+                    {plan.isContact ? (
+                      <span className={`text-3xl font-extrabold ${plan.highlight ? 'text-white' : 'text-slate-900'}`}>Sur devis</span>
                     ) : (
                       <div>
                         <div className="flex items-end gap-1">
                           <span className={`text-4xl font-extrabold ${plan.highlight ? 'text-white' : 'text-slate-900'}`}>{displayPrice}€</span>
-                          <span className={`text-sm mb-1 ${plan.highlight ? 'text-slate-400' : 'text-slate-400'}`}>/mois HT</span>
+                          <span className="text-sm text-slate-400 mb-1">/mois HT</span>
                         </div>
-                        {annual && (
-                          <p className={`text-xs mt-1 ${plan.highlight ? 'text-slate-500' : 'text-slate-400'}`}>
+                        {annual && plan.price > 0 && (
+                          <p className="text-xs text-slate-400 mt-1">
                             <span className="line-through">{plan.price}€</span> → facturé {displayPrice * 12}€/an
                           </p>
                         )}
-                        {!annual && (
+                        {!annual && plan.price > 0 && (
                           <p className="text-xs text-emerald-500 mt-1">
                             Ou {plan.annualPrice}€/mois en annuel (−20%)
                           </p>
@@ -175,7 +193,12 @@ export function PricingPlans({ sectionId, onSubscribe, subscribing }: PricingPla
                   ))}
                 </ul>
 
-                {useButton ? (
+                {plan.isContact ? (
+                  <a href="mailto:contact@worthifast.app?subject=Demande%20plan%20sur%20mesure"
+                    className="block text-center py-3 px-4 rounded-xl font-semibold text-sm border border-gray-200 text-slate-700 hover:bg-gray-50 transition-colors">
+                    {plan.cta}
+                  </a>
+                ) : useButton ? (
                   <button
                     onClick={() => onSubscribe(plan.id, billing)}
                     disabled={!!subscribing}
@@ -192,7 +215,7 @@ export function PricingPlans({ sectionId, onSubscribe, subscribing }: PricingPla
                     ) : plan.cta}
                   </button>
                 ) : (
-                  <Link href={plan.price === 0 ? '/signup' : `/signup?plan=${plan.id}&billing=${billing}`}
+                  <Link href={`/signup?plan=${plan.id}&billing=${billing}`}
                     className={`block text-center py-3 px-4 rounded-xl font-semibold text-sm transition-colors ${
                       plan.highlight
                         ? 'bg-emerald-500 text-white hover:bg-emerald-600'
@@ -200,10 +223,6 @@ export function PricingPlans({ sectionId, onSubscribe, subscribing }: PricingPla
                     }`}>
                     {plan.cta}
                   </Link>
-                )}
-
-                {plan.note && (
-                  <p className={`text-xs text-center mt-3 ${plan.highlight ? 'text-slate-500' : 'text-slate-400'}`}>{plan.note}</p>
                 )}
               </div>
             )

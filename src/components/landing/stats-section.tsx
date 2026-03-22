@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 const STATS = [
-  { value: 38, suffix: '%', label: 'Moins cher que Pennylane', color: '#F59E0B' },
+  { value: 25, suffix: '%', label: 'Moins cher que Pennylane', color: '#F59E0B' },
   { value: 30, suffix: 's', label: "Traitement d'une facture OCR", color: '#00A878' },
   { value: 45, suffix: '', label: 'Dossiers clients en 1 écran', color: '#F59E0B' },
   { value: 14, suffix: 'j', label: "D'essai gratuit sans CB", color: '#00A878' },

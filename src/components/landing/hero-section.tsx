@@ -26,7 +26,7 @@ export function HeroSection() {
           <p className="text-lg text-slate-300 leading-relaxed mb-8 max-w-lg">
             De la facture fournisseur au rapprochement bancaire, TVA CA3 et
             reporting — tout automatisé par l&apos;IA Mistral française.{' '}
-            <strong className="text-white">38% moins cher que Pennylane.</strong>
+            <strong className="text-white">25% moins cher que Pennylane.</strong>
           </p>
 
           <div className="flex items-center gap-2 flex-wrap mb-8">

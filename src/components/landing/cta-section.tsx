@@ -13,7 +13,7 @@ export function CtaSection() {
         <p className="text-slate-300 text-lg mb-8">
           14 jours d&apos;essai gratuit. Sans carte bancaire. Sans engagement.
           <br />
-          <span className="text-[#00A878]">38% moins cher que Pennylane.</span>
+          <span className="text-[#00A878]">25% moins cher que Pennylane.</span>
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
           <Link href="/signup" className="bg-[#F59E0B] hover:bg-[#D97706] text-black font-bold px-10 py-4 rounded-xl text-lg transition-colors">

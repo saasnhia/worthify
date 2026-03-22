@@ -11,7 +11,7 @@ interface CompRow {
 }
 
 const ROWS: CompRow[] = [
-  { label: 'Prix cabinet/mois', worthifast: '49€', pennylane: '79€ min', cegid: 'Sur devis' },
+  { label: 'Prix cabinet/mois', worthifast: '59€', pennylane: '79€ min', cegid: 'Sur devis' },
   { label: 'Tarif transparent', worthifast: true, pennylane: 'partial', cegid: false },
   { label: 'OCR factures IA', worthifast: true, pennylane: true, cegid: true },
   { label: 'Journal PCG auto', worthifast: true, pennylane: true, cegid: true },
