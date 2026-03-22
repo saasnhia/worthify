@@ -121,22 +121,22 @@ export function DashboardMockup({ mini = false }: { mini?: boolean }) {
       {/* KPI row 1 */}
       <KpiCard x={cx}       y={80} w={cw} h={68} value="12" label="Dossiers actifs" sub="12 dossier(s) en cours" color={BL} />
       <KpiCard x={cx+148}   y={80} w={cw} h={68} value="3" label="Factures en retard" sub="3 client(s) en retard" color={RD} />
-      <KpiCard x={cx+296}   y={80} w={cw} h={68} value="—" label="TVA du mois" sub="Aucune déclaration" color={GL} />
+      <KpiCard x={cx+296}   y={80} w={cw} h={68} value="8 036 €" label="TVA du mois" sub="CA3 mars pré-remplie" color={GL} />
       <KpiCard x={cx+444}   y={80} w={cw} h={68} value="5" label="Alertes actives" sub="dont 2 critique(s)" color="#8B5CF6" />
 
       {/* Trésorerie */}
       <text x={cx} y="176" fill={TP} fontSize="13" fontWeight="600" fontFamily={FT}>Trésorerie</text>
       <KpiCard x={cx}       y={184} w={cw} h={68} value="127 000 €" label="Solde bancaire" sub="Dernier relevé importé" color={GR} />
       <KpiCard x={cx+148}   y={184} w={cw} h={68} value="309 072 €" label="BFR estimé" sub="Encours clients − fourn." color={GL} />
-      <KpiCard x={cx+296}   y={184} w={cw} h={68} value="—" label="Prévisionnel J+30" sub="Connecter banque" color={TM} />
-      <KpiCard x={cx+444}   y={184} w={cw} h={68} value="—" label="Moy. mois précédent" sub="Historique 2 mois requis" color={TM} />
+      <KpiCard x={cx+296}   y={184} w={cw} h={68} value="41 200 €" label="Prévisionnel J+30" sub="Basé sur encours actuels" color={BL} />
+      <KpiCard x={cx+444}   y={184} w={cw} h={68} value="38 750 €" label="Moy. mois précédent" sub="Moyenne glissante 3 mois" color={GR} />
 
       {/* Performance */}
       <text x={cx} y="280" fill={TP} fontSize="13" fontWeight="600" fontFamily={FT}>Compte de résultat (YTD)</text>
-      <KpiCard x={cx}       y={288} w={cw} h={68} value="240 €" label="CA HT actuel" sub="Factures clients 2026" color={GR} />
-      <KpiCard x={cx+148}   y={288} w={cw} h={68} value="—" label="Charges HT" sub="Factures fournisseurs" color={RD} />
-      <KpiCard x={cx+296}   y={288} w={cw} h={68} value="—" label="Marge brute" sub="CA − Charges" color={BL} />
-      <KpiCard x={cx+444}   y={288} w={cw} h={68} value="—" label="CA N-1" sub="Année précédente" color={TM} />
+      <KpiCard x={cx}       y={288} w={cw} h={68} value="38 420 €" label="CA HT actuel" sub="Factures clients 2026" color={GR} />
+      <KpiCard x={cx+148}   y={288} w={cw} h={68} value="12 340 €" label="Charges HT" sub="Factures fournisseurs" color={RD} />
+      <KpiCard x={cx+296}   y={288} w={cw} h={68} value="67,8 %" label="Marge brute" sub="CA − Charges" color={BL} />
+      <KpiCard x={cx+444}   y={288} w={cw} h={68} value="198 400 €" label="CA N-1" sub="Année précédente" color={GR} />
 
       {/* Activity chart placeholder */}
       <rect x={cx} y="374" width="584" height="110" rx="8" fill={WH} stroke={BD} strokeWidth="0.5" />
@@ -169,7 +169,7 @@ function DashboardMini() {
       {[
         { v: '12', l: 'Dossiers', c: BL },
         { v: '3', l: 'En retard', c: RD },
-        { v: '—', l: 'TVA', c: GL },
+        { v: '8 036€', l: 'TVA', c: GL },
         { v: '5', l: 'Alertes', c: '#8B5CF6' },
       ].map((k, i) => (
         <g key={i}>
@@ -206,6 +206,63 @@ function DashboardMini() {
           </g>
         )
       })}
+    </svg>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════
+// 1b. JOURNAL COMPTABLE (mini only — pour bento features)
+// ═══════════════════════════════════════════════════════════
+
+const JOURNAL_ROWS = [
+  { date: '01/04', journal: 'AC', compte: '401TOTALENE', libelle: 'Facture TOTAL ENERGIES', debit: '', credit: '1 240,00' },
+  { date: '01/04', journal: 'AC', compte: '44566000', libelle: 'TVA déductible 20%', debit: '248,00', credit: '' },
+  { date: '01/04', journal: 'AC', compte: '51200000', libelle: 'Banque CIC Pro', debit: '1 488,00', credit: '' },
+  { date: '02/04', journal: 'VE', compte: '411001SCI', libelle: 'SCI LES PINS', debit: '', credit: '2 880,00' },
+  { date: '02/04', journal: 'VE', compte: '70600000', libelle: 'Prestations services', debit: '2 400,00', credit: '' },
+  { date: '02/04', journal: 'VE', compte: '44571000', libelle: 'TVA collectée 20%', debit: '480,00', credit: '' },
+]
+
+export function JournalMockup() {
+  return (
+    <svg viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+      <rect width="400" height="250" rx="6" fill={CB} />
+      {/* Header */}
+      <rect x="0" y="0" width="400" height="30" rx="6" fill={WH} />
+      <text x="14" y="20" fill={TP} fontSize="11" fontWeight="700" fontFamily={FT}>Journal — Avril 2026</text>
+      <rect x="280" y="6" width="108" height="18" rx="4" fill={TH} stroke={BD} strokeWidth="0.5" />
+      <text x="292" y="19" fill={TM} fontSize="8" fontFamily={FT}>Tous les journaux ▾</text>
+
+      {/* Table header */}
+      <rect x="8" y="36" width="384" height="20" rx="4" fill={TH} />
+      <text x="14" y="50" fill={TM} fontSize="7" fontWeight="600" fontFamily={FT}>Date</text>
+      <text x="52" y="50" fill={TM} fontSize="7" fontWeight="600" fontFamily={FT}>Jnl</text>
+      <text x="76" y="50" fill={TM} fontSize="7" fontWeight="600" fontFamily={FT}>Compte</text>
+      <text x="154" y="50" fill={TM} fontSize="7" fontWeight="600" fontFamily={FT}>Libellé</text>
+      <text x="296" y="50" fill={TM} fontSize="7" fontWeight="600" fontFamily={FT}>Débit</text>
+      <text x="352" y="50" fill={TM} fontSize="7" fontWeight="600" fontFamily={FT}>Crédit</text>
+
+      {/* Rows */}
+      {JOURNAL_ROWS.map((row, i) => {
+        const ry = 60 + i * 26
+        const jColor = row.journal === 'AC' ? BL : GR
+        return (
+          <g key={i}>
+            <rect x="8" y={ry} width="384" height="22" rx="3" fill={i % 2 === 0 ? WH : CB} />
+            <text x="14" y={ry + 15} fill={TM} fontSize="8" fontFamily={FT}>{row.date}</text>
+            <rect x="50" y={ry + 3} width="18" height="14" rx="3" fill={jColor} fillOpacity="0.1" />
+            <text x="59" y={ry + 14} textAnchor="middle" fill={jColor} fontSize="7" fontWeight="600" fontFamily={FT}>{row.journal}</text>
+            <text x="76" y={ry + 15} fill={TP} fontSize="7" fontFamily="monospace">{row.compte}</text>
+            <text x="154" y={ry + 15} fill={TP} fontSize="8" fontFamily={FT}>{row.libelle}</text>
+            <text x="296" y={ry + 15} fill={row.debit ? TP : TS} fontSize="8" fontWeight={row.debit ? '600' : '400'} fontFamily={FT}>{row.debit || '—'}</text>
+            <text x="352" y={ry + 15} fill={row.credit ? TP : TS} fontSize="8" fontWeight={row.credit ? '600' : '400'} fontFamily={FT}>{row.credit || '—'}</text>
+          </g>
+        )
+      })}
+
+      {/* Footer */}
+      <rect x="8" y="222" width="384" height="20" rx="4" fill={GR} fillOpacity="0.06" stroke={GR} strokeOpacity="0.15" strokeWidth="0.5" />
+      <text x="200" y="236" textAnchor="middle" fill={GR} fontSize="8" fontWeight="500" fontFamily={FT}>6 écritures ce mois · Solde : équilibré ✓</text>
     </svg>
   )
 }

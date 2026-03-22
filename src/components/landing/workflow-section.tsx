@@ -1,5 +1,5 @@
 import { BrowserFrame } from './browser-frame'
-import { OcrMockup, DashboardMockup, RapprochementMockup, TvaMockup } from './mockups'
+import { OcrMockup, RapprochementMockup, TvaMockup } from './mockups'
 
 const STEPS = [
   {
@@ -14,7 +14,7 @@ const STEPS = [
     icon: '🤖',
     title: 'OCR + PCG automatique',
     description: "L'IA Mistral extrait les données et génère les écritures PCG en 30 secondes.",
-    mockup: 'dashboard' as const,
+    mockup: 'ocr' as const,
   },
   {
     number: '03',
@@ -34,7 +34,6 @@ const STEPS = [
 
 const MOCKUP_MAP = {
   ocr: OcrMockup,
-  dashboard: DashboardMockup,
   rapprochement: RapprochementMockup,
   tva: TvaMockup,
 }

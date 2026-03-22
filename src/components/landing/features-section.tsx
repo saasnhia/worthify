@@ -1,9 +1,9 @@
 import {
-  DashboardMockup, OcrMockup, RapprochementMockup,
+  DashboardMockup, JournalMockup, OcrMockup, RapprochementMockup,
   TvaMockup, EinvoicingMockup, PortailMockup,
 } from './mockups'
 
-type MockupType = 'dashboard' | 'ocr' | 'rapprochement' | 'tva' | 'einvoicing' | 'portail'
+type MockupType = 'dashboard' | 'journal' | 'ocr' | 'rapprochement' | 'tva' | 'einvoicing' | 'portail'
 
 interface Feature {
   size: 'large' | 'normal'
@@ -20,7 +20,7 @@ const FEATURES: Feature[] = [
     icon: '📋',
     title: 'Journal comptable PCG',
     description: '700+ comptes, écritures chronologiques par journal (VE/AC/BQ/OD), grand livre par compte en 1 clic.',
-    mockup: 'dashboard',
+    mockup: 'journal',
   },
   {
     size: 'normal',
@@ -69,6 +69,7 @@ const FEATURES: Feature[] = [
 
 const MOCKUP_COMPONENTS: Record<MockupType, React.FC<{ mini?: boolean }>> = {
   dashboard: DashboardMockup,
+  journal: JournalMockup,
   ocr: OcrMockup,
   rapprochement: RapprochementMockup,
   tva: TvaMockup,
