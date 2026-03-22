@@ -1,0 +1,131 @@
+<svg width="1128" height="191" viewBox="0 0 1128 191" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1128" y2="191" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#050509"/>
+      <stop offset="50%" stop-color="#0A1428"/>
+      <stop offset="100%" stop-color="#060C10"/>
+    </linearGradient>
+    <radialGradient id="glN" cx="160" cy="20" r="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1B3A6B" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#1B3A6B" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glG" cx="960" cy="170" r="280" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00A878" stop-opacity="0.09"/>
+      <stop offset="100%" stop-color="#00A878" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ═══ BACKGROUND ═══ -->
+  <rect width="1128" height="191" fill="url(#bg)"/>
+  <rect width="1128" height="191" fill="url(#glN)"/>
+  <rect width="1128" height="191" fill="url(#glG)"/>
+
+  <!-- Top gold line -->
+  <rect x="0" y="0" width="1128" height="2" fill="#F59E0B" fill-opacity="0.5"/>
+
+  <!-- Giant W watermark -->
+  <text x="400" y="180" font-family="Georgia,'Times New Roman',serif" font-weight="700" font-size="230" fill="#1B3A6B" fill-opacity="0.07" transform="rotate(-5 400 180)">W</text>
+
+  <!-- Grid -->
+  <g opacity="0.025" stroke="#FFFFFF" stroke-width="0.5">
+    <line x1="0" y1="38" x2="1128" y2="38"/>
+    <line x1="0" y1="76" x2="1128" y2="76"/>
+    <line x1="0" y1="114" x2="1128" y2="114"/>
+    <line x1="0" y1="152" x2="1128" y2="152"/>
+    <line x1="188" y1="0" x2="188" y2="191"/>
+    <line x1="376" y1="0" x2="376" y2="191"/>
+    <line x1="564" y1="0" x2="564" y2="191"/>
+    <line x1="752" y1="0" x2="752" y2="191"/>
+    <line x1="940" y1="0" x2="940" y2="191"/>
+  </g>
+
+  <!-- Separators -->
+  <line x1="350" y1="12" x2="350" y2="179" stroke="#FFFFFF" stroke-opacity="0.05" stroke-width="0.5"/>
+  <line x1="755" y1="12" x2="755" y2="179" stroke="#FFFFFF" stroke-opacity="0.05" stroke-width="0.5"/>
+
+  <!-- ═══ LEFT ZONE (150–340) — top third, bottom empty for profile photo ═══ -->
+
+  <!-- Logo W -->
+  <text x="158" y="40" font-family="Georgia,'Times New Roman',serif" font-weight="700" font-size="32" fill="#FFFFFF">W</text>
+  <path d="M183 24 C185 16 188 10 192 4" fill="none" stroke="#00A878" stroke-width="2" stroke-linecap="round"/>
+  <path d="M150 45 C160 52 178 49 190 40" fill="none" stroke="#00A878" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Brand name -->
+  <text x="200" y="36" font-family="system-ui,-apple-system,sans-serif" font-weight="600" font-size="18" fill="#F1F5F9">Worthifast</text>
+
+  <!-- Tagline -->
+  <text x="158" y="60" font-family="system-ui,-apple-system,sans-serif" font-weight="400" font-size="10" fill="#64748B">La comptabilité intelligente pour cabinets</text>
+
+  <!-- Made in France badge -->
+  <rect x="158" y="70" width="168" height="18" rx="9" fill="#1B3A6B" fill-opacity="0.20" stroke="#1B3A6B" stroke-opacity="0.30" stroke-width="0.6"/>
+  <text x="242" y="83" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-weight="500" font-size="8.5" fill="#94A3B8">Made in France · SAS NBHC</text>
+
+  <!-- ═══ CENTER ZONE (360–745) ═══ -->
+
+  <!-- Surtitle -->
+  <text x="553" y="26" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-weight="700" font-size="8" fill="#00A878" letter-spacing="2">AUTOMATISATION COMPTABLE IA</text>
+
+  <!-- Main headline -->
+  <text x="553" y="55" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-weight="700" font-size="21" fill="#F1F5F9">Votre cabinet comptable,</text>
+  <text x="553" y="84" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-weight="800" font-size="25" fill="#F59E0B">enfin automatisé</text>
+
+  <!-- Workflow pipeline (5 steps with Agents IA) -->
+  <g font-family="system-ui,-apple-system,sans-serif" font-size="9">
+    <rect x="370" y="100" width="68" height="17" rx="4" fill="#FFFFFF" fill-opacity="0.04"/>
+    <text x="404" y="112" text-anchor="middle" fill="#94A3B8" font-weight="500">OCR Facture</text>
+
+    <text x="445" y="112" fill="#00A878" font-weight="600" font-size="10">→</text>
+
+    <rect x="455" y="100" width="68" height="17" rx="4" fill="#FFFFFF" fill-opacity="0.04"/>
+    <text x="489" y="112" text-anchor="middle" fill="#94A3B8" font-weight="500">Journal PCG</text>
+
+    <text x="530" y="112" fill="#00A878" font-weight="600" font-size="10">→</text>
+
+    <rect x="540" y="100" width="54" height="17" rx="4" fill="#FFFFFF" fill-opacity="0.04"/>
+    <text x="567" y="112" text-anchor="middle" fill="#94A3B8" font-weight="500">TVA CA3</text>
+
+    <text x="600" y="112" fill="#00A878" font-weight="600" font-size="10">→</text>
+
+    <rect x="610" y="100" width="62" height="17" rx="4" fill="#FFFFFF" fill-opacity="0.04"/>
+    <text x="641" y="112" text-anchor="middle" fill="#94A3B8" font-weight="500">Export FEC</text>
+
+    <text x="679" y="112" fill="#00A878" font-weight="600" font-size="10">→</text>
+
+    <rect x="689" y="100" width="62" height="17" rx="4" fill="#00A878" fill-opacity="0.08" stroke="#00A878" stroke-opacity="0.20" stroke-width="0.5"/>
+    <text x="720" y="112" text-anchor="middle" fill="#00A878" font-weight="600">Agents IA</text>
+  </g>
+
+  <!-- Status badge center bottom -->
+  <rect x="468" y="130" width="172" height="20" rx="10" fill="#F59E0B" fill-opacity="0.08" stroke="#F59E0B" stroke-opacity="0.25" stroke-width="0.6"/>
+  <text x="554" y="144" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-weight="600" font-size="8.5" fill="#F59E0B">Bientôt disponible · Essai 14j gratuit</text>
+
+  <!-- ═══ RIGHT ZONE (765–1118) — 5 feature cards ═══ -->
+
+  <!-- 1. IA Mistral (full width, green) -->
+  <rect x="770" y="16" width="344" height="30" rx="6" fill="#00A878" fill-opacity="0.08" stroke="#00A878" stroke-opacity="0.30" stroke-width="0.6"/>
+  <text x="784" y="33" font-family="system-ui,-apple-system,sans-serif" font-weight="700" font-size="11" fill="#00A878">🤖 IA Mistral hébergée en France</text>
+  <text x="784" y="43" font-family="system-ui,-apple-system,sans-serif" font-weight="400" font-size="7.5" fill="#64748B">Seul SaaS comptable avec IA hébergée en France</text>
+
+  <!-- 2. Dès 29€/mois (half left, gold) -->
+  <rect x="770" y="52" width="166" height="38" rx="6" fill="#F59E0B" fill-opacity="0.06" stroke="#F59E0B" stroke-opacity="0.25" stroke-width="0.6"/>
+  <text x="784" y="68" font-family="system-ui,-apple-system,sans-serif" font-weight="700" font-size="11" fill="#F59E0B">💶 Dès 29€/mois HT</text>
+  <text x="784" y="82" font-family="system-ui,-apple-system,sans-serif" font-weight="400" font-size="7.5" fill="#64748B">38% sous le prix du marché</text>
+
+  <!-- 3. E-invoicing 2026 (half right, green) -->
+  <rect x="944" y="52" width="170" height="38" rx="6" fill="#00A878" fill-opacity="0.08" stroke="#00A878" stroke-opacity="0.30" stroke-width="0.6"/>
+  <text x="958" y="68" font-family="system-ui,-apple-system,sans-serif" font-weight="700" font-size="11" fill="#00A878">📄 E-invoicing 2026</text>
+  <text x="958" y="82" font-family="system-ui,-apple-system,sans-serif" font-weight="400" font-size="7.5" fill="#64748B">Factur-X EN16931 natif</text>
+
+  <!-- 4. Agents IA custom (half left, navy) -->
+  <rect x="770" y="96" width="166" height="38" rx="6" fill="#1B3A6B" fill-opacity="0.15" stroke="#1B3A6B" stroke-opacity="0.30" stroke-width="0.6"/>
+  <text x="784" y="112" font-family="system-ui,-apple-system,sans-serif" font-weight="700" font-size="11" fill="#7DA0CA">🧠 Agents IA custom</text>
+  <text x="784" y="126" font-family="system-ui,-apple-system,sans-serif" font-weight="400" font-size="7.5" fill="#64748B">Créez vos agents compta</text>
+
+  <!-- 5. RGPD natif (half right, navy) -->
+  <rect x="944" y="96" width="170" height="38" rx="6" fill="#1B3A6B" fill-opacity="0.15" stroke="#1B3A6B" stroke-opacity="0.30" stroke-width="0.6"/>
+  <text x="958" y="112" font-family="system-ui,-apple-system,sans-serif" font-weight="700" font-size="11" fill="#7DA0CA">🔒 RGPD natif</text>
+  <text x="958" y="126" font-family="system-ui,-apple-system,sans-serif" font-weight="400" font-size="7.5" fill="#64748B">Hébergé en France</text>
+
+  <!-- ═══ BOTTOM GREEN LINE ═══ -->
+  <rect x="0" y="188" width="1128" height="3" rx="1.5" fill="#00A878" fill-opacity="0.40"/>
+</svg>
