@@ -1,7 +1,9 @@
-import Image from 'next/image'
-import { OcrMockup, RapprochementMockup, TvaMockup, EinvoicingMockup, PortailMockup } from './mockups'
+import {
+  DashboardMockup, OcrMockup, RapprochementMockup,
+  TvaMockup, EinvoicingMockup, PortailMockup,
+} from './mockups'
 
-type MockupType = 'ocr' | 'rapprochement' | 'tva' | 'einvoicing' | 'portail'
+type MockupType = 'dashboard' | 'ocr' | 'rapprochement' | 'tva' | 'einvoicing' | 'portail'
 
 interface Feature {
   size: 'large' | 'normal'
@@ -9,8 +11,7 @@ interface Feature {
   title: string
   description: string
   badge?: string
-  screenshot?: string
-  mockup?: MockupType
+  mockup: MockupType
 }
 
 const FEATURES: Feature[] = [
@@ -19,7 +20,7 @@ const FEATURES: Feature[] = [
     icon: '📋',
     title: 'Journal comptable PCG',
     description: '700+ comptes, écritures chronologiques par journal (VE/AC/BQ/OD), grand livre par compte en 1 clic.',
-    screenshot: '/screenshots/screen1.png',
+    mockup: 'dashboard',
   },
   {
     size: 'normal',
@@ -55,7 +56,7 @@ const FEATURES: Feature[] = [
     icon: '📊',
     title: 'Dashboard cabinet',
     description: 'KPIs en temps réel : CA, trésorerie, dossiers actifs, balance âgée, alertes fiscales.',
-    screenshot: '/screenshots/dashboard.png',
+    mockup: 'dashboard',
   },
   {
     size: 'normal',
@@ -67,6 +68,7 @@ const FEATURES: Feature[] = [
 ]
 
 const MOCKUP_COMPONENTS: Record<MockupType, React.FC<{ mini?: boolean }>> = {
+  dashboard: DashboardMockup,
   ocr: OcrMockup,
   rapprochement: RapprochementMockup,
   tva: TvaMockup,
@@ -75,8 +77,7 @@ const MOCKUP_COMPONENTS: Record<MockupType, React.FC<{ mini?: boolean }>> = {
 }
 
 function FeatureCard({ feature }: { feature: Feature }) {
-  const MockupComponent = feature.mockup ? MOCKUP_COMPONENTS[feature.mockup] : null
-
+  const MockupComponent = MOCKUP_COMPONENTS[feature.mockup]
   return (
     <div className={`bg-[#0F1117] border border-white/[0.08] rounded-2xl p-6 hover:border-[#00A878]/30 transition-colors ${
       feature.size === 'large' ? 'md:col-span-2' : ''
@@ -93,18 +94,9 @@ function FeatureCard({ feature }: { feature: Feature }) {
           <p className="text-sm text-slate-400 mt-1">{feature.description}</p>
         </div>
       </div>
-
-      {feature.screenshot && (
-        <div className="mt-4 rounded-lg overflow-hidden border border-white/5">
-          <Image src={feature.screenshot} alt={feature.title} width={700} height={400} className="w-full" />
-        </div>
-      )}
-
-      {MockupComponent && (
-        <div className="mt-4 rounded-lg overflow-hidden border border-white/5">
-          <MockupComponent mini />
-        </div>
-      )}
+      <div className="mt-4 rounded-lg overflow-hidden border border-white/5">
+        <MockupComponent mini />
+      </div>
     </div>
   )
 }

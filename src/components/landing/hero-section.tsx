@@ -1,6 +1,6 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { BrowserFrame } from './browser-frame'
+import { DashboardMockup } from './mockups'
 
 const PIPELINE = ['OCR Facture', 'Journal PCG', 'TVA CA3', 'Export FEC']
 
@@ -60,7 +60,7 @@ export function HeroSection() {
 
         <div className="relative hidden lg:block">
           <BrowserFrame className="shadow-2xl shadow-[#1B3A6B]/20">
-            <Image src="/screenshots/dashboard1.png" alt="Dashboard Worthifast" width={800} height={500} className="w-full" />
+            <DashboardMockup />
           </BrowserFrame>
           <div className="absolute -bottom-4 -left-4 bg-[#00A878] text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-lg">
             ✓ OCR traité en 30 secondes
