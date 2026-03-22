@@ -1,0 +1,10 @@
+<svg height="32" viewBox="0 0 160 36" xmlns="http://www.w3.org/2000/svg">
+  <!-- W serif white -->
+  <text x="15" y="27" font-family="Georgia,'Times New Roman',serif" font-weight="700" font-size="30" fill="#FFFFFF" text-anchor="middle">W</text>
+  <!-- Green leaf accent (rising from top-right of W) -->
+  <path d="M22 13 C23 9 25 5 27 2" fill="none" stroke="#00A878" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Green swoosh arc underneath -->
+  <path d="M1 29 C8 36 24 32 33 20" fill="none" stroke="#00A878" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Wordmark -->
+  <text x="40" y="24" font-family="'Segoe UI',system-ui,-apple-system,sans-serif" font-weight="600" font-size="18" fill="#FFFFFF" letter-spacing="0.3">Worthifast</text>
+</svg>

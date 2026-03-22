@@ -9,14 +9,14 @@ export const metadata: Metadata = {
   authors: [{ name: 'Worthifast' }],
   icons: {
     icon: '/favicon.svg',
-    apple: '/images/worthifast-logo.png',
+    apple: '/images/worthifast-logo.svg',
   },
   openGraph: {
     title: 'Worthifast — Comptabilité automatisée. En local.',
     description: 'SaaS comptable local RGPD. OCR factures, TVA, rapprochement bancaire. Dès 299€.',
     type: 'website',
     locale: 'fr_FR',
-    images: ['/images/worthifast-logo.png'],
+    images: ['/images/worthifast-logo.svg'],
   },
 }
 
