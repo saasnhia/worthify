@@ -103,7 +103,7 @@ export default function HomePage() {
       <nav className="sticky top-0 z-50 bg-[#080810]/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo-white.svg" alt="Worthifast" width={140} height={34} priority className="h-8 w-auto" />
+            <Image src="/images/worthifast-logo.png" alt="Worthifast — Logiciel comptable" width={140} height={34} priority className="h-8 w-auto" />
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
@@ -514,7 +514,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <Image src="/logo-white.svg" alt="Worthifast" width={140} height={34} className="h-8 w-auto" />
+                <Image src="/images/worthifast-logo.png" alt="Worthifast — Logiciel comptable" width={140} height={34} className="h-8 w-auto" />
               </div>
               <p className="text-sm max-w-xs leading-relaxed">
                 La solution comptable intelligente pour les cabinets d&apos;expertise comptable et PME françaises.
