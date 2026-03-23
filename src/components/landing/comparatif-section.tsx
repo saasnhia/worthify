@@ -8,59 +8,64 @@ interface CompRow {
   worthifast: boolean | string
   pennylane: boolean | string
   cegid: boolean | string
+  sage: boolean | string
 }
 
 const ROWS: CompRow[] = [
-  { label: 'Prix cabinet/mois', worthifast: '59€', pennylane: '79€ min', cegid: 'Sur devis' },
-  { label: 'Tarif transparent', worthifast: true, pennylane: 'partial', cegid: false },
-  { label: 'OCR factures IA', worthifast: true, pennylane: true, cegid: true },
-  { label: 'Journal PCG auto', worthifast: true, pennylane: true, cegid: true },
-  { label: 'IA française (Mistral)', worthifast: true, pennylane: false, cegid: false },
-  { label: 'E-invoicing 2026', worthifast: true, pennylane: true, cegid: true },
-  { label: 'Hébergé en France', worthifast: true, pennylane: true, cegid: true },
-  { label: 'Essai gratuit', worthifast: '14 jours', pennylane: '14-30j', cegid: false },
-  { label: 'Support', worthifast: '24h email', pennylane: '48h', cegid: '72h+' },
+  { label: 'Prix cabinet/mois', worthifast: '59 EUR', pennylane: '79 EUR min', cegid: 'Sur devis', sage: 'Sur devis' },
+  { label: 'Tarif transparent', worthifast: true, pennylane: 'partial', cegid: false, sage: false },
+  { label: 'OCR factures IA', worthifast: true, pennylane: true, cegid: true, sage: true },
+  { label: 'Journal PCG auto', worthifast: true, pennylane: true, cegid: true, sage: true },
+  { label: 'IA francaise (Mistral)', worthifast: true, pennylane: false, cegid: false, sage: false },
+  { label: 'E-invoicing 2026', worthifast: true, pennylane: true, cegid: true, sage: true },
+  { label: 'Heberge en France', worthifast: true, pennylane: true, cegid: true, sage: true },
+  { label: 'API ouverte', worthifast: true, pennylane: 'partial', cegid: false, sage: false },
+  { label: 'Self-hosted (Docker)', worthifast: true, pennylane: false, cegid: true, sage: true },
+  { label: 'Essai gratuit', worthifast: '14 jours', pennylane: '14-30j', cegid: false, sage: false },
+  { label: 'Support', worthifast: '24h email', pennylane: '48h', cegid: '72h+', sage: '72h+' },
 ]
 
 function CellValue({ value }: { value: boolean | string }) {
   if (value === true) return <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
   if (value === false) return <X className="w-5 h-5 text-slate-600 mx-auto" />
-  if (value === 'partial') return <span className="text-xs font-medium text-amber-500">⚠️</span>
+  if (value === 'partial') return <span className="text-xs font-medium text-amber-500">Partiel</span>
   return <span className="text-xs font-medium text-slate-300">{value}</span>
 }
 
 export function ComparatifSection() {
   return (
     <section id="comparatif" className="py-24 px-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-white mb-4">Pourquoi choisir Worthifast ?</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">Comparatif transparent avec les solutions existantes.</p>
         </div>
 
-        <div className="bg-[#0F1117] border border-white/[0.08] rounded-2xl overflow-hidden">
+        <div className="bg-[#0D1117] border border-white/[0.07] rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-white/[0.08]">
-                  <th className="text-left px-6 py-4 font-semibold text-slate-400 w-48" />
-                  <th className="text-center px-4 py-4 bg-[#1B3A6B]/20 border-x border-[#00A878]/20">
-                    <span className="block text-xs text-[#00A878] font-medium mb-1">Notre solution</span>
+                  <th className="text-left px-5 py-4 font-semibold text-slate-400 w-44" />
+                  <th className="text-center px-4 py-4 bg-[#00A878]/[0.06] border-x border-[#00A878]/20">
+                    <span className="block text-[10px] text-[#00A878] font-semibold mb-0.5 uppercase tracking-wider">Notre solution</span>
                     <span className="font-bold text-white">Worthifast</span>
                   </th>
                   <th className="text-center px-4 py-4 font-bold text-slate-500">Pennylane</th>
                   <th className="text-center px-4 py-4 font-bold text-slate-500">Cegid</th>
+                  <th className="text-center px-4 py-4 font-bold text-slate-500">Sage</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/[0.05]">
                 {ROWS.map(row => (
                   <tr key={row.label} className="hover:bg-white/[0.02] transition-colors">
-                    <td className="px-6 py-3.5 text-slate-300">{row.label}</td>
-                    <td className="px-4 py-3.5 text-center bg-[#1B3A6B]/10 border-x border-[#00A878]/10">
+                    <td className="px-5 py-3 text-slate-300 text-[13px]">{row.label}</td>
+                    <td className="px-4 py-3 text-center bg-[#00A878]/[0.03] border-x border-[#00A878]/10">
                       <CellValue value={row.worthifast} />
                     </td>
-                    <td className="px-4 py-3.5 text-center"><CellValue value={row.pennylane} /></td>
-                    <td className="px-4 py-3.5 text-center"><CellValue value={row.cegid} /></td>
+                    <td className="px-4 py-3 text-center"><CellValue value={row.pennylane} /></td>
+                    <td className="px-4 py-3 text-center"><CellValue value={row.cegid} /></td>
+                    <td className="px-4 py-3 text-center"><CellValue value={row.sage} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -69,11 +74,12 @@ export function ComparatifSection() {
         </div>
 
         <p className="text-xs text-slate-600 text-center mt-4">
-          Comparatif indicatif — données publiques mars 2026. Prix Pennylane : pennylane.com/fr/tarifs
+          Comparatif indicatif — donnees publiques mars 2026. Source : pages tarifs officielles.
         </p>
 
         <div className="text-center mt-8">
-          <Link href="/signup" className="inline-block bg-[#F59E0B] hover:bg-[#D97706] text-black font-semibold px-8 py-3.5 rounded-xl transition-colors">
+          <Link href="/signup"
+            className="inline-block bg-[#F59E0B] hover:bg-[#D97706] text-black font-bold px-8 py-3.5 rounded-xl transition-all shadow-[0_0_24px_rgba(245,158,11,0.25)]">
             Tester Worthifast gratuitement →
           </Link>
         </div>

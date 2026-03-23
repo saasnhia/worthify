@@ -3,10 +3,26 @@
 import { useEffect, useRef, useState } from 'react'
 
 const STATS = [
-  { value: 25, suffix: '%', label: 'Moins cher que Pennylane', color: '#F59E0B' },
-  { value: 30, suffix: 's', label: "Traitement d'une facture OCR", color: '#00A878' },
-  { value: 45, suffix: '', label: 'Dossiers clients en 1 écran', color: '#F59E0B' },
-  { value: 14, suffix: 'j', label: "D'essai gratuit sans CB", color: '#00A878' },
+  {
+    value: 25, suffix: '%', color: '#F59E0B',
+    label: 'Moins cher que Pennylane',
+    sublabel: '59 EUR/mois vs 79 EUR minimum',
+  },
+  {
+    value: 30, suffix: 's', color: '#00A878',
+    label: 'Traitement OCR facture',
+    sublabel: 'Tesseract + Mistral IA France',
+  },
+  {
+    value: 100, suffix: '%', color: '#00A878',
+    label: 'Conforme e-invoicing 2026',
+    sublabel: 'Factur-X EN16931 natif',
+  },
+  {
+    value: 14, suffix: 'j', color: '#F59E0B',
+    label: 'Essai gratuit sans CB',
+    sublabel: 'Donnees conservees apres essai',
+  },
 ]
 
 function AnimatedCounter({ target, suffix, color }: { target: number; suffix: string; color: string }) {
@@ -39,7 +55,7 @@ function AnimatedCounter({ target, suffix, color }: { target: number; suffix: st
   }, [target])
 
   return (
-    <div ref={ref} className="text-4xl md:text-5xl font-black text-white">
+    <div ref={ref} className="text-4xl md:text-5xl font-black text-white tabular-nums">
       {count}
       <span style={{ color }}>{suffix}</span>
     </div>
@@ -48,12 +64,14 @@ function AnimatedCounter({ target, suffix, color }: { target: number; suffix: st
 
 export function StatsSection() {
   return (
-    <section className="py-16 px-4 bg-white/[0.02] border-y border-white/5">
-      <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    <section className="py-16 px-4">
+      <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
         {STATS.map((stat) => (
-          <div key={stat.label}>
+          <div key={stat.label}
+            className="bg-[#0D1117] border border-white/[0.07] rounded-xl p-5 text-center hover:border-[#00A878]/20 transition-all duration-200">
             <AnimatedCounter target={stat.value} suffix={stat.suffix} color={stat.color} />
-            <p className="text-sm text-slate-500 mt-1">{stat.label}</p>
+            <p className="text-sm font-medium text-slate-300 mt-2">{stat.label}</p>
+            <p className="text-xs text-slate-600 mt-1">{stat.sublabel}</p>
           </div>
         ))}
       </div>

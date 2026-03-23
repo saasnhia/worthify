@@ -35,10 +35,10 @@ export default function HomePage() {
   }
 
   return (
-    <main className="bg-[#080810] text-white">
+    <main className="bg-[#050509] text-white">
 
       {/* ── NAVBAR ── */}
-      <nav className="sticky top-0 z-50 bg-[#080810]/90 backdrop-blur-xl border-b border-white/5">
+      <nav className="sticky top-0 z-50 bg-[#050509]/90 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Image src="/images/worthifast-logo-white.svg" alt="Worthifast — Logiciel comptable" width={140} height={34} priority className="h-8 w-auto" />
@@ -67,7 +67,7 @@ export default function HomePage() {
         </div>
 
         {mobileMenu && (
-          <div className="md:hidden border-t border-white/5 bg-[#080810] px-4 py-4 space-y-3">
+          <div className="md:hidden border-t border-white/5 bg-[#050509] px-4 py-4 space-y-3">
             {[
               { href: '#features', label: 'Fonctionnalités' },
               { href: '#pricing', label: 'Tarifs' },

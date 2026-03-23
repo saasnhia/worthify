@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="dzCard" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1C2333"/>
+      <stop offset="100%" stop-color="#1A1F2E"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="500" fill="#0F1117" rx="8"/>
+
+  <!-- Sidebar -->
+  <rect x="0" y="0" width="180" height="500" fill="#161B22" rx="8"/>
+  <rect x="180" y="0" width="1" height="500" fill="#2D333B"/>
+  <circle cx="28" cy="28" r="10" fill="#00A878"/>
+  <text x="44" y="33" fill="#F1F5F9" font-family="system-ui" font-size="13" font-weight="700">Worthifast</text>
+  <rect x="8" y="122" width="164" height="28" fill="#00A878" fill-opacity="0.12" rx="6"/>
+  <text x="36" y="140" fill="#00A878" font-family="system-ui" font-size="11" font-weight="600">Factures</text>
+  <g font-family="system-ui" font-size="11" fill="#8B949E">
+    <text x="36" y="74">Tableau de bord</text>
+    <text x="36" y="104">Clients</text>
+    <text x="36" y="170">Comptabilite</text>
+    <text x="36" y="196">Rapprochement</text>
+  </g>
+
+  <!-- Header -->
+  <text x="200" y="36" fill="#F1F5F9" font-family="system-ui" font-size="16" font-weight="700">Import facture fournisseur</text>
+  <text x="200" y="52" fill="#64748B" font-family="system-ui" font-size="10">Deposez vos fichiers — tous formats acceptes</text>
+
+  <!-- Main drop zone -->
+  <rect x="200" y="68" width="582" height="260" fill="#00A878" fill-opacity="0.03" rx="16" stroke="#00A878" stroke-width="2" stroke-dasharray="10 6" stroke-opacity="0.35"/>
+
+  <!-- Upload icon -->
+  <circle cx="491" cy="140" r="32" fill="#00A878" fill-opacity="0.08"/>
+  <path d="M491 122 L491 148 M479 134 L491 122 L503 134" stroke="#00A878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <rect x="477" y="150" width="28" height="4" fill="#00A878" fill-opacity="0.3" rx="2"/>
+
+  <text x="491" y="190" fill="#F1F5F9" font-family="system-ui" font-size="14" font-weight="600" text-anchor="middle">Glissez vos factures ici</text>
+  <text x="491" y="210" fill="#64748B" font-family="system-ui" font-size="11" text-anchor="middle">ou cliquez pour parcourir vos fichiers</text>
+
+  <!-- Format badges -->
+  <g transform="translate(341, 228)">
+    <rect x="0" y="0" width="44" height="22" fill="#EF4444" fill-opacity="0.12" rx="4"/>
+    <text x="22" y="15" fill="#EF4444" font-family="system-ui" font-size="9" font-weight="600" text-anchor="middle">PDF</text>
+    <rect x="52" y="0" width="44" height="22" fill="#3B82F6" fill-opacity="0.12" rx="4"/>
+    <text x="74" y="15" fill="#3B82F6" font-family="system-ui" font-size="9" font-weight="600" text-anchor="middle">JPG</text>
+    <rect x="104" y="0" width="44" height="22" fill="#8B5CF6" fill-opacity="0.12" rx="4"/>
+    <text x="126" y="15" fill="#8B5CF6" font-family="system-ui" font-size="9" font-weight="600" text-anchor="middle">PNG</text>
+    <rect x="156" y="0" width="50" height="22" fill="#22C55E" fill-opacity="0.12" rx="4"/>
+    <text x="181" y="15" fill="#22C55E" font-family="system-ui" font-size="9" font-weight="600" text-anchor="middle">Excel</text>
+    <rect x="214" y="0" width="48" height="22" fill="#F59E0B" fill-opacity="0.12" rx="4"/>
+    <text x="238" y="15" fill="#F59E0B" font-family="system-ui" font-size="9" font-weight="600" text-anchor="middle">Word</text>
+  </g>
+
+  <!-- Floating PDF being dragged -->
+  <g transform="translate(600, 90) rotate(8)">
+    <rect x="0" y="0" width="120" height="155" fill="#1E293B" rx="6" stroke="#00A878" stroke-width="1.5" stroke-opacity="0.5"/>
+    <!-- PDF icon corner fold -->
+    <path d="M90 0 L120 30 L90 30 Z" fill="#0F172A"/>
+    <!-- PDF content preview -->
+    <rect x="10" y="40" width="100" height="6" fill="#334155" rx="2"/>
+    <text x="60" y="66" fill="#94A3B8" font-family="system-ui" font-size="7" font-weight="600" text-anchor="middle">LYRECO France</text>
+    <rect x="10" y="76" width="70" height="4" fill="#334155" rx="1"/>
+    <rect x="10" y="86" width="90" height="4" fill="#334155" rx="1"/>
+    <rect x="10" y="96" width="50" height="4" fill="#334155" rx="1"/>
+    <rect x="10" y="112" width="100" height="6" fill="#334155" rx="2"/>
+    <text x="60" y="138" fill="#00A878" font-family="system-ui" font-size="8" font-weight="700" text-anchor="middle">1 728,00 EUR TTC</text>
+    <!-- PDF badge -->
+    <rect x="8" y="8" width="32" height="16" fill="#EF4444" rx="3"/>
+    <text x="24" y="19" fill="white" font-family="system-ui" font-size="7" font-weight="700" text-anchor="middle">PDF</text>
+  </g>
+
+  <!-- Drag arrow trail -->
+  <path d="M690 220 C670 250 630 260 600 250" stroke="#00A878" stroke-width="1.5" stroke-opacity="0.3" fill="none" stroke-dasharray="4 3"/>
+
+  <!-- Recent imports list -->
+  <rect x="200" y="344" width="582" height="146" fill="url(#dzCard)" rx="8" stroke="#2D333B" stroke-width="0.5"/>
+  <text x="214" y="366" fill="#F1F5F9" font-family="system-ui" font-size="11" font-weight="600">Imports recents</text>
+
+  <rect x="208" y="376" width="566" height="22" fill="#1A1F2E" rx="4"/>
+  <text x="218" y="391" fill="#64748B" font-family="system-ui" font-size="9" font-weight="600">Fichier</text>
+  <text x="440" y="391" fill="#64748B" font-family="system-ui" font-size="9" font-weight="600">Statut</text>
+  <text x="560" y="391" fill="#64748B" font-family="system-ui" font-size="9" font-weight="600">Confiance</text>
+  <text x="680" y="391" fill="#64748B" font-family="system-ui" font-size="9" font-weight="600">Compte</text>
+
+  <text x="218" y="416" fill="#F1F5F9" font-family="system-ui" font-size="9">facture-lyreco-mars-2026.pdf</text>
+  <rect x="440" y="406" width="60" height="16" fill="#00A878" fill-opacity="0.12" rx="3"/>
+  <text x="470" y="418" fill="#00A878" font-family="system-ui" font-size="8" font-weight="500" text-anchor="middle">Valide</text>
+  <text x="570" y="416" fill="#00A878" font-family="system-ui" font-size="9" font-weight="600">98%</text>
+  <text x="680" y="416" fill="#8B949E" font-family="system-ui" font-size="9">606100</text>
+
+  <text x="218" y="438" fill="#F1F5F9" font-family="system-ui" font-size="9">scan-EDF-022026.jpg</text>
+  <rect x="440" y="428" width="60" height="16" fill="#00A878" fill-opacity="0.12" rx="3"/>
+  <text x="470" y="440" fill="#00A878" font-family="system-ui" font-size="8" font-weight="500" text-anchor="middle">Valide</text>
+  <text x="570" y="438" fill="#00A878" font-family="system-ui" font-size="9" font-weight="600">94%</text>
+  <text x="680" y="438" fill="#8B949E" font-family="system-ui" font-size="9">606300</text>
+
+  <text x="218" y="460" fill="#F1F5F9" font-family="system-ui" font-size="9">releve-BNP-mars.csv</text>
+  <rect x="440" y="450" width="72" height="16" fill="#3B82F6" fill-opacity="0.12" rx="3"/>
+  <text x="476" y="462" fill="#3B82F6" font-family="system-ui" font-size="8" font-weight="500" text-anchor="middle">En cours...</text>
+  <text x="570" y="460" fill="#64748B" font-family="system-ui" font-size="9">—</text>
+  <text x="680" y="460" fill="#64748B" font-family="system-ui" font-size="9">—</text>
+
+  <!-- Max size note -->
+  <text x="491" y="272" fill="#4B5563" font-family="system-ui" font-size="9" text-anchor="middle">Taille max : 50 Mo par fichier</text>
+</svg>
