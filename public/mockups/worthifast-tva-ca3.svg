@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="cG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1C2333"/>
+      <stop offset="100%" stop-color="#1A1F2E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0F1117" rx="8"/>
+
+  <!-- Sidebar -->
+  <rect x="0" y="0" width="180" height="500" fill="#161B22" rx="8"/>
+  <rect x="180" y="0" width="1" height="500" fill="#2D333B"/>
+  <circle cx="28" cy="28" r="10" fill="#00A878"/>
+  <text x="44" y="33" fill="#F1F5F9" font-family="system-ui" font-size="13" font-weight="700">Worthifast</text>
+
+  <rect x="8" y="194" width="164" height="28" fill="#00A878" fill-opacity="0.12" rx="6"/>
+  <text x="36" y="212" fill="#00A878" font-family="system-ui" font-size="11" font-weight="600">TVA / CA3</text>
+
+  <g font-family="system-ui" font-size="11" fill="#8B949E">
+    <text x="36" y="74">Tableau de bord</text>
+    <text x="36" y="104">Clients</text>
+    <text x="36" y="134">Factures</text>
+    <text x="36" y="164">Comptabilite</text>
+    <text x="36" y="240">E-invoicing</text>
+    <text x="36" y="266">Agents IA</text>
+  </g>
+
+  <!-- Header -->
+  <text x="200" y="36" fill="#F1F5F9" font-family="system-ui" font-size="16" font-weight="700">Declaration TVA — CA3</text>
+  <text x="200" y="52" fill="#64748B" font-family="system-ui" font-size="10">Periode : mars 2026 — Regime reel normal</text>
+
+  <!-- Status badge -->
+  <rect x="680" y="22" width="100" height="24" fill="#F59E0B" fill-opacity="0.12" rx="12"/>
+  <circle cx="694" cy="34" r="4" fill="#F59E0B"/>
+  <text x="702" y="38" fill="#F59E0B" font-family="system-ui" font-size="9" font-weight="600">Pret a deposer</text>
+
+  <!-- Main CA3 Form -->
+  <rect x="200" y="68" width="440" height="420" fill="url(#cG)" rx="8" stroke="#2D333B" stroke-width="0.5"/>
+
+  <!-- Form title -->
+  <rect x="208" y="76" width="424" height="30" fill="#1A1F2E" rx="4"/>
+  <text x="420" y="96" fill="#F1F5F9" font-family="system-ui" font-size="11" font-weight="700" text-anchor="middle">FORMULAIRE CA3 — CERFA N 3310</text>
+
+  <!-- Section A: Operations imposables -->
+  <text x="218" y="128" fill="#00A878" font-family="system-ui" font-size="9" font-weight="700">A — OPERATIONS IMPOSABLES</text>
+
+  <!-- Row: Ligne 01 -->
+  <rect x="218" y="136" width="412" height="28" fill="#161B22" rx="4"/>
+  <rect x="222" y="140" width="22" height="20" fill="#00A878" fill-opacity="0.15" rx="3"/>
+  <text x="233" y="154" fill="#00A878" font-family="system-ui" font-size="8" font-weight="700" text-anchor="middle">01</text>
+  <text x="252" y="154" fill="#F1F5F9" font-family="system-ui" font-size="9">Ventes, prestations de services</text>
+  <text x="570" y="154" fill="#F1F5F9" font-family="system-ui" font-size="10" font-weight="600" text-anchor="end">47 320,00</text>
+  <text x="626" y="154" fill="#64748B" font-family="system-ui" font-size="8">EUR</text>
+
+  <!-- Row: Ligne 02 -->
+  <rect x="218" y="168" width="412" height="28" fill="transparent" rx="4"/>
+  <rect x="222" y="172" width="22" height="20" fill="#00A878" fill-opacity="0.15" rx="3"/>
+  <text x="233" y="186" fill="#00A878" font-family="system-ui" font-size="8" font-weight="700" text-anchor="middle">02</text>
+  <text x="252" y="186" fill="#F1F5F9" font-family="system-ui" font-size="9">Autres operations imposables</text>
+  <text x="570" y="186" fill="#F1F5F9" font-family="system-ui" font-size="10" font-weight="600" text-anchor="end">0,00</text>
+  <text x="626" y="186" fill="#64748B" font-family="system-ui" font-size="8">EUR</text>
+
+  <!-- Section B: TVA Brute -->
+  <text x="218" y="218" fill="#F59E0B" font-family="system-ui" font-size="9" font-weight="700">B — TVA BRUTE</text>
+
+  <!-- Row: TVA 20% -->
+  <rect x="218" y="226" width="412" height="28" fill="#161B22" rx="4"/>
+  <rect x="222" y="230" width="22" height="20" fill="#F59E0B" fill-opacity="0.15" rx="3"/>
+  <text x="233" y="244" fill="#F59E0B" font-family="system-ui" font-size="8" font-weight="700" text-anchor="middle">08</text>
+  <text x="252" y="240" fill="#F1F5F9" font-family="system-ui" font-size="9">Taux normal 20%</text>
+  <text x="252" y="250" fill="#64748B" font-family="system-ui" font-size="7">Base: 42 580,00</text>
+  <text x="570" y="244" fill="#F59E0B" font-family="system-ui" font-size="10" font-weight="600" text-anchor="end">8 516,00</text>
+  <text x="626" y="244" fill="#64748B" font-family="system-ui" font-size="8">EUR</text>
+
+  <!-- Row: TVA 10% -->
+  <rect x="218" y="258" width="412" height="28" fill="transparent" rx="4"/>
+  <rect x="222" y="262" width="22" height="20" fill="#F59E0B" fill-opacity="0.15" rx="3"/>
+  <text x="233" y="276" fill="#F59E0B" font-family="system-ui" font-size="8" font-weight="700" text-anchor="middle">09</text>
+  <text x="252" y="272" fill="#F1F5F9" font-family="system-ui" font-size="9">Taux reduit 10%</text>
+  <text x="252" y="282" fill="#64748B" font-family="system-ui" font-size="7">Base: 4 740,00</text>
+  <text x="570" y="276" fill="#F59E0B" font-family="system-ui" font-size="10" font-weight="600" text-anchor="end">474,00</text>
+  <text x="626" y="276" fill="#64748B" font-family="system-ui" font-size="8">EUR</text>
+
+  <!-- Total TVA brute -->
+  <rect x="218" y="292" width="412" height="28" fill="#F59E0B" fill-opacity="0.06" rx="4" stroke="#F59E0B" stroke-opacity="0.2" stroke-width="0.5"/>
+  <text x="252" y="310" fill="#F1F5F9" font-family="system-ui" font-size="9" font-weight="600">Total TVA brute (ligne 16)</text>
+  <text x="570" y="310" fill="#F59E0B" font-family="system-ui" font-size="11" font-weight="700" text-anchor="end">8 990,00</text>
+  <text x="626" y="310" fill="#64748B" font-family="system-ui" font-size="8">EUR</text>
+
+  <!-- Section C: TVA Deductible -->
+  <text x="218" y="340" fill="#3B82F6" font-family="system-ui" font-size="9" font-weight="700">C — TVA DEDUCTIBLE</text>
+
+  <!-- Row: TVA sur immobilisations -->
+  <rect x="218" y="348" width="412" height="28" fill="#161B22" rx="4"/>
+  <rect x="222" y="352" width="22" height="20" fill="#3B82F6" fill-opacity="0.15" rx="3"/>
+  <text x="233" y="366" fill="#3B82F6" font-family="system-ui" font-size="8" font-weight="700" text-anchor="middle">19</text>
+  <text x="252" y="366" fill="#F1F5F9" font-family="system-ui" font-size="9">TVA sur immobilisations</text>
+  <text x="570" y="366" fill="#3B82F6" font-family="system-ui" font-size="10" font-weight="600" text-anchor="end">0,00</text>
+  <text x="626" y="366" fill="#64748B" font-family="system-ui" font-size="8">EUR</text>
+
+  <!-- Row: TVA sur ABS -->
+  <rect x="218" y="380" width="412" height="28" fill="transparent" rx="4"/>
+  <rect x="222" y="384" width="22" height="20" fill="#3B82F6" fill-opacity="0.15" rx="3"/>
+  <text x="233" y="398" fill="#3B82F6" font-family="system-ui" font-size="8" font-weight="700" text-anchor="middle">20</text>
+  <text x="252" y="398" fill="#F1F5F9" font-family="system-ui" font-size="9">TVA sur autres biens et services</text>
+  <text x="570" y="398" fill="#3B82F6" font-family="system-ui" font-size="10" font-weight="600" text-anchor="end">954,00</text>
+  <text x="626" y="398" fill="#64748B" font-family="system-ui" font-size="8">EUR</text>
+
+  <!-- Section D: TVA Nette -->
+  <text x="218" y="430" fill="#EF4444" font-family="system-ui" font-size="9" font-weight="700">D — TVA NETTE A PAYER</text>
+
+  <!-- Grand total -->
+  <rect x="218" y="438" width="412" height="38" fill="#EF4444" fill-opacity="0.06" rx="6" stroke="#EF4444" stroke-opacity="0.3" stroke-width="0.5"/>
+  <rect x="222" y="442" width="22" height="30" fill="#EF4444" fill-opacity="0.15" rx="3"/>
+  <text x="233" y="461" fill="#EF4444" font-family="system-ui" font-size="8" font-weight="700" text-anchor="middle">28</text>
+  <text x="252" y="456" fill="#F1F5F9" font-family="system-ui" font-size="10" font-weight="600">TVA nette due</text>
+  <text x="252" y="470" fill="#64748B" font-family="system-ui" font-size="7">8 990,00 - 954,00</text>
+  <text x="570" y="462" fill="#EF4444" font-family="system-ui" font-size="14" font-weight="700" text-anchor="end">8 036,00</text>
+  <text x="626" y="462" fill="#64748B" font-family="system-ui" font-size="9">EUR</text>
+
+  <!-- Right panel: Actions -->
+  <rect x="656" y="68" width="126" height="190" fill="url(#cG)" rx="8" stroke="#2D333B" stroke-width="0.5"/>
+  <text x="670" y="90" fill="#F1F5F9" font-family="system-ui" font-size="10" font-weight="600">Actions</text>
+
+  <rect x="664" y="100" width="110" height="30" fill="#00A878" rx="6"/>
+  <text x="719" y="119" fill="#FFFFFF" font-family="system-ui" font-size="9" font-weight="600" text-anchor="middle">Teledeclarer</text>
+
+  <rect x="664" y="138" width="110" height="30" fill="#2D333B" rx="6" stroke="#3D444D" stroke-width="0.5"/>
+  <text x="719" y="157" fill="#8B949E" font-family="system-ui" font-size="9" text-anchor="middle">Exporter PDF</text>
+
+  <rect x="664" y="176" width="110" height="30" fill="#2D333B" rx="6" stroke="#3D444D" stroke-width="0.5"/>
+  <text x="719" y="195" fill="#8B949E" font-family="system-ui" font-size="9" text-anchor="middle">Verifier chiffres</text>
+
+  <rect x="664" y="214" width="110" height="30" fill="#2D333B" rx="6" stroke="#3D444D" stroke-width="0.5"/>
+  <text x="719" y="233" fill="#8B949E" font-family="system-ui" font-size="9" text-anchor="middle">Historique</text>
+
+  <!-- Summary card -->
+  <rect x="656" y="272" width="126" height="130" fill="url(#cG)" rx="8" stroke="#2D333B" stroke-width="0.5"/>
+  <text x="670" y="292" fill="#F1F5F9" font-family="system-ui" font-size="10" font-weight="600">Resume</text>
+
+  <text x="670" y="314" fill="#64748B" font-family="system-ui" font-size="8">Regime</text>
+  <text x="670" y="326" fill="#F1F5F9" font-family="system-ui" font-size="9" font-weight="500">Reel normal</text>
+
+  <text x="670" y="346" fill="#64748B" font-family="system-ui" font-size="8">Periode</text>
+  <text x="670" y="358" fill="#F1F5F9" font-family="system-ui" font-size="9" font-weight="500">Mars 2026</text>
+
+  <text x="670" y="378" fill="#64748B" font-family="system-ui" font-size="8">Echeance depot</text>
+  <text x="670" y="390" fill="#F59E0B" font-family="system-ui" font-size="9" font-weight="600">20 avril 2026</text>
+
+  <!-- Compliance badge -->
+  <rect x="656" y="414" width="126" height="74" fill="url(#cG)" rx="8" stroke="#00A878" stroke-opacity="0.3" stroke-width="0.5"/>
+  <text x="719" y="438" fill="#00A878" font-family="system-ui" font-size="9" font-weight="700" text-anchor="middle">Conformite</text>
+
+  <text x="670" y="456" fill="#8B949E" font-family="system-ui" font-size="7">Ecritures verifiees</text>
+  <text x="760" y="456" fill="#00A878" font-family="system-ui" font-size="8" font-weight="600" text-anchor="end">124/124</text>
+
+  <text x="670" y="470" fill="#8B949E" font-family="system-ui" font-size="7">Anomalies</text>
+  <text x="760" y="470" fill="#00A878" font-family="system-ui" font-size="8" font-weight="600" text-anchor="end">0</text>
+
+  <text x="670" y="484" fill="#8B949E" font-family="system-ui" font-size="7">Status</text>
+  <text x="760" y="484" fill="#00A878" font-family="system-ui" font-size="8" font-weight="600" text-anchor="end">Valide</text>
+</svg>

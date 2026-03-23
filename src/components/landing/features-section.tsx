@@ -1,9 +1,10 @@
+import Image from 'next/image'
 import {
-  DashboardMockup, JournalMockup, OcrMockup, RapprochementMockup,
-  TvaMockup, EinvoicingMockup, PortailMockup,
+  JournalMockup, RapprochementMockup,
+  EinvoicingMockup, PortailMockup,
 } from './mockups'
 
-type MockupType = 'dashboard' | 'journal' | 'ocr' | 'rapprochement' | 'tva' | 'einvoicing' | 'portail'
+type MockupType = 'dashboard' | 'journal' | 'ocr' | 'rapprochement' | 'tva' | 'einvoicing' | 'portail' | 'agent-ia'
 
 interface Feature {
   size: 'large' | 'normal'
@@ -60,25 +61,33 @@ const FEATURES: Feature[] = [
   },
   {
     size: 'normal',
-    icon: '🤝',
-    title: 'Portail client',
-    description: 'Vos clients déposent leurs documents directement. Zéro email.',
-    mockup: 'portail',
+    icon: '🤖',
+    title: 'Agent IA comptable',
+    description: 'Posez vos questions comptables — écritures suggérées, références PCG & BOFIP.',
+    badge: 'Mistral IA France',
+    mockup: 'agent-ia',
   },
 ]
 
-const MOCKUP_COMPONENTS: Record<MockupType, React.FC<{ mini?: boolean }>> = {
-  dashboard: DashboardMockup,
+/** Mockups served as static SVG files from public/mockups/ */
+const SVG_MOCKUPS: Partial<Record<MockupType, string>> = {
+  dashboard: '/mockups/worthifast-dashboard.svg',
+  ocr: '/mockups/worthifast-ocr.svg',
+  tva: '/mockups/worthifast-tva-ca3.svg',
+  'agent-ia': '/mockups/worthifast-agent-ia.svg',
+}
+
+/** Inline SVG React components (kept for features without file-based mockups) */
+const INLINE_MOCKUPS: Partial<Record<MockupType, React.FC<{ mini?: boolean }>>> = {
   journal: JournalMockup,
-  ocr: OcrMockup,
   rapprochement: RapprochementMockup,
-  tva: TvaMockup,
   einvoicing: EinvoicingMockup,
   portail: PortailMockup,
 }
 
 function FeatureCard({ feature }: { feature: Feature }) {
-  const MockupComponent = MOCKUP_COMPONENTS[feature.mockup]
+  const svgPath = SVG_MOCKUPS[feature.mockup]
+  const InlineComponent = INLINE_MOCKUPS[feature.mockup]
   return (
     <div className={`bg-[#0F1117] border border-white/[0.08] rounded-2xl p-6 hover:border-[#00A878]/30 transition-colors ${
       feature.size === 'large' ? 'md:col-span-2' : ''
@@ -96,7 +105,11 @@ function FeatureCard({ feature }: { feature: Feature }) {
         </div>
       </div>
       <div className="mt-4 rounded-lg overflow-hidden border border-white/5">
-        <MockupComponent mini />
+        {svgPath ? (
+          <Image src={svgPath} alt={feature.title} width={800} height={500} className="w-full h-auto" />
+        ) : InlineComponent ? (
+          <InlineComponent mini />
+        ) : null}
       </div>
     </div>
   )

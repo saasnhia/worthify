@@ -1,41 +1,50 @@
+import Image from 'next/image'
 import { BrowserFrame } from './browser-frame'
-import { OcrMockup, RapprochementMockup, TvaMockup } from './mockups'
+import { RapprochementMockup } from './mockups'
 
-const STEPS = [
+type StepMockup = 'ocr' | 'rapprochement' | 'tva'
+
+const STEPS: Array<{
+  number: string
+  icon: string
+  title: string
+  description: string
+  mockup: StepMockup
+}> = [
   {
     number: '01',
     icon: '📤',
     title: 'Déposez votre facture',
     description: 'Glissez un PDF, une photo ou importez depuis votre email. Tous formats acceptés.',
-    mockup: 'ocr' as const,
+    mockup: 'ocr',
   },
   {
     number: '02',
     icon: '🤖',
     title: 'OCR + PCG automatique',
     description: "L'IA Mistral extrait les données et génère les écritures PCG en 30 secondes.",
-    mockup: 'ocr' as const,
+    mockup: 'ocr',
   },
   {
     number: '03',
     icon: '🏦',
     title: 'Rapprochement bancaire',
     description: "Importez votre relevé — le matching automatique s'occupe du reste.",
-    mockup: 'rapprochement' as const,
+    mockup: 'rapprochement',
   },
   {
     number: '04',
     icon: '📊',
     title: 'Déclarations & exports',
     description: 'TVA CA3 pré-remplie, FEC conforme DGFiP, reporting cabinet en temps réel.',
-    mockup: 'tva' as const,
+    mockup: 'tva',
   },
 ]
 
-const MOCKUP_MAP = {
-  ocr: OcrMockup,
-  rapprochement: RapprochementMockup,
-  tva: TvaMockup,
+/** File-based SVG mockups for OCR and TVA steps */
+const SVG_MOCKUPS: Partial<Record<StepMockup, string>> = {
+  ocr: '/mockups/worthifast-ocr.svg',
+  tva: '/mockups/worthifast-tva-ca3.svg',
 }
 
 export function WorkflowSection() {
@@ -49,7 +58,7 @@ export function WorkflowSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {STEPS.map((step, i) => {
-            const MockupComponent = MOCKUP_MAP[step.mockup]
+            const svgPath = SVG_MOCKUPS[step.mockup]
             return (
               <div key={step.number} className="group" style={{ animationDelay: `${i * 150}ms` }}>
                 <div className="flex items-start gap-4 mb-4">
@@ -63,7 +72,11 @@ export function WorkflowSection() {
                   </div>
                 </div>
                 <BrowserFrame className="group-hover:border-[#00A878]/30 transition-colors">
-                  <MockupComponent />
+                  {svgPath ? (
+                    <Image src={svgPath} alt={step.title} width={800} height={500} className="w-full h-auto" />
+                  ) : (
+                    <RapprochementMockup />
+                  )}
                 </BrowserFrame>
               </div>
             )

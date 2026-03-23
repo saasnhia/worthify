@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="barGrad" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#00A878" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#00A878" stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1C2333"/>
+      <stop offset="100%" stop-color="#1A1F2E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0F1117" rx="8"/>
+
+  <!-- Sidebar -->
+  <rect x="0" y="0" width="180" height="500" fill="#161B22" rx="8"/>
+  <rect x="180" y="0" width="1" height="500" fill="#2D333B"/>
+
+  <!-- Logo -->
+  <circle cx="28" cy="28" r="10" fill="#00A878"/>
+  <text x="44" y="33" fill="#F1F5F9" font-family="system-ui" font-size="13" font-weight="700">Worthifast</text>
+
+  <!-- Sidebar items -->
+  <g font-family="system-ui" font-size="11" fill="#8B949E">
+    <!-- Active item -->
+    <rect x="8" y="56" width="164" height="28" fill="#00A878" fill-opacity="0.12" rx="6"/>
+    <text x="36" y="74" fill="#00A878" font-weight="600">Tableau de bord</text>
+    <rect x="14" y="64" width="14" height="14" fill="none" stroke="#00A878" stroke-width="1.2" rx="2"/>
+
+    <text x="36" y="104" fill="#8B949E">Clients</text>
+    <text x="36" y="128" fill="#8B949E">Factures</text>
+    <text x="36" y="152" fill="#8B949E">Comptabilite</text>
+    <text x="36" y="176" fill="#8B949E">Rapprochement</text>
+    <text x="36" y="200" fill="#8B949E">TVA / CA3</text>
+    <text x="36" y="224" fill="#8B949E">E-invoicing</text>
+    <text x="36" y="248" fill="#8B949E">Agents IA</text>
+    <text x="36" y="272" fill="#8B949E">Automatisation</text>
+    <text x="36" y="296" fill="#8B949E">Transactions</text>
+    <text x="36" y="320" fill="#8B949E">Documents</text>
+    <text x="36" y="344" fill="#8B949E">Relances</text>
+    <text x="36" y="368" fill="#8B949E">Notifications</text>
+    <text x="36" y="392" fill="#8B949E">Parametres</text>
+  </g>
+
+  <!-- User avatar -->
+  <circle cx="28" cy="476" r="12" fill="#2D333B"/>
+  <text x="44" y="480" fill="#8B949E" font-family="system-ui" font-size="10">Cabinet Moreau</text>
+
+  <!-- Header -->
+  <text x="200" y="36" fill="#F1F5F9" font-family="system-ui" font-size="16" font-weight="700">Tableau de bord</text>
+  <text x="200" y="52" fill="#64748B" font-family="system-ui" font-size="10">Mars 2026 — Cabinet Moreau &amp; Associes</text>
+
+  <!-- KPI Cards Row -->
+  <!-- Card 1: CA du mois -->
+  <rect x="200" y="68" width="138" height="72" fill="url(#cardGrad)" rx="8" stroke="#2D333B" stroke-width="0.5"/>
+  <text x="214" y="86" fill="#64748B" font-family="system-ui" font-size="9">CA du mois</text>
+  <text x="214" y="110" fill="#F1F5F9" font-family="system-ui" font-size="20" font-weight="700">47 320 EUR</text>
+  <text x="214" y="128" fill="#00A878" font-family="system-ui" font-size="9">+12.4% vs fevrier</text>
+
+  <!-- Card 2: TVA a declarer -->
+  <rect x="348" y="68" width="138" height="72" fill="url(#cardGrad)" rx="8" stroke="#2D333B" stroke-width="0.5"/>
+  <text x="362" y="86" fill="#64748B" font-family="system-ui" font-size="9">TVA a declarer</text>
+  <text x="362" y="110" fill="#F59E0B" font-family="system-ui" font-size="20" font-weight="700">8 036 EUR</text>
+  <text x="362" y="128" fill="#F59E0B" font-family="system-ui" font-size="9">Echeance 20 avril</text>
+
+  <!-- Card 3: Factures en attente -->
+  <rect x="496" y="68" width="138" height="72" fill="url(#cardGrad)" rx="8" stroke="#2D333B" stroke-width="0.5"/>
+  <text x="510" y="86" fill="#64748B" font-family="system-ui" font-size="9">Factures en attente</text>
+  <text x="510" y="110" fill="#EF4444" font-family="system-ui" font-size="20" font-weight="700">14</text>
+  <text x="510" y="128" fill="#EF4444" font-family="system-ui" font-size="9">3 en retard &gt; 30j</text>
+
+  <!-- Card 4: Tresorerie -->
+  <rect x="644" y="68" width="138" height="72" fill="url(#cardGrad)" rx="8" stroke="#2D333B" stroke-width="0.5"/>
+  <text x="658" y="86" fill="#64748B" font-family="system-ui" font-size="9">Tresorerie</text>
+  <text x="658" y="110" fill="#F1F5F9" font-family="system-ui" font-size="20" font-weight="700">124 850 EUR</text>
+  <text x="658" y="128" fill="#00A878" font-family="system-ui" font-size="9">Stable</text>
+
+  <!-- CA Chart (6 months) -->
+  <rect x="200" y="152" width="390" height="180" fill="url(#cardGrad)" rx="8" stroke="#2D333B" stroke-width="0.5"/>
+  <text x="214" y="174" fill="#F1F5F9" font-family="system-ui" font-size="11" font-weight="600">Chiffre d'affaires — 6 derniers mois</text>
+
+  <!-- Y axis labels -->
+  <text x="214" y="194" fill="#64748B" font-family="system-ui" font-size="8">60k</text>
+  <text x="214" y="224" fill="#64748B" font-family="system-ui" font-size="8">40k</text>
+  <text x="214" y="254" fill="#64748B" font-family="system-ui" font-size="8">20k</text>
+  <text x="214" y="284" fill="#64748B" font-family="system-ui" font-size="8">0</text>
+
+  <!-- Grid lines -->
+  <line x1="240" y1="190" x2="575" y2="190" stroke="#2D333B" stroke-width="0.5"/>
+  <line x1="240" y1="220" x2="575" y2="220" stroke="#2D333B" stroke-width="0.5"/>
+  <line x1="240" y1="250" x2="575" y2="250" stroke="#2D333B" stroke-width="0.5"/>
+  <line x1="240" y1="280" x2="575" y2="280" stroke="#2D333B" stroke-width="0.5"/>
+
+  <!-- Bars -->
+  <rect x="255" y="235" width="36" height="45" fill="url(#barGrad)" rx="3"/>
+  <rect x="305" y="220" width="36" height="60" fill="url(#barGrad)" rx="3"/>
+  <rect x="355" y="210" width="36" height="70" fill="url(#barGrad)" rx="3"/>
+  <rect x="405" y="225" width="36" height="55" fill="url(#barGrad)" rx="3"/>
+  <rect x="455" y="205" width="36" height="75" fill="url(#barGrad)" rx="3"/>
+  <rect x="505" y="195" width="36" height="85" fill="url(#barGrad)" rx="3"/>
+
+  <!-- X axis labels -->
+  <text x="264" y="300" fill="#64748B" font-family="system-ui" font-size="8" text-anchor="middle">Oct</text>
+  <text x="314" y="300" fill="#64748B" font-family="system-ui" font-size="8" text-anchor="middle">Nov</text>
+  <text x="364" y="300" fill="#64748B" font-family="system-ui" font-size="8" text-anchor="middle">Dec</text>
+  <text x="414" y="300" fill="#64748B" font-family="system-ui" font-size="8" text-anchor="middle">Jan</text>
+  <text x="464" y="300" fill="#64748B" font-family="system-ui" font-size="8" text-anchor="middle">Fev</text>
+  <text x="514" y="300" fill="#64748B" font-family="system-ui" font-size="8" text-anchor="middle">Mar</text>
+
+  <!-- Bar values -->
+  <text x="273" y="230" fill="#F1F5F9" font-family="system-ui" font-size="8" text-anchor="middle">31k</text>
+  <text x="323" y="215" fill="#F1F5F9" font-family="system-ui" font-size="8" text-anchor="middle">38k</text>
+  <text x="373" y="205" fill="#F1F5F9" font-family="system-ui" font-size="8" text-anchor="middle">42k</text>
+  <text x="423" y="220" fill="#F1F5F9" font-family="system-ui" font-size="8" text-anchor="middle">35k</text>
+  <text x="473" y="200" fill="#F1F5F9" font-family="system-ui" font-size="8" text-anchor="middle">44k</text>
+  <text x="523" y="190" fill="#F1F5F9" font-family="system-ui" font-size="8" text-anchor="middle">47k</text>
+
+  <!-- Recent Ecritures Table -->
+  <rect x="200" y="344" width="582" height="146" fill="url(#cardGrad)" rx="8" stroke="#2D333B" stroke-width="0.5"/>
+  <text x="214" y="366" fill="#F1F5F9" font-family="system-ui" font-size="11" font-weight="600">Dernieres ecritures comptables</text>
+
+  <!-- Table header -->
+  <rect x="208" y="376" width="566" height="22" fill="#1A1F2E" rx="4"/>
+  <text x="218" y="391" fill="#64748B" font-family="system-ui" font-size="9" font-weight="600">Date</text>
+  <text x="298" y="391" fill="#64748B" font-family="system-ui" font-size="9" font-weight="600">Libelle</text>
+  <text x="520" y="391" fill="#64748B" font-family="system-ui" font-size="9" font-weight="600">Debit</text>
+  <text x="600" y="391" fill="#64748B" font-family="system-ui" font-size="9" font-weight="600">Credit</text>
+  <text x="680" y="391" fill="#64748B" font-family="system-ui" font-size="9" font-weight="600">Compte</text>
+
+  <!-- Row 1 -->
+  <text x="218" y="416" fill="#8B949E" font-family="system-ui" font-size="9">22/03/2026</text>
+  <text x="298" y="416" fill="#F1F5F9" font-family="system-ui" font-size="9">Achat fournitures — Lyreco</text>
+  <text x="520" y="416" fill="#F1F5F9" font-family="system-ui" font-size="9">1 440,00</text>
+  <text x="600" y="416" fill="#64748B" font-family="system-ui" font-size="9">—</text>
+  <text x="680" y="416" fill="#00A878" font-family="system-ui" font-size="9">606100</text>
+
+  <!-- Row 2 -->
+  <text x="218" y="438" fill="#8B949E" font-family="system-ui" font-size="9">21/03/2026</text>
+  <text x="298" y="438" fill="#F1F5F9" font-family="system-ui" font-size="9">Honoraires audit — SAS Dupont</text>
+  <text x="520" y="438" fill="#64748B" font-family="system-ui" font-size="9">—</text>
+  <text x="600" y="438" fill="#F1F5F9" font-family="system-ui" font-size="9">3 600,00</text>
+  <text x="680" y="438" fill="#00A878" font-family="system-ui" font-size="9">706000</text>
+
+  <!-- Row 3 -->
+  <text x="218" y="460" fill="#8B949E" font-family="system-ui" font-size="9">20/03/2026</text>
+  <text x="298" y="460" fill="#F1F5F9" font-family="system-ui" font-size="9">Loyer bureau — SCI Bourgogne</text>
+  <text x="520" y="460" fill="#F1F5F9" font-family="system-ui" font-size="9">2 200,00</text>
+  <text x="600" y="460" fill="#64748B" font-family="system-ui" font-size="9">—</text>
+  <text x="680" y="460" fill="#00A878" font-family="system-ui" font-size="9">613200</text>
+
+  <!-- Alerts badge (top right) -->
+  <rect x="600" y="152" width="182" height="180" fill="url(#cardGrad)" rx="8" stroke="#2D333B" stroke-width="0.5"/>
+  <text x="614" y="174" fill="#F1F5F9" font-family="system-ui" font-size="11" font-weight="600">Alertes</text>
+
+  <!-- Alert items -->
+  <rect x="608" y="184" width="166" height="36" fill="#EF4444" fill-opacity="0.08" rx="6" stroke="#EF4444" stroke-opacity="0.2" stroke-width="0.5"/>
+  <circle cx="620" cy="202" r="4" fill="#EF4444"/>
+  <text x="630" y="198" fill="#F1F5F9" font-family="system-ui" font-size="8" font-weight="500">3 factures &gt; 60j</text>
+  <text x="630" y="210" fill="#EF4444" font-family="system-ui" font-size="7">Critique — relance urgente</text>
+
+  <rect x="608" y="226" width="166" height="36" fill="#F59E0B" fill-opacity="0.08" rx="6" stroke="#F59E0B" stroke-opacity="0.2" stroke-width="0.5"/>
+  <circle cx="620" cy="244" r="4" fill="#F59E0B"/>
+  <text x="630" y="240" fill="#F1F5F9" font-family="system-ui" font-size="8" font-weight="500">TVA CA3 a deposer</text>
+  <text x="630" y="252" fill="#F59E0B" font-family="system-ui" font-size="7">Echeance 20 avril</text>
+
+  <rect x="608" y="268" width="166" height="36" fill="#3B82F6" fill-opacity="0.08" rx="6" stroke="#3B82F6" stroke-opacity="0.2" stroke-width="0.5"/>
+  <circle cx="620" cy="286" r="4" fill="#3B82F6"/>
+  <text x="630" y="282" fill="#F1F5F9" font-family="system-ui" font-size="8" font-weight="500">12 txn non rapprochees</text>
+  <text x="630" y="294" fill="#3B82F6" font-family="system-ui" font-size="7">Suggestion auto disponible</text>
+
+  <rect x="608" y="310" width="166" height="18" fill="#2D333B" rx="4"/>
+  <text x="691" y="322" fill="#00A878" font-family="system-ui" font-size="8" font-weight="500" text-anchor="middle">Voir toutes les alertes</text>
+</svg>
